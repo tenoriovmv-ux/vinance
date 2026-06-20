@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Mis Finanzas">
 <title>Mis Finanzas</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Exo+2:wght@200;300&family=Exo+2:wght@200;300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -50,7 +50,7 @@ html,body{height:100%;background:#000;color:var(--txt);overflow:hidden}
 .eye-btn.on{border-color:var(--acc);color:var(--acc)}
 
 /* NAV DESKTOP */
-.nav{background:rgba(0,0,0,.2);border-bottom:0.5px solid var(--border);flex-shrink:0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.nav{background:rgba(0,0,0,.2);border-bottom:0.5px solid var(--border);flex-shrink:0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:relative;z-index:100}
 .nav-inner{display:flex;max-width:860px;margin:0 auto;width:100%;overflow-x:auto;scrollbar-width:none}
 .nav-inner::-webkit-scrollbar{display:none}
 .tab{padding:12px 14px;font-size:11px;font-weight:600;color:var(--txt3);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;letter-spacing:.3px;transition:.15s;flex-shrink:0;display:flex;align-items:center;gap:5px}
@@ -64,8 +64,8 @@ html,body{height:100%;background:#000;color:var(--txt);overflow:hidden}
 @media(max-width:520px){.nav-inner{display:none}.hamburger{display:flex;align-items:center;gap:8px;width:100%;justify-content:space-between;padding:10px 16px}.hamburger-cur{font-size:11px;font-weight:700;color:var(--acc)}}
 
 /* MOBILE BOTTOM NAV */
-.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:62px;background:rgba(0,0,0,.6);border-top:0.5px solid var(--border);z-index:500;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.mobile-nav-inner{display:grid;grid-template-columns:repeat(5,1fr);height:100%}
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:62px;background:rgba(0,0,0,.85);border-top:0.5px solid var(--border);z-index:999;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.mobile-nav-inner{display:grid;grid-template-columns:repeat(5,1fr);height:100%;width:100%}
 .mni{display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:none;background:transparent;padding:0;position:relative}
 .mni i{font-size:22px;color:var(--txt3);transition:.15s;line-height:1}
 .mni.on i{color:var(--acc)}
@@ -331,10 +331,117 @@ html,body{height:100%;background:#000;color:var(--txt);overflow:hidden}
 .big-box{text-align:center;padding:20px;background:var(--card2);border-radius:var(--radius);border:0.5px solid var(--border);margin-top:12px;backdrop-filter:blur(8px)}
 .big-lbl{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px}
 .big-val{font-size:28px;font-weight:700;color:var(--acc)}
+
+/* PIN SCREEN */
+#pin-screen{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px 32px}
+#pin-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 65% 20%,color-mix(in srgb,var(--acc) 20%,transparent) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,color-mix(in srgb,var(--acc) 10%,transparent) 0%,transparent 55%);pointer-events:none}
+#pin-screen>*{position:relative;z-index:1}
+.pin-logo{font-family:'Exo 2',sans-serif;font-size:14px;font-weight:200;color:var(--acc);letter-spacing:5px;text-transform:uppercase;display:flex;align-items:center;gap:7px;margin-bottom:48px}
+.pin-logo-dot{width:7px;height:7px;border-radius:50%;background:var(--acc)}
+.pin-title{font-size:18px;font-weight:600;color:var(--txt);margin-bottom:6px;text-align:center}
+.pin-sub{font-size:11px;color:var(--txt3);text-align:center;margin-bottom:32px;line-height:1.5}
+.pin-dots{display:flex;gap:18px;margin-bottom:40px}
+.pin-dot{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--border);background:transparent;transition:.2s}
+.pin-dot.on{background:var(--acc);border-color:var(--acc);box-shadow:0 0 10px color-mix(in srgb,var(--acc) 50%,transparent)}
+.pin-numpad{display:grid;grid-template-columns:repeat(3,1fr);width:100%;max-width:280px;gap:0}
+.pin-key{height:64px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:300;color:var(--txt);cursor:pointer;background:transparent;border:none;font-family:'Montserrat',sans-serif;border-radius:12px;transition:.12s;-webkit-tap-highlight-color:transparent}
+.pin-key:active{color:var(--acc);transform:scale(.85)}
+.pin-key.del{font-size:16px;color:var(--txt3)}
+.pin-key.empty{pointer-events:none}
+.pin-footer{display:flex;justify-content:space-between;width:100%;max-width:280px;margin-top:12px}
+.pin-link{font-size:9px;color:var(--txt3);background:none;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;padding:6px 0;letter-spacing:.3px}
+.pin-error{font-size:11px;color:var(--danger);text-align:center;margin-top:8px;min-height:18px}
+/* USER SELECT */
+.user-list{width:100%;max-width:300px;margin-bottom:24px}
+.user-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,.06);border:0.5px solid var(--border);border-radius:12px;margin-bottom:8px;cursor:pointer;transition:.15s}
+.user-item:hover,.user-item:active{border-color:var(--acc);background:rgba(255,255,255,.1)}
+.user-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#000;flex-shrink:0}
+.user-name{font-size:14px;font-weight:600;color:var(--txt)}
+.user-sub{font-size:10px;color:var(--txt3)}
+.btn-new-user{background:transparent;border:0.5px solid var(--border);color:var(--txt3);border-radius:10px;padding:10px 20px;font-size:12px;font-family:'Montserrat',sans-serif;cursor:pointer;margin-top:4px;width:100%;max-width:300px}
+.btn-new-user:hover{border-color:var(--acc);color:var(--acc)}
+
 </style>
 </head>
 <body>
-<div id="app">
+
+<!-- PIN SCREEN -->
+<div id="pin-screen">
+  <div class="pin-logo"><div class="pin-logo-dot"></div>VINANCE</div>
+  
+  <!-- State: user selection -->
+  <div id="pin-state-users" style="display:flex;flex-direction:column;align-items:center;width:100%">
+    <div class="pin-title">Bienvenido</div>
+    <div class="pin-sub" style="margin-bottom:20px">¿Quién eres?</div>
+    <div class="user-list" id="user-list"></div>
+    <button class="btn-new-user" onclick="pinStartNew()">+ Nuevo usuario</button>
+  </div>
+
+  <!-- State: enter PIN -->
+  <div id="pin-state-enter" style="display:none;flex-direction:column;align-items:center;width:100%">
+    <div class="pin-title" id="pin-enter-title">Hola, Vicente</div>
+    <div class="pin-sub">Ingresa tu PIN</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-numpad">
+      <button class="pin-key" onclick="pinKey('1')">1</button>
+      <button class="pin-key" onclick="pinKey('2')">2</button>
+      <button class="pin-key" onclick="pinKey('3')">3</button>
+      <button class="pin-key" onclick="pinKey('4')">4</button>
+      <button class="pin-key" onclick="pinKey('5')">5</button>
+      <button class="pin-key" onclick="pinKey('6')">6</button>
+      <button class="pin-key" onclick="pinKey('7')">7</button>
+      <button class="pin-key" onclick="pinKey('8')">8</button>
+      <button class="pin-key" onclick="pinKey('9')">9</button>
+      <button class="pin-key empty"></button>
+      <button class="pin-key" onclick="pinKey('0')">0</button>
+      <button class="pin-key del" onclick="pinDel()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-9l-5 -5a2 2 0 0 1 0 -2.828l5 -5z"/><path d="M12 10l4 4m0 -4l-4 4"/></svg></button>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+    <div class="pin-footer">
+      <button class="pin-link" onclick="pinBack()">← Cambiar usuario</button>
+      <button class="pin-link" onclick="pinForgot()">Olvidé mi PIN</button>
+    </div>
+  </div>
+
+  <!-- State: create new user -->
+  <div id="pin-state-create" style="display:none;flex-direction:column;align-items:center;width:100%">
+    <div class="pin-title" id="pin-create-title">Crea tu perfil</div>
+    <div class="pin-sub" id="pin-create-sub">¿Cuál es tu nombre?</div>
+    <div id="pin-create-name-wrap" style="width:100%;max-width:280px;margin-bottom:24px">
+      <input id="pin-new-name" placeholder="Tu nombre" style="width:100%;background:rgba(255,255,255,.08);border:0.5px solid var(--border);border-radius:10px;padding:12px 16px;color:var(--txt);font-size:16px;font-family:'Montserrat',sans-serif;outline:none;text-align:center">
+      <button class="badd" onclick="pinConfirmName()" style="width:100%;margin-top:10px;padding:12px">Continuar</button>
+    </div>
+    <div id="pin-create-pin-wrap" style="display:none;flex-direction:column;align-items:center;width:100%">
+      <div class="pin-dots">
+        <div class="pin-dot" id="npd0"></div><div class="pin-dot" id="npd1"></div>
+        <div class="pin-dot" id="npd2"></div><div class="pin-dot" id="npd3"></div>
+      </div>
+      <div class="pin-numpad">
+        <button class="pin-key" onclick="newPinKey('1')">1</button>
+        <button class="pin-key" onclick="newPinKey('2')">2</button>
+        <button class="pin-key" onclick="newPinKey('3')">3</button>
+        <button class="pin-key" onclick="newPinKey('4')">4</button>
+        <button class="pin-key" onclick="newPinKey('5')">5</button>
+        <button class="pin-key" onclick="newPinKey('6')">6</button>
+        <button class="pin-key" onclick="newPinKey('7')">7</button>
+        <button class="pin-key" onclick="newPinKey('8')">8</button>
+        <button class="pin-key" onclick="newPinKey('9')">9</button>
+        <button class="pin-key empty"></button>
+        <button class="pin-key" onclick="newPinKey('0')">0</button>
+        <button class="pin-key del" onclick="newPinDel()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-9l-5 -5a2 2 0 0 1 0 -2.828l5 -5z"/><path d="M12 10l4 4m0 -4l-4 4"/></svg></button>
+      </div>
+    </div>
+    <div class="pin-footer" style="max-width:280px">
+      <button class="pin-link" onclick="pinBack()">← Atrás</button>
+      <button class="pin-link"></button>
+    </div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
 
 <!-- TOPBAR -->
 <div class="topbar">
@@ -357,24 +464,24 @@ html,body{height:100%;background:#000;color:var(--txt);overflow:hidden}
     <span class="hamburger-cur" id="hb-cur">Resumen</span>
   </button>
   <div class="nav-inner" id="nav-inner">
-    <div class="tab on"  onclick="goTab(0,this)"><i class="ti ti-home"></i>Resumen</div>
-    <div class="tab"     onclick="goTab(1,this)"><i class="ti ti-credit-card"></i>Tarjetas</div>
-    <div class="tab"     onclick="goTab(2,this)"><i class="ti ti-chart-line"></i>Cuotas</div>
-    <div class="tab"     onclick="goTab(3,this)"><i class="ti ti-receipt"></i>Pagos del Mes</div>
-    <div class="tab"     onclick="goTab(4,this)"><i class="ti ti-plus-circle"></i>Ingresos Extra</div>
-    <div class="tab"     onclick="goTab(5,this)"><i class="ti ti-users"></i>Préstamos</div>
-    <div class="tab"     onclick="goTab(6,this)"><i class="ti ti-piggy-bank"></i>Ahorros</div>
-    <div class="tab"     onclick="goTab(7,this)"><i class="ti ti-settings"></i>Config</div>
+    <div class="tab on"  onclick="goTab(0,this)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg>Resumen</div>
+    <div class="tab"     onclick="goTab(1,this)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="7" y1="15" x2="7.01" y2="15"/><line x1="11" y1="15" x2="13" y2="15"/></svg>Tarjetas</div>
+    <div class="tab"     onclick="goTab(2,this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 19 8 13 12 15 16 10 20 14"/><polyline points="20 10 20 14 16 14"/></svg>Cuotas</div>
+    <div class="tab"     onclick="goTab(3,this)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2"/><path d="M14 8h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5m2 0v1.5m0 -9v1.5"/></svg>Pagos del Mes</div>
+    <div class="tab"     onclick="goTab(4,this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="12" y1="9" x2="12" y2="15"/></svg>Ingresos Extra</div>
+    <div class="tab"     onclick="goTab(5,this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg>Préstamos</div>
+    <div class="tab"     onclick="goTab(6,this)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8v-3a1 1 0 0 0 -1 -1h-8a2 2 0 0 0 0 4h9a2 2 0 0 1 0 4h-1"/><path d="M6 8h1"/><path d="M18 8.5l1 -1.5"/><path d="M4 10.5a6.5 6.5 0 1 0 13 0"/><path d="M12 19v2"/><path d="M9 19.5l1 -1.5"/><path d="M15 19.5l-1 -1.5"/><circle cx="14" cy="13" r="1" fill="currentColor"/></svg>Ahorros</div>
+    <div class="tab"     onclick="goTab(7,this)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg>Config</div>
   </div>
   <div class="nav-dropdown" id="nav-dropdown">
-    <div class="tab on"  onclick="goTab(0,this);toggleNav()"><i class="ti ti-home"></i>Resumen</div>
-    <div class="tab"     onclick="goTab(1,this);toggleNav()"><i class="ti ti-credit-card"></i>Tarjetas</div>
-    <div class="tab"     onclick="goTab(2,this);toggleNav()"><i class="ti ti-chart-line"></i>Cuotas</div>
-    <div class="tab"     onclick="goTab(3,this);toggleNav()"><i class="ti ti-receipt"></i>Pagos del Mes</div>
-    <div class="tab"     onclick="goTab(4,this);toggleNav()"><i class="ti ti-plus-circle"></i>Ingresos Extra</div>
-    <div class="tab"     onclick="goTab(5,this);toggleNav()"><i class="ti ti-users"></i>Préstamos</div>
-    <div class="tab"     onclick="goTab(6,this);toggleNav()"><i class="ti ti-piggy-bank"></i>Ahorros</div>
-    <div class="tab"     onclick="goTab(7,this);toggleNav()"><i class="ti ti-settings"></i>Config</div>
+    <div class="tab on"  onclick="goTab(0,this);toggleNav()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg>Resumen</div>
+    <div class="tab"     onclick="goTab(1,this);toggleNav()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="7" y1="15" x2="7.01" y2="15"/><line x1="11" y1="15" x2="13" y2="15"/></svg>Tarjetas</div>
+    <div class="tab"     onclick="goTab(2,this);toggleNav()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 19 8 13 12 15 16 10 20 14"/><polyline points="20 10 20 14 16 14"/></svg>Cuotas</div>
+    <div class="tab"     onclick="goTab(3,this);toggleNav()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2"/><path d="M14 8h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5m2 0v1.5m0 -9v1.5"/></svg>Pagos del Mes</div>
+    <div class="tab"     onclick="goTab(4,this);toggleNav()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="12" y1="9" x2="12" y2="15"/></svg>Ingresos Extra</div>
+    <div class="tab"     onclick="goTab(5,this);toggleNav()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg>Préstamos</div>
+    <div class="tab"     onclick="goTab(6,this);toggleNav()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8v-3a1 1 0 0 0 -1 -1h-8a2 2 0 0 0 0 4h9a2 2 0 0 1 0 4h-1"/><path d="M6 8h1"/><path d="M18 8.5l1 -1.5"/><path d="M4 10.5a6.5 6.5 0 1 0 13 0"/><path d="M12 19v2"/><path d="M9 19.5l1 -1.5"/><path d="M15 19.5l-1 -1.5"/><circle cx="14" cy="13" r="1" fill="currentColor"/></svg>Ahorros</div>
+    <div class="tab"     onclick="goTab(7,this);toggleNav()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg>Config</div>
   </div>
 </div>
 
@@ -579,7 +686,7 @@ html,body{height:100%;background:#000;color:var(--txt);overflow:hidden}
   <div class="card" style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
     <div class="avatar-wrap">
       <div class="avatar-circle" id="avatar-circle" onclick="document.getElementById('avatar-input').click()">V</div>
-      <div class="avatar-edit-btn"><i class="ti ti-camera"></i></div>
+      <div class="avatar-edit-btn"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2"/><circle cx="12" cy="13" r="3"/></svg></div>
       <input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="setAvatar(this)">
     </div>
     <div style="flex:1">
@@ -741,11 +848,11 @@ html,body{height:100%;background:#000;color:var(--txt);overflow:hidden}
 <!-- MOBILE BOTTOM NAV -->
 <div class="mobile-nav" id="mobile-nav">
   <div class="mobile-nav-inner">
-    <button class="mni on" onclick="goTabMobile(0,this)"><i class="ti ti-home"></i></button>
-    <button class="mni" onclick="goTabMobile(1,this)"><i class="ti ti-credit-card"></i></button>
-    <button class="mni" onclick="goTabMobile(3,this)"><i class="ti ti-receipt"></i></button>
-    <button class="mni" onclick="goTabMobile(6,this)"><i class="ti ti-piggy-bank"></i></button>
-    <button class="mni" onclick="goTabMobile(7,this)"><i class="ti ti-settings"></i></button>
+    <button class="mni on" onclick="goTabMobile(0,this)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg></button>
+    <button class="mni" onclick="goTabMobile(1,this)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="7" y1="15" x2="7.01" y2="15"/><line x1="11" y1="15" x2="13" y2="15"/></svg></button>
+    <button class="mni" onclick="goTabMobile(3,this)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2"/><path d="M14 8h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5m2 0v1.5m0 -9v1.5"/></svg></button>
+    <button class="mni" onclick="goTabMobile(6,this)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8v-3a1 1 0 0 0 -1 -1h-8a2 2 0 0 0 0 4h9a2 2 0 0 1 0 4h-1"/><path d="M6 8h1"/><path d="M18 8.5l1 -1.5"/><path d="M4 10.5a6.5 6.5 0 1 0 13 0"/><path d="M12 19v2"/><path d="M9 19.5l1 -1.5"/><path d="M15 19.5l-1 -1.5"/><circle cx="14" cy="13" r="1" fill="currentColor"/></svg></button>
+    <button class="mni" onclick="goTabMobile(7,this)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><circle cx="12" cy="12" r="3"/></svg></button>
   </div>
 </div>
 
@@ -2020,7 +2127,8 @@ function renderAll(){
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
-load();
+// load() skipped — PIN system handles user data loading
+
 buildMonthOptions();
 buildCuotaMonthSels();
 applyTheme();
@@ -2029,6 +2137,193 @@ ensureVars();
 renderBancoSel();
 renderResumen();
 setTimeout(checkPopup,800);
+
+// ── PIN & MULTI-USER SYSTEM ──────────────────────────────────────────────────
+var PIN_USERS_KEY='vinance_users';
+var currentUser=null;
+var pinBuffer='';
+var newPinBuffer='';
+var newUserName='';
+
+function getUsers(){
+  try{return JSON.parse(localStorage.getItem(PIN_USERS_KEY)||'[]');}catch(e){return[];}
+}
+function saveUsers(users){
+  try{localStorage.setItem(PIN_USERS_KEY,JSON.stringify(users));}catch(e){}
+}
+function getUserDataKey(userId){return 'vinance_data_'+userId;}
+
+function pinInit(){
+  var users=getUsers();
+  if(users.length===0){
+    // No users yet — go straight to create
+    pinStartNew();
+  } else {
+    pinShowUsers(users);
+  }
+}
+
+function pinShowUsers(users){
+  document.getElementById('pin-state-users').style.display='flex';
+  document.getElementById('pin-state-enter').style.display='none';
+  document.getElementById('pin-state-create').style.display='none';
+  var list=document.getElementById('user-list');
+  list.innerHTML='';
+  users.forEach(function(u){
+    var div=document.createElement('div');
+    div.className='user-item';
+    div.innerHTML='<div class="user-avatar">'+u.name[0].toUpperCase()+'</div><div><div class="user-name">'+u.name+'</div><div class="user-sub">Toca para ingresar</div></div>';
+    div.onclick=function(){pinSelectUser(u);};
+    list.appendChild(div);
+  });
+}
+
+function pinSelectUser(u){
+  currentUser=u;
+  document.getElementById('pin-state-users').style.display='none';
+  document.getElementById('pin-state-enter').style.display='flex';
+  document.getElementById('pin-state-create').style.display='none';
+  document.getElementById('pin-enter-title').textContent='Hola, '+u.name;
+  document.getElementById('pin-error').textContent='';
+  pinBuffer='';
+  updatePinDots(['pd0','pd1','pd2','pd3'],0);
+}
+
+function pinKey(n){
+  if(pinBuffer.length>=4)return;
+  pinBuffer+=n;
+  updatePinDots(['pd0','pd1','pd2','pd3'],pinBuffer.length);
+  if(pinBuffer.length===4){
+    setTimeout(function(){
+      if(pinBuffer===currentUser.pin){
+        pinSuccess();
+      } else {
+        document.getElementById('pin-error').textContent='PIN incorrecto. Intenta de nuevo.';
+        pinBuffer='';
+        updatePinDots(['pd0','pd1','pd2','pd3'],0);
+        setTimeout(function(){document.getElementById('pin-error').textContent='';},2000);
+      }
+    },200);
+  }
+}
+function pinDel(){if(pinBuffer.length>0){pinBuffer=pinBuffer.slice(0,-1);updatePinDots(['pd0','pd1','pd2','pd3'],pinBuffer.length);}}
+
+function pinSuccess(){
+  // Load this user's data
+  var key=getUserDataKey(currentUser.id);
+  try{
+    var d=localStorage.getItem(key);
+    if(d){
+      var p=JSON.parse(d);
+      if(!p.bancos||p.bancos.length===0) delete p.bancos;
+      if(!p.cuotas||p.cuotas.length===0) delete p.cuotas;
+      if(!p.fijos||p.fijos.length===0) delete p.fijos;
+      if(!p.subs||p.subs.length===0) delete p.subs;
+      Object.assign(S,p);
+    }
+  }catch(e){}
+  // Override save to use user-specific key
+  window._userDataKey=key;
+  document.getElementById('pin-screen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  renderAll();
+  setTimeout(checkPopup,800);
+}
+
+function pinBack(){
+  pinBuffer='';newPinBuffer='';newUserName='';
+  var users=getUsers();
+  if(users.length===0){pinStartNew();}
+  else{pinShowUsers(users);}
+}
+
+function pinForgot(){
+  if(!currentUser)return;
+  if(confirm('¿Resetear el PIN de '+currentUser.name+'? Deberás crear uno nuevo.')){
+    var users=getUsers().map(function(u){if(u.id===currentUser.id)u.pin='';return u;});
+    saveUsers(users);
+    currentUser.pin='';
+    newUserName=currentUser.name;
+    pinShowCreatePin();
+  }
+}
+
+function pinStartNew(){
+  document.getElementById('pin-state-users').style.display='none';
+  document.getElementById('pin-state-enter').style.display='none';
+  document.getElementById('pin-state-create').style.display='flex';
+  document.getElementById('pin-create-title').textContent='Crea tu perfil';
+  document.getElementById('pin-create-sub').textContent='¿Cuál es tu nombre?';
+  document.getElementById('pin-create-name-wrap').style.display='block';
+  document.getElementById('pin-create-pin-wrap').style.display='none';
+  document.getElementById('pin-new-name').value='';
+  newPinBuffer='';newUserName='';
+}
+
+function pinConfirmName(){
+  var name=document.getElementById('pin-new-name').value.trim();
+  if(!name)return;
+  newUserName=name;
+  pinShowCreatePin();
+}
+
+function pinShowCreatePin(){
+  document.getElementById('pin-create-title').textContent='Hola, '+newUserName;
+  document.getElementById('pin-create-sub').textContent='Crea tu PIN de 4 dígitos';
+  document.getElementById('pin-create-name-wrap').style.display='none';
+  document.getElementById('pin-create-pin-wrap').style.display='flex';
+  newPinBuffer='';
+  updatePinDots(['npd0','npd1','npd2','npd3'],0);
+}
+
+function newPinKey(n){
+  if(newPinBuffer.length>=4)return;
+  newPinBuffer+=n;
+  updatePinDots(['npd0','npd1','npd2','npd3'],newPinBuffer.length);
+  if(newPinBuffer.length===4){
+    setTimeout(function(){
+      var users=getUsers();
+      var newId='u'+Date.now();
+      var isExisting=currentUser&&currentUser.pin==='';
+      if(isExisting){
+        // Reset PIN for existing user
+        users=users.map(function(u){if(u.id===currentUser.id)u.pin=newPinBuffer;return u;});
+        saveUsers(users);
+        currentUser.pin=newPinBuffer;
+        pinSelectUser(currentUser);
+      } else {
+        // Brand new user
+        var newUser={id:newId,name:newUserName,pin:newPinBuffer};
+        users.push(newUser);
+        saveUsers(users);
+        currentUser=newUser;
+        S.cfg.nombre=newUserName;
+        pinSuccess();
+      }
+    },200);
+  }
+}
+function newPinDel(){if(newPinBuffer.length>0){newPinBuffer=newPinBuffer.slice(0,-1);updatePinDots(['npd0','npd1','npd2','npd3'],newPinBuffer.length);}}
+
+function updatePinDots(ids,count){
+  ids.forEach(function(id,i){
+    var el=document.getElementById(id);
+    if(el)el.className='pin-dot'+(i<count?' on':'');
+  });
+}
+
+// Override save to use per-user storage
+var _originalSave=save;
+function save(){
+  if(window._userDataKey){
+    try{localStorage.setItem(window._userDataKey,JSON.stringify(S));}catch(e){}
+  } else {
+    try{localStorage.setItem('mf_vicente',JSON.stringify(S));}catch(e){}
+  }
+}
+
+// START
+pinInit();
 </script>
 </body>
 </html>    pagoBtn='';
