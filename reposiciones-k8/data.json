@@ -1,0 +1,2035 @@
+{
+ "generado": "06/10/2026",
+ "productos": [
+  {
+   "id": "geoplus",
+   "nombre": "Chaleco Geoplus 360",
+   "categoria": "Chalecos",
+   "tela": "Gabardina",
+   "reposiciones": [
+    {
+     "fecha": "18/05/2026",
+     "hojas": [
+      {
+       "nombre": "Geoplus Gabardina",
+       "producto": "CHALECO GEOPLUS GABARDINA 360",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "NARANJO FLUOR",
+         "prefijo": "CHALECO GEOPLUS GABARDINA 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           500
+          ],
+          [
+           "M",
+           1500
+          ],
+          [
+           "L",
+           2000
+          ],
+          [
+           "XL",
+           2000
+          ],
+          [
+           "XXL",
+           2000
+          ],
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 8500
+        },
+        {
+         "etiqueta": "AMARILLO FLUOR",
+         "prefijo": "CHALECO GEOPLUS GABARDINA 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 500
+        },
+        {
+         "etiqueta": "AZUL MARINO",
+         "prefijo": "CHALECO GEOPLUS GABARDINA 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 500
+        }
+       ],
+       "total": 9500
+      }
+     ],
+     "nota": "Pedido inicial: naranjo completo + XXXL de amarillo y azul",
+     "total": 9500
+    },
+    {
+     "fecha": "14/08/2026",
+     "hojas": [
+      {
+       "nombre": "Geoplus Gabardina",
+       "producto": "CHALECO GEOPLUS GABARDINA 360",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AMARILLO FLUOR",
+         "prefijo": "CHALECO GEOPLUS GABARDINA 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           500
+          ],
+          [
+           "M",
+           500
+          ],
+          [
+           "L",
+           1000
+          ],
+          [
+           "XL",
+           1000
+          ],
+          [
+           "XXL",
+           500
+          ]
+         ],
+         "subtotal": 3500
+        },
+        {
+         "etiqueta": "AZUL MARINO",
+         "prefijo": "CHALECO GEOPLUS GABARDINA 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           500
+          ],
+          [
+           "M",
+           500
+          ],
+          [
+           "L",
+           1000
+          ],
+          [
+           "XL",
+           1000
+          ],
+          [
+           "XXL",
+           500
+          ]
+         ],
+         "subtotal": 3500
+        }
+       ],
+       "total": 7000
+      }
+     ],
+     "nota": "Reposición de amarillo y azul (XXXL ya pedidas)",
+     "total": 7000
+    },
+    {
+     "fecha": "06/10/2026",
+     "hojas": [
+      {
+       "nombre": "Geoplus Gabardina",
+       "producto": "CHALECO GEOPLUS GABARDINA 360",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "NARANJO FLUOR",
+         "prefijo": "CHALECO GEOPLUS GABARDINA 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           500
+          ],
+          [
+           "M",
+           1500
+          ],
+          [
+           "L",
+           2000
+          ],
+          [
+           "XL",
+           2000
+          ],
+          [
+           "XXL",
+           2000
+          ],
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 8500
+        },
+        {
+         "etiqueta": "AMARILLO FLUOR",
+         "prefijo": "CHALECO GEOPLUS GABARDINA 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           500
+          ],
+          [
+           "M",
+           1000
+          ],
+          [
+           "L",
+           1200
+          ],
+          [
+           "XL",
+           1200
+          ],
+          [
+           "XXL",
+           1000
+          ],
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 5400
+        }
+       ],
+       "total": 13900
+      }
+     ],
+     "nota": "Última reposición (archivo separado)",
+     "total": 13900
+    }
+   ],
+   "pendiente": "",
+   "ultima": "06/10/2026",
+   "total_ultima": 13900
+  },
+  {
+   "id": "geolite",
+   "nombre": "Chaleco Geolite 360",
+   "categoria": "Chalecos",
+   "tela": "Poplin",
+   "reposiciones": [
+    {
+     "fecha": "18/05/2026",
+     "hojas": [
+      {
+       "nombre": "Geolite Poplin",
+       "producto": "CHALECO GEOLITE POPLIN 360",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "NARANJO FLUOR",
+         "prefijo": "CHALECO GEOLITE POPLIN 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           500
+          ],
+          [
+           "M",
+           2000
+          ],
+          [
+           "L",
+           3000
+          ],
+          [
+           "XL",
+           3000
+          ],
+          [
+           "XXL",
+           2000
+          ],
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 11000
+        },
+        {
+         "etiqueta": "AMARILLO FLUOR",
+         "prefijo": "CHALECO GEOLITE POPLIN 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 500
+        },
+        {
+         "etiqueta": "AZUL MARINO",
+         "prefijo": "CHALECO GEOLITE POPLIN 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 500
+        }
+       ],
+       "total": 12000
+      }
+     ],
+     "nota": "Pedido inicial",
+     "total": 12000
+    },
+    {
+     "fecha": "14/08/2026",
+     "hojas": [
+      {
+       "nombre": "Geolite Poplin",
+       "producto": "CHALECO GEOLITE POPLIN 360",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AMARILLO FLUOR",
+         "prefijo": "CHALECO GEOLITE POPLIN 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           500
+          ],
+          [
+           "M",
+           1000
+          ],
+          [
+           "L",
+           1500
+          ],
+          [
+           "XL",
+           1500
+          ],
+          [
+           "XXL",
+           1000
+          ]
+         ],
+         "subtotal": 5500
+        }
+       ],
+       "total": 5500
+      }
+     ],
+     "nota": "Reposición de amarillo",
+     "total": 5500
+    },
+    {
+     "fecha": "06/10/2026",
+     "hojas": [
+      {
+       "nombre": "Geolite Poplin",
+       "producto": "CHALECO GEOLITE POPLIN 360",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "NARANJO FLUOR",
+         "prefijo": "CHALECO GEOLITE POPLIN 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           500
+          ],
+          [
+           "M",
+           2000
+          ],
+          [
+           "L",
+           3000
+          ],
+          [
+           "XL",
+           3000
+          ],
+          [
+           "XXL",
+           2000
+          ],
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 11000
+        },
+        {
+         "etiqueta": "AMARILLO FLUOR",
+         "prefijo": "CHALECO GEOLITE POPLIN 360",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           500
+          ],
+          [
+           "M",
+           800
+          ],
+          [
+           "L",
+           1000
+          ],
+          [
+           "XL",
+           1000
+          ],
+          [
+           "XXL",
+           500
+          ],
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 4300
+        }
+       ],
+       "total": 15300
+      }
+     ],
+     "nota": "Última reposición (archivo separado)",
+     "total": 15300
+    }
+   ],
+   "pendiente": "",
+   "ultima": "06/10/2026",
+   "total_ultima": 15300
+  },
+  {
+   "id": "buzo-dual",
+   "nombre": "Buzo Dual Lite Pilot",
+   "categoria": "Buzos",
+   "tela": "",
+   "reposiciones": [
+    {
+     "fecha": "06/07/2026",
+     "hojas": [
+      {
+       "nombre": "Buzo Dual Lite Pilot",
+       "producto": "BUZO DUAL LITE PILOT",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL MARINO / NARANJO",
+         "prefijo": "BUZO DUAL LITE PILOT AZUL MARINO/NARANJO",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           500
+          ],
+          [
+           "M",
+           1000
+          ],
+          [
+           "L",
+           1500
+          ],
+          [
+           "XL",
+           1500
+          ],
+          [
+           "XXL",
+           500
+          ],
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 5500
+        }
+       ],
+       "total": 5500
+      }
+     ],
+     "nota": "Pedido inicial",
+     "total": 5500
+    },
+    {
+     "fecha": "06/10/2026",
+     "hojas": [
+      {
+       "nombre": "Buzo Dual Lite Pilot",
+       "producto": "BUZO DUAL LITE PILOT",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL / NARANJO FLUOR",
+         "prefijo": "BUZO DUAL LITE PILOT AZUL / NARANJO FLUOR",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           500
+          ],
+          [
+           "M",
+           700
+          ],
+          [
+           "L",
+           1000
+          ],
+          [
+           "XL",
+           1000
+          ],
+          [
+           "XXL",
+           500
+          ],
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 4200
+        }
+       ],
+       "total": 4200
+      }
+     ],
+     "nota": "Última reposición",
+     "total": 4200
+    }
+   ],
+   "pendiente": "",
+   "ultima": "06/10/2026",
+   "total_ultima": 4200
+  },
+  {
+   "id": "top-polo",
+   "nombre": "Top Polo Dryfit Hi-Vis",
+   "categoria": "Poleras",
+   "tela": "Dryfit",
+   "reposiciones": [
+    {
+     "fecha": "07/07/2026",
+     "hojas": [
+      {
+       "nombre": "Top Polo Dryfit",
+       "producto": "TOP POLO DRYFIT",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL / AMARILLO FLUOR",
+         "prefijo": "TOP POLO DRYFIT HI-VIS BICOLOR",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           200
+          ],
+          [
+           "M",
+           300
+          ],
+          [
+           "L",
+           500
+          ],
+          [
+           "XL",
+           500
+          ],
+          [
+           "XXL",
+           500
+          ],
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 2500
+        },
+        {
+         "etiqueta": "AZUL / NARANJO FLUOR",
+         "prefijo": "TOP POLO DRYFIT HI-VIS BICOLOR",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           200
+          ],
+          [
+           "M",
+           300
+          ],
+          [
+           "L",
+           500
+          ],
+          [
+           "XL",
+           500
+          ],
+          [
+           "XXL",
+           500
+          ],
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 2500
+        }
+       ],
+       "total": 5000
+      }
+     ],
+     "nota": "Bicolor, con XXXL agregado por color",
+     "total": 5000
+    }
+   ],
+   "pendiente": "",
+   "ultima": "07/07/2026",
+   "total_ultima": 5000
+  },
+  {
+   "id": "geoshield",
+   "nombre": "Chaleco Geoshield K18",
+   "categoria": "Chalecos",
+   "tela": "Gabardina",
+   "reposiciones": [
+    {
+     "fecha": "18/08/2026",
+     "hojas": [
+      {
+       "nombre": "Geoshield K18",
+       "producto": "CHALECO GEOSHIELD K18",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "TELA: GABARDINA",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "NARANJO FLUOR",
+         "prefijo": "CHALECO GEOSHIELD K18",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           500
+          ],
+          [
+           "M",
+           800
+          ],
+          [
+           "L",
+           800
+          ],
+          [
+           "XL",
+           800
+          ],
+          [
+           "XXL",
+           500
+          ],
+          [
+           "XXXL",
+           500
+          ]
+         ],
+         "subtotal": 3900
+        },
+        {
+         "etiqueta": "AMARILLO FLUOR",
+         "prefijo": "CHALECO GEOSHIELD K18",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           200
+          ],
+          [
+           "M",
+           300
+          ],
+          [
+           "L",
+           500
+          ],
+          [
+           "XL",
+           500
+          ],
+          [
+           "XXL",
+           300
+          ],
+          [
+           "XXXL",
+           300
+          ]
+         ],
+         "subtotal": 2100
+        }
+       ],
+       "total": 6000
+      }
+     ],
+     "nota": "Reposición de agosto",
+     "total": 6000
+    },
+    {
+     "fecha": "18/08/2026",
+     "hojas": [
+      {
+       "nombre": "Geoshield K18",
+       "producto": "CHALECO GEOSHIELD K18",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "TELA: GABARDINA",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "NARANJO FLUOR",
+         "prefijo": "CHALECO GEOSHIELD K18",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           300
+          ],
+          [
+           "M",
+           500
+          ],
+          [
+           "L",
+           800
+          ],
+          [
+           "XL",
+           800
+          ],
+          [
+           "XXL",
+           300
+          ],
+          [
+           "XXXL",
+           300
+          ]
+         ],
+         "subtotal": 3000
+        },
+        {
+         "etiqueta": "AMARILLO FLUOR",
+         "prefijo": "CHALECO GEOSHIELD K18",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           300
+          ],
+          [
+           "M",
+           500
+          ],
+          [
+           "L",
+           800
+          ],
+          [
+           "XL",
+           800
+          ],
+          [
+           "XXL",
+           300
+          ],
+          [
+           "XXXL",
+           300
+          ]
+         ],
+         "subtotal": 3000
+        }
+       ],
+       "total": 6000
+      }
+     ],
+     "nota": "3.000 por color",
+     "total": 6000
+    },
+    {
+     "fecha": "06/10/2026",
+     "hojas": [
+      {
+       "nombre": "Geoshield K18",
+       "producto": "CHALECO GEOSHIELD K18",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "TELA: GABARDINA",
+       "split": true,
+       "bloques": [
+        {
+         "etiqueta": "NARANJO FLUOR",
+         "prefijo": "CHALECO GEOSHIELD K18",
+         "sufijo": "",
+         "split": true,
+         "tallas": [
+          [
+           "S",
+           500,
+           225,
+           275
+          ],
+          [
+           "M",
+           1200,
+           850,
+           350
+          ],
+          [
+           "L",
+           2200,
+           1600,
+           600
+          ],
+          [
+           "XL",
+           2200,
+           1600,
+           600
+          ],
+          [
+           "XXL",
+           1000,
+           525,
+           475
+          ],
+          [
+           "XXXL",
+           500,
+           225,
+           275
+          ]
+         ],
+         "subtotal": 7600
+        },
+        {
+         "etiqueta": "AMARILLO FLUOR",
+         "prefijo": "CHALECO GEOSHIELD K18",
+         "sufijo": "",
+         "split": true,
+         "tallas": [
+          [
+           "S",
+           200,
+           0,
+           200
+          ],
+          [
+           "M",
+           300,
+           0,
+           300
+          ],
+          [
+           "L",
+           500,
+           0,
+           500
+          ],
+          [
+           "XL",
+           500,
+           0,
+           500
+          ],
+          [
+           "XXL",
+           300,
+           0,
+           300
+          ],
+          [
+           "XXXL",
+           200,
+           0,
+           200
+          ]
+         ],
+         "subtotal": 2000
+        }
+       ],
+       "total": 9600
+      }
+     ],
+     "nota": "Última reposición, dividida entre Carlos y K8",
+     "total": 9600,
+     "carlos": 5025,
+     "k8": 4575
+    }
+   ],
+   "pendiente": "",
+   "ultima": "06/10/2026",
+   "total_ultima": 9600
+  },
+  {
+   "id": "geotech-h",
+   "nombre": "Chaleco Geotech · Hombre",
+   "categoria": "Chalecos",
+   "tela": "Gabardina",
+   "reposiciones": [
+    {
+     "fecha": "06/10/2026",
+     "hojas": [
+      {
+       "nombre": "Geotech Hombre",
+       "producto": "CHALECO GEOTECH HOMBRE",
+       "titulo": "SOLICITUD INTERNA DE ROPA",
+       "subtitulo": "TELA: GABARDINA",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "NARANJO FLUOR",
+         "prefijo": "CHALECO GEOTECH",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           300
+          ],
+          [
+           "M",
+           800
+          ],
+          [
+           "L",
+           1000
+          ],
+          [
+           "XL",
+           1000
+          ],
+          [
+           "XXL",
+           500
+          ],
+          [
+           "XXXL",
+           300
+          ]
+         ],
+         "subtotal": 3900
+        },
+        {
+         "etiqueta": "AMARILLO FLUOR",
+         "prefijo": "CHALECO GEOTECH",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           300
+          ],
+          [
+           "M",
+           300
+          ],
+          [
+           "L",
+           500
+          ],
+          [
+           "XL",
+           500
+          ],
+          [
+           "XXL",
+           300
+          ],
+          [
+           "XXXL",
+           200
+          ]
+         ],
+         "subtotal": 2100
+        }
+       ],
+       "total": 6000
+      }
+     ],
+     "nota": "Última reposición",
+     "total": 6000
+    }
+   ],
+   "pendiente": "",
+   "ultima": "06/10/2026",
+   "total_ultima": 6000
+  },
+  {
+   "id": "geotech-m",
+   "nombre": "Chaleco Geotech · Mujer",
+   "categoria": "Chalecos",
+   "tela": "Gabardina",
+   "reposiciones": [],
+   "pendiente": "Faltan las cantidades por talla para armar la reposición.",
+   "ultima": "",
+   "total_ultima": 0
+  },
+  {
+   "id": "trekplus-forrado",
+   "nombre": "Pantalón Trekplus Forrado",
+   "categoria": "Pantalones",
+   "tela": "Forrado",
+   "reposiciones": [
+    {
+     "fecha": "18/08/2026",
+     "hojas": [
+      {
+       "nombre": "Forrado",
+       "producto": "PANTALON CARGO FORRADO",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL MARINO",
+         "prefijo": "PANTALON CARGO FORRADO",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           700
+          ],
+          [
+           "M",
+           1000
+          ],
+          [
+           "L",
+           1500
+          ],
+          [
+           "XL",
+           2000
+          ],
+          [
+           "XXL",
+           1000
+          ],
+          [
+           "XXXL",
+           800
+          ]
+         ],
+         "subtotal": 7000
+        }
+       ],
+       "total": 7000
+      }
+     ],
+     "nota": "Pedido inicial, sin cinta",
+     "total": 7000
+    },
+    {
+     "fecha": "06/10/2026",
+     "hojas": [
+      {
+       "nombre": "Forrado",
+       "producto": "PANTALON TREKPLUS FORRADO",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL MARINO · sin cinta",
+         "prefijo": "PANTALON TREKPLUS FORRADO",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           350
+          ],
+          [
+           "M",
+           500
+          ],
+          [
+           "L",
+           750
+          ],
+          [
+           "XL",
+           1000
+          ],
+          [
+           "XXL",
+           500
+          ],
+          [
+           "XXXL",
+           400
+          ]
+         ],
+         "subtotal": 3500
+        }
+       ],
+       "total": 3500
+      },
+      {
+       "nombre": "Forrado Reflect",
+       "producto": "PANTALON TREKPLUS FORRADO REFLECT",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL MARINO · con cinta reflectante",
+         "prefijo": "PANTALON TREKPLUS FORRADO REFLECT",
+         "sufijo": " - CON CINTA REFLECTANTE",
+         "tallas": [
+          [
+           "S",
+           350
+          ],
+          [
+           "M",
+           500
+          ],
+          [
+           "L",
+           750
+          ],
+          [
+           "XL",
+           1000
+          ],
+          [
+           "XXL",
+           500
+          ],
+          [
+           "XXXL",
+           400
+          ]
+         ],
+         "subtotal": 3500
+        }
+       ],
+       "total": 3500
+      }
+     ],
+     "nota": "Dividido en sin cinta y con cinta, mismo documento",
+     "total": 7000
+    }
+   ],
+   "pendiente": "",
+   "ultima": "06/10/2026",
+   "total_ultima": 7000
+  },
+  {
+   "id": "trekplus-stretch",
+   "nombre": "Pantalón Trekplus Stretch",
+   "categoria": "Pantalones",
+   "tela": "8 onzas con spandex",
+   "reposiciones": [
+    {
+     "fecha": "18/08/2026",
+     "hojas": [
+      {
+       "nombre": "Stretch",
+       "producto": "PANTALON 8 ONZAS CON SPANDEX",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL MARINO",
+         "prefijo": "PANTALON 8 ONZAS CON SPANDEX",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           700
+          ],
+          [
+           "M",
+           1000
+          ],
+          [
+           "L",
+           1500
+          ],
+          [
+           "XL",
+           2000
+          ],
+          [
+           "XXL",
+           1000
+          ],
+          [
+           "XXXL",
+           800
+          ]
+         ],
+         "subtotal": 7000
+        }
+       ],
+       "total": 7000
+      }
+     ],
+     "nota": "Pedido inicial, sin cinta",
+     "total": 7000
+    },
+    {
+     "fecha": "06/10/2026",
+     "hojas": [
+      {
+       "nombre": "Stretch",
+       "producto": "PANTALON TREKPLUS STRETCH",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL MARINO · sin cinta",
+         "prefijo": "PANTALON TREKPLUS STRETCH",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           350
+          ],
+          [
+           "M",
+           500
+          ],
+          [
+           "L",
+           750
+          ],
+          [
+           "XL",
+           1000
+          ],
+          [
+           "XXL",
+           500
+          ],
+          [
+           "XXXL",
+           400
+          ]
+         ],
+         "subtotal": 3500
+        }
+       ],
+       "total": 3500
+      },
+      {
+       "nombre": "Stretch Reflect",
+       "producto": "PANTALON TREKPLUS STRETCH REFLECT",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL MARINO · con cinta reflectante",
+         "prefijo": "PANTALON TREKPLUS STRETCH REFLECT",
+         "sufijo": " - CON CINTA REFLECTANTE",
+         "tallas": [
+          [
+           "S",
+           350
+          ],
+          [
+           "M",
+           500
+          ],
+          [
+           "L",
+           750
+          ],
+          [
+           "XL",
+           1000
+          ],
+          [
+           "XXL",
+           500
+          ],
+          [
+           "XXXL",
+           400
+          ]
+         ],
+         "subtotal": 3500
+        }
+       ],
+       "total": 3500
+      }
+     ],
+     "nota": "Dividido en sin cinta y con cinta, mismo documento",
+     "total": 7000
+    }
+   ],
+   "pendiente": "",
+   "ultima": "06/10/2026",
+   "total_ultima": 7000
+  },
+  {
+   "id": "trekplus-gabardina",
+   "nombre": "Pantalón Trekplus Gabardina",
+   "categoria": "Pantalones",
+   "tela": "Gabardina",
+   "reposiciones": [
+    {
+     "fecha": "18/08/2026",
+     "hojas": [
+      {
+       "nombre": "Trekplus Gabardina",
+       "producto": "PANTALON TREKPLUS GABARDINA",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL MARINO",
+         "prefijo": "PANTALON TREKPLUS GABARDINA",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           800
+          ],
+          [
+           "M",
+           1000
+          ],
+          [
+           "L",
+           1500
+          ],
+          [
+           "XL",
+           1500
+          ],
+          [
+           "XXL",
+           1200
+          ],
+          [
+           "XXXL",
+           800
+          ]
+         ],
+         "subtotal": 6800
+        }
+       ],
+       "total": 6800
+      }
+     ],
+     "nota": "Pedido inicial (curva del Stretch x2, L y XL a 1.500)",
+     "total": 6800
+    },
+    {
+     "fecha": "06/10/2026",
+     "hojas": [
+      {
+       "nombre": "Gabardina",
+       "producto": "PANTALON TREKPLUS GABARDINA",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL MARINO · sin cinta",
+         "prefijo": "PANTALON TREKPLUS GABARDINA",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           400
+          ],
+          [
+           "M",
+           500
+          ],
+          [
+           "L",
+           750
+          ],
+          [
+           "XL",
+           750
+          ],
+          [
+           "XXL",
+           600
+          ],
+          [
+           "XXXL",
+           400
+          ]
+         ],
+         "subtotal": 3400
+        }
+       ],
+       "total": 3400
+      },
+      {
+       "nombre": "Gabardina Reflect",
+       "producto": "PANTALON TREKPLUS GABARDINA REFLECT",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL MARINO · con cinta reflectante",
+         "prefijo": "PANTALON TREKPLUS GABARDINA REFLECT",
+         "sufijo": " - CON CINTA REFLECTANTE",
+         "tallas": [
+          [
+           "S",
+           400
+          ],
+          [
+           "M",
+           500
+          ],
+          [
+           "L",
+           750
+          ],
+          [
+           "XL",
+           750
+          ],
+          [
+           "XXL",
+           600
+          ],
+          [
+           "XXXL",
+           400
+          ]
+         ],
+         "subtotal": 3400
+        }
+       ],
+       "total": 3400
+      }
+     ],
+     "nota": "Dividido en sin cinta y con cinta, mismo documento",
+     "total": 6800
+    }
+   ],
+   "pendiente": "",
+   "ultima": "06/10/2026",
+   "total_ultima": 6800
+  },
+  {
+   "id": "dockers-h",
+   "nombre": "Pantalón Dockers Alpha · Hombre",
+   "categoria": "Pantalones",
+   "tela": "",
+   "reposiciones": [
+    {
+     "fecha": "18/08/2026",
+     "hojas": [
+      {
+       "nombre": "Hombre",
+       "producto": "PANTALON DOCKERS ALPHA HOMBRE",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL MARINO",
+         "prefijo": "PANTALON DOCKERS ALPHA HOMBRE",
+         "sufijo": "",
+         "tallas": [
+          [
+           "40",
+           200
+          ],
+          [
+           "42",
+           300
+          ],
+          [
+           "44",
+           300
+          ],
+          [
+           "46",
+           500
+          ],
+          [
+           "48",
+           500
+          ],
+          [
+           "50",
+           500
+          ],
+          [
+           "52",
+           500
+          ],
+          [
+           "54",
+           300
+          ],
+          [
+           "56",
+           200
+          ],
+          [
+           "58",
+           200
+          ],
+          [
+           "60",
+           200
+          ]
+         ],
+         "subtotal": 3700
+        },
+        {
+         "etiqueta": "NEGRO",
+         "prefijo": "PANTALON DOCKERS ALPHA HOMBRE",
+         "sufijo": "",
+         "tallas": [
+          [
+           "42",
+           200
+          ],
+          [
+           "44",
+           300
+          ],
+          [
+           "46",
+           400
+          ],
+          [
+           "48",
+           400
+          ],
+          [
+           "50",
+           300
+          ],
+          [
+           "52",
+           200
+          ],
+          [
+           "54",
+           200
+          ],
+          [
+           "56",
+           200
+          ]
+         ],
+         "subtotal": 2200
+        },
+        {
+         "etiqueta": "BEIGE",
+         "prefijo": "PANTALON DOCKERS ALPHA HOMBRE",
+         "sufijo": "",
+         "tallas": [
+          [
+           "44",
+           200
+          ],
+          [
+           "46",
+           300
+          ],
+          [
+           "48",
+           300
+          ],
+          [
+           "50",
+           300
+          ],
+          [
+           "52",
+           200
+          ]
+         ],
+         "subtotal": 1300
+        }
+       ],
+       "total": 7200
+      }
+     ],
+     "nota": "Sugerido enviado a Don Bao",
+     "total": 7200
+    }
+   ],
+   "pendiente": "",
+   "ultima": "18/08/2026",
+   "total_ultima": 7200
+  },
+  {
+   "id": "dockers-m",
+   "nombre": "Pantalón Dockers Alpha · Mujer",
+   "categoria": "Pantalones",
+   "tela": "",
+   "reposiciones": [
+    {
+     "fecha": "18/08/2026",
+     "hojas": [
+      {
+       "nombre": "Mujer",
+       "producto": "PANTALON DOCKERS ALPHA MUJER",
+       "titulo": "SOLICITUD INTERNA DE TELA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "AZUL MARINO",
+         "prefijo": "PANTALON DOCKERS ALPHA MUJER",
+         "sufijo": "",
+         "tallas": [
+          [
+           "36",
+           200
+          ],
+          [
+           "38",
+           200
+          ],
+          [
+           "40",
+           300
+          ],
+          [
+           "42",
+           300
+          ],
+          [
+           "44",
+           400
+          ],
+          [
+           "46",
+           400
+          ],
+          [
+           "48",
+           400
+          ],
+          [
+           "50",
+           300
+          ],
+          [
+           "52",
+           200
+          ],
+          [
+           "54",
+           200
+          ],
+          [
+           "56",
+           200
+          ]
+         ],
+         "subtotal": 3100
+        },
+        {
+         "etiqueta": "NEGRO",
+         "prefijo": "PANTALON DOCKERS ALPHA MUJER",
+         "sufijo": "",
+         "tallas": [
+          [
+           "40",
+           300
+          ],
+          [
+           "42",
+           300
+          ],
+          [
+           "44",
+           300
+          ],
+          [
+           "46",
+           300
+          ],
+          [
+           "48",
+           200
+          ],
+          [
+           "50",
+           200
+          ],
+          [
+           "52",
+           200
+          ],
+          [
+           "54",
+           200
+          ]
+         ],
+         "subtotal": 2000
+        },
+        {
+         "etiqueta": "BEIGE",
+         "prefijo": "PANTALON DOCKERS ALPHA MUJER",
+         "sufijo": "",
+         "tallas": [
+          [
+           "40",
+           200
+          ],
+          [
+           "42",
+           300
+          ],
+          [
+           "44",
+           300
+          ],
+          [
+           "46",
+           300
+          ],
+          [
+           "48",
+           200
+          ]
+         ],
+         "subtotal": 1300
+        }
+       ],
+       "total": 6400
+      }
+     ],
+     "nota": "Sugerido enviado a Don Bao",
+     "total": 6400
+    }
+   ],
+   "pendiente": "",
+   "ultima": "18/08/2026",
+   "total_ultima": 6400
+  },
+  {
+   "id": "clinica-h",
+   "nombre": "Ropa Clínica · Hombre",
+   "categoria": "Ropa clínica",
+   "tela": "",
+   "reposiciones": [
+    {
+     "fecha": "18/08/2026",
+     "hojas": [
+      {
+       "nombre": "Hombre",
+       "producto": "ROPA CLINICA HOMBRE",
+       "titulo": "SOLICITUD DE ROPA CLÍNICA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "NEGRO",
+         "prefijo": "ROPA CLINICA HOMBRE",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           150
+          ],
+          [
+           "M",
+           260
+          ],
+          [
+           "L",
+           250
+          ],
+          [
+           "XL",
+           160
+          ],
+          [
+           "2XL",
+           100
+          ],
+          [
+           "3XL",
+           80
+          ]
+         ],
+         "subtotal": 1000
+        },
+        {
+         "etiqueta": "AZUL REY",
+         "prefijo": "ROPA CLINICA HOMBRE",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           150
+          ],
+          [
+           "M",
+           260
+          ],
+          [
+           "L",
+           250
+          ],
+          [
+           "XL",
+           160
+          ],
+          [
+           "2XL",
+           100
+          ],
+          [
+           "3XL",
+           80
+          ]
+         ],
+         "subtotal": 1000
+        },
+        {
+         "etiqueta": "CELESTE",
+         "prefijo": "ROPA CLINICA HOMBRE",
+         "sufijo": "",
+         "tallas": [
+          [
+           "S",
+           150
+          ],
+          [
+           "M",
+           260
+          ],
+          [
+           "L",
+           250
+          ],
+          [
+           "XL",
+           160
+          ],
+          [
+           "2XL",
+           100
+          ],
+          [
+           "3XL",
+           80
+          ]
+         ],
+         "subtotal": 1000
+        }
+       ],
+       "total": 3000
+      }
+     ],
+     "nota": "Sin 2XS/XS; esas unidades pasaron a 3XL",
+     "total": 3000
+    }
+   ],
+   "pendiente": "",
+   "ultima": "18/08/2026",
+   "total_ultima": 3000
+  },
+  {
+   "id": "clinica-m",
+   "nombre": "Ropa Clínica · Mujer",
+   "categoria": "Ropa clínica",
+   "tela": "",
+   "reposiciones": [
+    {
+     "fecha": "18/08/2026",
+     "hojas": [
+      {
+       "nombre": "Mujer",
+       "producto": "ROPA CLINICA MUJER",
+       "titulo": "SOLICITUD DE ROPA CLÍNICA",
+       "subtitulo": "ÁREA COMERCIAL",
+       "split": false,
+       "bloques": [
+        {
+         "etiqueta": "NEGRO",
+         "prefijo": "ROPA CLINICA MUJER",
+         "sufijo": "",
+         "tallas": [
+          [
+           "XS",
+           80
+          ],
+          [
+           "S",
+           225
+          ],
+          [
+           "M",
+           390
+          ],
+          [
+           "L",
+           375
+          ],
+          [
+           "XL",
+           240
+          ],
+          [
+           "2XL",
+           150
+          ]
+         ],
+         "subtotal": 1460
+        },
+        {
+         "etiqueta": "AZUL REY",
+         "prefijo": "ROPA CLINICA MUJER",
+         "sufijo": "",
+         "tallas": [
+          [
+           "XS",
+           80
+          ],
+          [
+           "S",
+           225
+          ],
+          [
+           "M",
+           390
+          ],
+          [
+           "L",
+           375
+          ],
+          [
+           "XL",
+           240
+          ],
+          [
+           "2XL",
+           150
+          ]
+         ],
+         "subtotal": 1460
+        },
+        {
+         "etiqueta": "CELESTE",
+         "prefijo": "ROPA CLINICA MUJER",
+         "sufijo": "",
+         "tallas": [
+          [
+           "XS",
+           80
+          ],
+          [
+           "S",
+           150
+          ],
+          [
+           "M",
+           260
+          ],
+          [
+           "L",
+           250
+          ],
+          [
+           "XL",
+           160
+          ],
+          [
+           "2XL",
+           100
+          ]
+         ],
+         "subtotal": 1000
+        }
+       ],
+       "total": 3920
+      }
+     ],
+     "nota": "Sin 2XS; XS en 80",
+     "total": 3920
+    }
+   ],
+   "pendiente": "",
+   "ultima": "18/08/2026",
+   "total_ultima": 3920
+  }
+ ]
+}
