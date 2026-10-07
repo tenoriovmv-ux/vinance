@@ -1,10 +1,10 @@
 {
- "generado": "06/10/2026",
+ "generado": "07/10/2026",
  "productos": [
   {
    "id": "geoplus",
    "nombre": "Chaleco Geoplus 360",
-   "categoria": "Chalecos",
+   "categoria": "Workwear",
    "tela": "Gabardina",
    "reposiciones": [
     {
@@ -242,7 +242,7 @@
   {
    "id": "geolite",
    "nombre": "Chaleco Geolite 360",
-   "categoria": "Chalecos",
+   "categoria": "Workwear",
    "tela": "Poplin",
    "reposiciones": [
     {
@@ -452,7 +452,7 @@
   {
    "id": "buzo-dual",
    "nombre": "Buzo Dual Lite Pilot",
-   "categoria": "Buzos",
+   "categoria": "Workwear",
    "tela": "",
    "reposiciones": [
     {
@@ -561,7 +561,7 @@
   {
    "id": "top-polo",
    "nombre": "Top Polo Dryfit Hi-Vis",
-   "categoria": "Poleras",
+   "categoria": "Workwear",
    "tela": "Dryfit",
    "reposiciones": [
     {
@@ -653,7 +653,7 @@
   {
    "id": "geoshield",
    "nombre": "Chaleco Geoshield K18",
-   "categoria": "Chalecos",
+   "categoria": "Workwear",
    "tela": "Gabardina",
    "reposiciones": [
     {
@@ -673,87 +673,6 @@
          "tallas": [
           [
            "S",
-           500
-          ],
-          [
-           "M",
-           800
-          ],
-          [
-           "L",
-           800
-          ],
-          [
-           "XL",
-           800
-          ],
-          [
-           "XXL",
-           500
-          ],
-          [
-           "XXXL",
-           500
-          ]
-         ],
-         "subtotal": 3900
-        },
-        {
-         "etiqueta": "AMARILLO FLUOR",
-         "prefijo": "CHALECO GEOSHIELD K18",
-         "sufijo": "",
-         "tallas": [
-          [
-           "S",
-           200
-          ],
-          [
-           "M",
-           300
-          ],
-          [
-           "L",
-           500
-          ],
-          [
-           "XL",
-           500
-          ],
-          [
-           "XXL",
-           300
-          ],
-          [
-           "XXXL",
-           300
-          ]
-         ],
-         "subtotal": 2100
-        }
-       ],
-       "total": 6000
-      }
-     ],
-     "nota": "Reposición de agosto",
-     "total": 6000
-    },
-    {
-     "fecha": "18/08/2026",
-     "hojas": [
-      {
-       "nombre": "Geoshield K18",
-       "producto": "CHALECO GEOSHIELD K18",
-       "titulo": "SOLICITUD INTERNA DE TELA",
-       "subtitulo": "TELA: GABARDINA",
-       "split": false,
-       "bloques": [
-        {
-         "etiqueta": "NARANJO FLUOR",
-         "prefijo": "CHALECO GEOSHIELD K18",
-         "sufijo": "",
-         "tallas": [
-          [
-           "S",
            300
           ],
           [
@@ -815,7 +734,7 @@
        "total": 6000
       }
      ],
-     "nota": "3.000 por color",
+     "nota": "Reposición de agosto, 3.000 por color",
      "total": 6000
     },
     {
@@ -935,11 +854,11 @@
   {
    "id": "geotech-h",
    "nombre": "Chaleco Geotech · Hombre",
-   "categoria": "Chalecos",
+   "categoria": "Workwear",
    "tela": "Gabardina",
    "reposiciones": [
     {
-     "fecha": "06/10/2026",
+     "fecha": "02/10/2026",
      "hojas": [
       {
        "nombre": "Geotech Hombre",
@@ -1016,18 +935,18 @@
        "total": 6000
       }
      ],
-     "nota": "Última reposición",
+     "nota": "Reposición del viernes 02/10",
      "total": 6000
     }
    ],
    "pendiente": "",
-   "ultima": "06/10/2026",
+   "ultima": "02/10/2026",
    "total_ultima": 6000
   },
   {
    "id": "geotech-m",
    "nombre": "Chaleco Geotech · Mujer",
-   "categoria": "Chalecos",
+   "categoria": "Workwear",
    "tela": "Gabardina",
    "reposiciones": [],
    "pendiente": "Faltan las cantidades por talla para armar la reposición.",
@@ -1037,7 +956,7 @@
   {
    "id": "trekplus-forrado",
    "nombre": "Pantalón Trekplus Forrado",
-   "categoria": "Pantalones",
+   "categoria": "Workwear",
    "tela": "Forrado",
    "reposiciones": [
     {
@@ -1188,7 +1107,7 @@
   {
    "id": "trekplus-stretch",
    "nombre": "Pantalón Trekplus Stretch",
-   "categoria": "Pantalones",
+   "categoria": "Workwear",
    "tela": "8 onzas con spandex",
    "reposiciones": [
     {
@@ -1339,7 +1258,7 @@
   {
    "id": "trekplus-gabardina",
    "nombre": "Pantalón Trekplus Gabardina",
-   "categoria": "Pantalones",
+   "categoria": "Workwear",
    "tela": "Gabardina",
    "reposiciones": [
     {
@@ -1490,7 +1409,7 @@
   {
    "id": "dockers-h",
    "nombre": "Pantalón Dockers Alpha · Hombre",
-   "categoria": "Pantalones",
+   "categoria": "Corporate",
    "tela": "",
    "reposiciones": [
     {
@@ -1638,7 +1557,7 @@
   {
    "id": "dockers-m",
    "nombre": "Pantalón Dockers Alpha · Mujer",
-   "categoria": "Pantalones",
+   "categoria": "Corporate",
    "tela": "",
    "reposiciones": [
     {
@@ -1786,7 +1705,7 @@
   {
    "id": "clinica-h",
    "nombre": "Ropa Clínica · Hombre",
-   "categoria": "Ropa clínica",
+   "categoria": "Clinic",
    "tela": "",
    "reposiciones": [
     {
@@ -1910,7 +1829,7 @@
   {
    "id": "clinica-m",
    "nombre": "Ropa Clínica · Mujer",
-   "categoria": "Ropa clínica",
+   "categoria": "Clinic",
    "tela": "",
    "reposiciones": [
     {
@@ -2031,5 +1950,6 @@
    "ultima": "18/08/2026",
    "total_ultima": 3920
   }
- ]
+ ],
+ "version": "2026-10-07.1"
 }
