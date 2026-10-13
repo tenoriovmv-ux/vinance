@@ -13,10 +13,11 @@
 <style>
 /* Paleta "Colours Cafe": cada color va con su par de texto (fondo → tinta) */
 :root{
-  --fondo:#EDEDEB;--ink:#141213;--blanco:#FFFFFF;--sub:rgba(20,18,19,.56);--linea:rgba(20,18,19,.09);--suave:rgba(20,18,19,.07);
-  --sangre:#630700;--magenta:#FF97D0;--lincoln:#125603;--lima:#C3F380;--uva:#7523B4;--sinopia:#FAE170;--rojo:#D13F13;--bebe:#FCC5C6;--oro:#906713;--mostaza:#FFDB58;--cerul:#0D5072;--aqua:#7FEEFF;
-  --ok:var(--lincoln);--ok-ink:var(--lima);--no:var(--rojo);--no-ink:var(--bebe);
-  --acc:var(--lima);--acc-ink:var(--uva);--b1:var(--lima);--b2:var(--sinopia);
+  --fondo:#EDEDEB;--ink:#191414;--blanco:#FFFFFF;--sub:rgba(20,18,19,.56);--linea:rgba(20,18,19,.09);--suave:rgba(20,18,19,.07);
+  --klein:#4100F5;--citric:#CDF564;--aquam:#9BF0E1;--fushia:#F037A5;--tang:#FF4632;--black:#191414;--storm:#8FA9C9;
+  --grad:linear-gradient(180deg,var(--aquam) 0%,#F2EC5C 22%,var(--tang) 44%,var(--black) 62%,var(--klein) 80%,var(--storm) 100%);
+  --ok:var(--citric);--ok-ink:var(--klein);--no:var(--tang);--no-ink:var(--black);
+  --acc:var(--black);--acc-ink:var(--citric);--b1:var(--citric);--b2:var(--aquam);
   --display:"Archivo","Arial Black",Impact,sans-serif;
   --texto:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --sombra:0 1px 0 rgba(20,18,19,.03),0 12px 28px rgba(20,18,19,.07);
@@ -90,7 +91,7 @@ h2{font-size:clamp(1.3rem,5.6vw,1.8rem)}
 .card.tab::before{content:"";position:absolute;top:-9px;left:24px;width:54px;height:18px;border-radius:10px 10px 0 0;background:var(--blanco)}
 .panel{width:100%;background:var(--blanco);border-radius:28px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:var(--sombra)}
 .reloj{font-family:var(--display);font-weight:900;font-stretch:125%;font-size:clamp(4.2rem,26vw,7.2rem);line-height:.86;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
-.reloj.alerta{color:var(--rojo);animation:lat .5s infinite}
+.reloj.alerta{color:var(--tang);animation:lat .5s infinite}
 @keyframes lat{50%{transform:scale(1.06)}}
 .reloj-wrap{display:flex;align-items:flex-end;gap:10px;justify-content:center}
 .reloj-wrap .eti{padding-bottom:10px;font-size:.78rem}
@@ -161,7 +162,7 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 .aro-wrap .label{width:52%}
 .aro-wrap .label::after{display:none}
 .aro-wrap .seg{font-family:var(--display);font-weight:900;font-stretch:100%;font-size:clamp(1.4rem,7vw,2.2rem);font-variant-numeric:tabular-nums;line-height:1}
-.aro-wrap .seg.alerta{color:var(--rojo);animation:lat .5s infinite}
+.aro-wrap .seg.alerta{color:var(--tang);animation:lat .5s infinite}
 .aro{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
 .aro circle{fill:none;stroke-width:3;stroke-linecap:round}
 .aro .fondo-aro{stroke:var(--suave)}
@@ -195,11 +196,14 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 .carta-j span{font-weight:700;font-size:clamp(.78rem,3.4vw,.95rem);line-height:1.05;opacity:.6}
 .carta-j img{position:absolute;bottom:-4%;left:50%;transform:translateX(-50%);height:60%;width:auto;filter:drop-shadow(0 6px 8px rgba(20,18,19,.2))}
 .carta-j i{position:absolute;bottom:8px;left:10px;font-style:normal;font-weight:800;font-size:.75rem;opacity:.6}
-.carta-j.sel{transform:translateX(-50%) translateY(-14%) scale(1.32);z-index:20;animation:pumc .45s}
-.abanico:has(.sel) .carta-j:not(.sel){opacity:calc(var(--o) * .5)}
-@keyframes pumc{0%{transform:translateX(-50%) translateY(0) scale(1)}60%{transform:translateX(-50%) translateY(-16%) scale(1.38)}100%{transform:translateX(-50%) translateY(-14%) scale(1.32)}}
+/* la elegida crece en su mismo lugar y todo lo demás queda desenfocado detrás */
+.carta-j.sel{transform:translateX(-50%) scale(1.42);transform-origin:50% 50%;z-index:20;animation:pumc .45s;box-shadow:0 22px 44px rgba(20,18,19,.3)}
+@keyframes pumc{0%{transform:translateX(-50%) scale(1)}60%{transform:translateX(-50%) scale(1.5)}100%{transform:translateX(-50%) scale(1.42)}}
+.abanico:has(.sel)::before{content:"";position:fixed;inset:0;z-index:15;background:rgba(237,237,235,.3);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);animation:aparece .35s}
+@keyframes aparece{from{opacity:0}}
+.orbe-wrap{position:relative;z-index:21}
 .orbe-wrap{flex:none;display:flex;justify-content:center;padding:4px 0}
-.orbe{position:relative;width:min(30vw,17vh,124px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 30% 25%,var(--magenta) 0,transparent 55%),radial-gradient(circle at 70% 85%,var(--uva) 0,transparent 60%),linear-gradient(160deg,var(--aqua),var(--cerul));color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 30px rgba(20,18,19,.2);transition:background .12s}
+.orbe{position:relative;width:min(30vw,17vh,124px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 30% 25%,var(--fushia) 0,transparent 55%),radial-gradient(circle at 70% 85%,var(--klein) 0,transparent 60%),linear-gradient(160deg,var(--aquam),var(--citric));color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 30px rgba(20,18,19,.2);transition:background .12s}
 .orbe[disabled]{cursor:default}
 .orbe .aro{inset:-9px;width:calc(100% + 18px);height:calc(100% + 18px)}
 .orbe .prog-aro{stroke:var(--ink);stroke-width:2.2}
@@ -230,7 +234,7 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 .score .eq .n{font-family:var(--display);font-weight:900;font-stretch:125%;font-size:clamp(3rem,18vw,4.8rem);line-height:.9;min-width:1.5em;letter-spacing:-.03em}
 .score .eq .nm{flex:1;padding-bottom:10px;font-weight:800;font-size:1.02rem;line-height:1.1}
 .score .eq .nm small{display:block;color:var(--sub);font-weight:700;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase}
-.score .eq.gana .n{color:var(--rojo)}
+.score .eq.gana .n{color:var(--klein)}
 .equipos{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
 .equipos .card{padding:12px;gap:4px;align-items:flex-start;min-height:84px;cursor:pointer;text-align:left;border-radius:24px}
 .equipos .card.sel{box-shadow:inset 0 0 0 3px var(--ink),var(--sombra)}
@@ -243,7 +247,7 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 .opcion{display:flex;align-items:center;gap:12px;width:100%;background:var(--blanco);border-radius:22px;padding:12px 14px;text-align:left;font-weight:700;font-size:clamp(.88rem,3.9vw,1.02rem);line-height:1.25;box-shadow:var(--sombra);transition:transform .08s,opacity .2s}
 .opcion:active{transform:scale(.98)}
 .opcion .let{width:32px;height:32px;border-radius:50%;box-shadow:inset 0 0 0 1.5px currentColor;display:flex;align-items:center;justify-content:center;flex:none;font-family:var(--display);font-weight:900;font-stretch:75%}
-.opcion:nth-child(1){background:var(--aqua)}.opcion:nth-child(2){background:var(--lima)}.opcion:nth-child(3){background:var(--sinopia)}.opcion:nth-child(4){background:var(--bebe)}
+.opcion:nth-child(1){background:var(--aquam)}.opcion:nth-child(2){background:var(--citric)}.opcion:nth-child(3){background:var(--fushia)}.opcion:nth-child(4){background:var(--tang)}
 .opcion .tx{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .opcion.bien{background:var(--ok);color:var(--ok-ink)}.opcion.bien .let{background:var(--ok-ink);color:var(--ok)}
 .opcion.mal{background:var(--no);color:var(--no-ink)}.opcion.mal .let{background:var(--no-ink);color:var(--no)}
@@ -264,7 +268,7 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 .secreto{background:var(--blanco);border-radius:22px;padding:14px;text-align:center;color:var(--ink);box-shadow:var(--sombra)}
 .carta-riesgo{width:220px;height:300px;margin:0 auto;border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px;text-align:center;animation:flip .45s;box-shadow:0 18px 34px rgba(20,18,19,.22)}
 @keyframes flip{0%{transform:rotateY(90deg)}100%{transform:rotateY(0)}}
-.carta-riesgo.buena{background:var(--lincoln);color:var(--lima)}.carta-riesgo.mala{background:var(--sangre);color:var(--magenta)}
+.carta-riesgo.buena{background:var(--klein);color:var(--citric)}.carta-riesgo.mala{background:var(--black);color:var(--tang)}
 .carta-riesgo .titulo{font-family:var(--display);font-weight:900;font-stretch:112%;font-size:2rem;text-transform:uppercase;line-height:.95}
 .equipo-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .reglas{line-height:1.45;font-size:.95rem}.reglas h4{margin:12px 0 2px;font-size:1.05rem}
@@ -283,20 +287,46 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 #duelo .acc .pill{height:48px;font-size:1rem}
 #duelo .solo-zona{flex:1;display:flex;flex-direction:column}
 #duelo .solo-zona .zona{font-size:clamp(2.2rem,13vw,4.2rem)}
+#duelo .zona-wrap{flex:1;display:flex;position:relative;min-height:0}
+#duelo .zona-wrap .zona{flex:1;flex-direction:column;gap:4px}
+#duelo .zona small{font-family:var(--texto);font-size:.8rem;letter-spacing:.1em;opacity:.7}
+#duelo .pasar-d{position:absolute;right:14px;bottom:14px;height:40px;padding:0 18px;border-radius:999px;background:rgba(255,255,255,.75);color:var(--ink);font-weight:800;font-size:.9rem;box-shadow:inset 0 0 0 1.5px var(--ink)}
+#duelo .invert .pasar-d{right:auto;left:14px}
+#duelo .alerta-d{color:var(--tang)}
+#duelo .tv-zonas{flex-direction:row}
+
+/* pantalla final: degradado de la paleta */
+body.s-gana{background:var(--grad);background-attachment:fixed;--acc:var(--black);--acc-ink:var(--citric)}
+body.s-gana::before,body.s-gana::after{display:none}
+.gana-card{background:rgba(255,255,255,.92);border-radius:32px;padding:16px 18px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:var(--sombra)}
+.gana-card .marca{font-size:clamp(2rem,11vw,3.6rem);overflow-wrap:anywhere}
+.gana-pts{font-weight:800;color:var(--klein)}
+.score.card{align-items:stretch;padding:6px 14px 14px}
+
+/* modo TV: la pantalla grande muestra el juego; se escala con --z (lo calcula zoomTV) */
+body.tv .scene{zoom:var(--z,1);height:calc(100dvh / var(--z,1));max-width:760px}
+body.tv #app{align-items:flex-start}
+.tv-toggle{display:flex;align-items:center;gap:12px;width:100%;background:var(--blanco);border-radius:20px;padding:12px 14px;text-align:left;box-shadow:var(--sombra)}
+.tv-toggle .esp{flex:1;min-width:0}.tv-toggle small{display:block;color:var(--sub);font-weight:500;line-height:1.25}
+.interruptor{width:46px;height:28px;border-radius:999px;background:var(--suave);position:relative;flex:none;transition:background .2s}
+.interruptor::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25);transition:transform .2s}
+.interruptor.on{background:var(--klein)}.interruptor.on::after{transform:translateX(18px)}
+.adivinados{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.adivinados span{background:var(--citric);color:var(--klein);border-radius:999px;padding:4px 12px;font-weight:800;font-size:.85rem}
 
 /* escenas: color de acento + su tinta + manchas de fondo */
-body.s-pop{--acc:var(--magenta);--acc-ink:var(--lincoln);--b1:var(--magenta);--b2:var(--sinopia)}
-body.s-rock{--acc:var(--rojo);--acc-ink:var(--bebe);--b1:var(--bebe);--b2:var(--rojo)}
-body.s-rnb{--acc:var(--uva);--acc-ink:var(--sinopia);--b1:var(--magenta);--b2:var(--uva)}
-body.s-reg{--acc:var(--sinopia);--acc-ink:var(--rojo);--b1:var(--sinopia);--b2:var(--rojo)}
-body.s-alt{--acc:var(--lima);--acc-ink:var(--uva);--b1:var(--lima);--b2:var(--aqua)}
-body.s-bal{--acc:var(--cerul);--acc-ink:var(--aqua);--b1:var(--aqua);--b2:var(--cerul)}
-body.s-oro{--acc:var(--oro);--acc-ink:var(--mostaza);--b1:var(--mostaza);--b2:var(--oro)}
-body.s-bebe{--acc:var(--bebe);--acc-ink:var(--oro);--b1:var(--bebe);--b2:var(--magenta)}
-body.s-lima{--acc:var(--ink);--acc-ink:var(--lima);--b1:var(--lima);--b2:var(--sinopia)}
-body.s-amarillo{--acc:var(--sinopia);--acc-ink:var(--rojo);--b1:var(--sinopia);--b2:var(--magenta)}
-body.s-negro{--acc:var(--ink);--acc-ink:var(--lima);--b1:var(--lima);--b2:var(--aqua)}
-body.s-celeste{--acc:var(--cerul);--acc-ink:var(--aqua);--b1:var(--aqua);--b2:var(--lima)}
+body.s-pop{--acc:var(--fushia);--acc-ink:var(--aquam);--b1:var(--fushia);--b2:var(--aquam)}
+body.s-rock{--acc:var(--tang);--acc-ink:var(--black);--b1:var(--tang);--b2:var(--citric)}
+body.s-rnb{--acc:var(--klein);--acc-ink:var(--citric);--b1:var(--klein);--b2:var(--fushia)}
+body.s-reg{--acc:var(--citric);--acc-ink:var(--klein);--b1:var(--citric);--b2:var(--tang)}
+body.s-alt{--acc:var(--aquam);--acc-ink:var(--fushia);--b1:var(--aquam);--b2:var(--citric)}
+body.s-bal{--acc:var(--black);--acc-ink:var(--tang);--b1:var(--storm);--b2:var(--tang)}
+body.s-oro{--acc:var(--citric);--acc-ink:var(--klein);--b1:var(--citric);--b2:var(--klein)}
+body.s-bebe{--acc:var(--tang);--acc-ink:var(--black);--b1:var(--tang);--b2:var(--fushia)}
+body.s-lima{--acc:var(--black);--acc-ink:var(--citric);--b1:var(--citric);--b2:var(--aquam)}
+body.s-amarillo{--acc:var(--citric);--acc-ink:var(--klein);--b1:var(--citric);--b2:var(--fushia)}
+body.s-negro{--acc:var(--black);--acc-ink:var(--citric);--b1:var(--klein);--b2:var(--aquam)}
+body.s-celeste{--acc:var(--klein);--acc-ink:var(--citric);--b1:var(--aquam);--b2:var(--klein)}
 
 @media (max-height:720px){.hero{height:22%}.head{padding:6px 0 2px}.reloj{font-size:clamp(3.4rem,22vw,5.6rem)}.panel,.card{padding:12px}.pill{height:50px}.top{min-height:38px}.foot{gap:8px;padding-top:8px}.opcion{padding:10px 12px}}
 @media (max-height:620px){.hero{height:18%}.palabra{font-size:clamp(1.9rem,9.5vw,2.8rem)}h1{font-size:clamp(1.7rem,8vw,2.4rem)}.row{padding:8px 10px;gap:6px}.row .acts .mini{height:32px}.vinilos{max-width:290px;gap:10px;padding:12px}.opcion{padding:8px 12px;border-radius:18px}.opciones{gap:6px}.opcion .let{width:26px;height:26px}}
@@ -313,8 +343,8 @@ IMG.banda="data:image/webp;base64,UklGRlCbAwBXRUJQVlA4WAoAAAAwAAAARQUA/AIASUNDUM
 document.getElementById('pista').src=AUDIO.pista;
 
 const GENEROS=[{n:"Pop",s:"pop"},{n:"Rock",s:"rock"},{n:"R&B",s:"rnb"},{n:"Reggaetón",s:"reg"},{n:"Alternativo",s:"alt"},{n:"Baladas",s:"bal"}];
-const CGEN={Pop:"var(--magenta)",Rock:"var(--rojo)","R&B":"var(--uva)","Reggaetón":"var(--sinopia)",Alternativo:"var(--lima)",Baladas:"var(--cerul)"};
-const CINK={Pop:"var(--lincoln)",Rock:"var(--bebe)","R&B":"var(--sinopia)","Reggaetón":"var(--rojo)",Alternativo:"var(--uva)",Baladas:"var(--aqua)"};
+const CGEN={Pop:"var(--fushia)",Rock:"var(--tang)","R&B":"var(--klein)","Reggaetón":"var(--citric)",Alternativo:"var(--aquam)",Baladas:"var(--black)"};
+const CINK={Pop:"var(--aquam)",Rock:"var(--black)","R&B":"var(--citric)","Reggaetón":"var(--klein)",Alternativo:"var(--fushia)",Baladas:"var(--tang)"};
 const SGEN={Pop:"pop",Rock:"rock","R&B":"rnb","Reggaetón":"reg",Alternativo:"alt",Baladas:"bal"};
 const JUEGOS={
  1:{n:"Canta la palabra",img:"g1",gen:false,s:"oro",pts:"1 pt por palabra · 6/6 = carta de riesgo",
@@ -332,7 +362,7 @@ const JUEGOS={
 };
 const FLAGICON={escudo:"🛡️",doble:"✖️2",sil:"🤫",eligen:"👉",reloj:"⏱️",dj:"🎧",extra:"➕"};
 const NEG=['m2','sil','eligen','reloj','regalo','gratis'];
-const COLEQ=['var(--magenta)','var(--lima)','var(--sinopia)','var(--aqua)'];
+const COLEQ=['var(--fushia)','var(--citric)','var(--aquam)','var(--tang)'];
 const SONADO=new Set();/* canciones que este celular ya hizo sonar solo (para no repetir al redibujar) */
 
 /* S = estado de la partida (lo manda el anfitrión). V = vista actual (qué pantalla y qué está pasando).
@@ -411,7 +441,7 @@ const SP={
     /* al volver de Spotify, el anfitrión retoma la misma sala o partida (los invitados vuelven solos con bb_sala) */
     try{if(ROLE.host&&!ROLE.solo&&S&&!S.empezada)sessionStorage.setItem('bb_lobby',JSON.stringify({S,code:NET.code}));
       if(ROLE.host&&S&&S.empezada){guardar();sessionStorage.setItem('bb_volver','1')}}catch(e){}
-    const p=new URLSearchParams({client_id:cid,response_type:'code',redirect_uri:SP.redirect(),scope:'user-modify-playback-state user-read-playback-state',code_challenge_method:'S256',code_challenge:ch});
+    const p=new URLSearchParams({client_id:cid,response_type:'code',redirect_uri:SP.redirect(),scope:'user-modify-playback-state user-read-playback-state streaming user-read-email user-read-private',code_challenge_method:'S256',code_challenge:ch});
     location.href='https://accounts.spotify.com/authorize?'+p.toString();
   },
   async callback(){
@@ -449,6 +479,17 @@ const SP={
   async pause(){clearTimeout(SP.stopTimer);await SP.api('/me/player/pause','PUT')},
   desconectar(){SP.tok=null;localStorage.removeItem('bb_sp_dev')}
 };
+/* Modo TV: el navegador de la tele se vuelve un parlante de Spotify ("BeatBox TV") con el Web Playback SDK.
+   Si el navegador no lo soporta (algunas smart TV), se elige la app de Spotify de la tele u otro parlante en "Spotify". */
+const TVP={player:null,listo:false,error:null,
+  iniciar(){if(TVP.player||TVP.cargando||!SP.on)return;TVP.cargando=true;
+    window.onSpotifyWebPlaybackSDKReady=()=>{const p=new Spotify.Player({name:'BeatBox TV',getOAuthToken:cb=>{SP.token().then(cb).catch(()=>{})},volume:1});
+      p.addListener('ready',({device_id})=>{localStorage.setItem('bb_sp_dev',device_id);TVP.listo=true;TVP.error=null;render()});
+      p.addListener('not_ready',()=>{TVP.listo=false;render()});
+      ['initialization_error','authentication_error','account_error'].forEach(ev=>p.addListener(ev,({message})=>{TVP.error=message||ev;TVP.listo=false;render()}));
+      p.connect();TVP.player=p;};
+    const sc=document.createElement('script');sc.src='https://sdk.scdn.co/spotify-player.js';sc.onerror=()=>{TVP.error='sin SDK';render()};document.head.appendChild(sc);},
+  activar(){try{if(TVP.player)TVP.player.activateElement()}catch(e){}}};
 function msPausa(p){const m=String(p||'').match(/(\d+):(\d{1,2})/);return m?(+m[1]*60+ +m[2])*1000:null}
 function errorSpotify(e){const msg=/premium/i.test(e.message)?'Spotify solo permite controlar la reproducción con una cuenta Premium.':/sin sesión|vencida/i.test(e.message)?'La sesión de Spotify se cerró. Vuelve a conectar desde el inicio.':/Failed to fetch|NetworkError/i.test(e.message)?'Este navegador bloqueó la conexión con Spotify. En la versión publicada en GitHub Pages funciona.':e.message;
   aviso('Spotify',msg);}
@@ -506,7 +547,7 @@ function unirse(code,quieto){
   const p=nuevoPeer();NET.peer=p;
   const conectar=()=>{const c=p.connect(peerId(code),{reliable:true});NET.host=c;
     c.on('open',()=>{NET.estado='on';clearInterval(NET.intento);NET.intento=null;c.send({hello:{cid:CID,name:ROLE.name,team:ROLE.team}});render()});
-    c.on('data',d=>{if(d&&d.S){S=d.S;V=d.V;const yo=S.phones[CID];if(yo){ROLE.team=yo.team;ROLE.name=yo.name}render()}});
+    c.on('data',d=>{if(d&&d.aviso){aviso('BeatBox',d.aviso);return}if(d&&d.S){S=d.S;V=d.V;const yo=S.phones[CID];if(yo){ROLE.team=yo.team;ROLE.name=yo.name}render()}});
     c.on('close',()=>{NET.estado='reconectando';render();reintentar()});c.on('error',()=>{NET.estado='reconectando';render();reintentar()});};
   const reintentar=()=>{if(NET.intento)return;NET.intento=setInterval(()=>{if(NET.host&&NET.host.open)return;try{conectar()}catch(e){}},3000)};
   p.on('open',conectar);
@@ -521,10 +562,11 @@ function estadoNet(){const m={off:'',abriendo:'Abriendo sala…',on:ROLE.host?`S
 function act(name,p){if(ROLE.host)ejecutar(name,p||{},{host:true,team:ROLE.team,cid:CID});else if(NET.host&&NET.host.open)NET.host.send({act:name,p:p||{}});}
 function hayTel(ti){return S&&Object.values(S.phones).some(p=>p.on&&p.team===ti)}
 /* ¿puede este celular actuar por el equipo ti? En modo solo, siempre. El anfitrión suple a un equipo sin celular. */
-function puede(ti,from){from=from||{host:ROLE.host,team:ROLE.team};return ROLE.solo||from.team===ti||(from.host&&!hayTel(ti))}
+/* En modo TV la pantalla grande nunca actúa ni juzga: así nunca muestra lo secreto. */
+function puede(ti,from){from=from||{host:ROLE.host,team:ROLE.team};return ROLE.solo||from.team===ti||(from.host&&!S.tv&&!hayTel(ti))}
 function rivalIdx(){return (S.cur+1)%S.teams.length}
 /* ¿puede juzgar? Cualquier celular de un equipo distinto al que juega; el anfitrión si no hay rivales conectados. */
-function esJuez(from){from=from||{host:ROLE.host,team:ROLE.team};if(ROLE.solo)return true;if(from.team!=null&&from.team!==S.cur)return true;return from.host&&!S.teams.some((t,i)=>i!==S.cur&&hayTel(i))}
+function esJuez(from){from=from||{host:ROLE.host,team:ROLE.team};if(ROLE.solo)return true;if(from.team!=null&&from.team!==S.cur)return true;return from.host&&!S.tv&&!S.teams.some((t,i)=>i!==S.cur&&hayTel(i))}
 function esActor(from){from=from||{host:ROLE.host,team:ROLE.team};return puede(S.cur,from)}
 function sync(){guardar();render();broadcast()}
 function ejecutar(name,p,from){const f=ACT[name];if(!f||!S)return;try{f(p,from)}catch(e){console.error(name,e)}}
@@ -551,7 +593,10 @@ function topbar(){
 function menuJuego(){
   abrirModal(`<h3>Marcador · meta ${S.meta}</h3>${scoreHTML()}<button class="pill sec" onclick="verReglas()">Reglas</button><button class="pill sec" onclick="ajustesSpotify()">Spotify${SP.on?' · conectado':''}</button><button class="pill no" onclick="confirmarSalir()">${ROLE.host?'Terminar partida':'Salir de la sala'}</button><button class="pill negro" onclick="cerrarModal()">Volver al juego</button>`);}
 /* en las escenas con scroll solo se desliza el contenido: la barra de botones queda fija abajo */
-function scene(o){$('#duelo-root').innerHTML='';document.body.className='s-'+(o.s||'lima');
+function esTV(){return !!(S&&S.tv&&ROLE.host)}
+function zoomTV(){document.body.style.setProperty('--z',Math.max(1,Math.min(innerHeight/640,innerWidth/560)).toFixed(3))}
+addEventListener('resize',()=>{if(esTV())zoomTV()});
+function scene(o){$('#duelo-root').innerHTML='';document.body.className='s-'+(o.s||'lima')+(esTV()?' tv':'');if(esTV())zoomTV();
   const k=V?V.k:'',prev=$('.desliza'),top=prev&&scene.k===k?prev.scrollTop:0;scene.k=k;
   const dentro=`${o.hero!==undefined?`<div class="hero">${o.hero}</div>`:''}${o.head?`<div class="head">${o.head}</div>`:''}<div class="body">${o.body||''}</div>`;
   $('#app').innerHTML=`<section class="scene ${o.scroll?'scroll':''}">${topbar()}${o.scroll?`<div class="desliza">${dentro}</div>`:dentro}${o.foot?`<div class="foot">${o.foot}</div>`:''}</section>`;
@@ -617,21 +662,26 @@ RENDER.lobby=function(){
     scene({scroll:true,s:'lima',hero:`<img class="banda-img" src="${IMG.banda}" alt="La banda de BeatBox">`,head:`<div class="marca">Beat Box</div>`,
       body:`<div class="card sala"><div class="qr">${qr}</div><div class="info"><span class="eti">Escanea para unirte</span><div class="codigo">${esc(NET.code||'····')}</div>
           <div class="contador"><b>${n}</b> ${n===1?'celular':'celulares'} · <b>${S.teams.length}</b> equipos</div>${NET.estado==='on'?'':netHTML()}</div></div>
+        <button class="tv-toggle" id="tvt"><span class="esp"><b>📺 Modo TV</b><small>${tvEstado()}</small></span><span class="interruptor ${S.tv?'on':''}"></span></button>
         <div class="fila"><label>Equipos</label><div class="seg" id="segn">${[2,3,4].map(k=>`<button data-n="${k}" class="${k===S.teams.length?'sel':''}">${k}</button>`).join('')}</div></div>
         ${cards}
         <div class="fila"><label>Meta</label><div class="seg" id="segm">${[15,20,25].map(m=>`<button data-m="${m}" class="${m===S.meta?'sel':''}">${m}</button>`).join('')}</div></div>
         <div class="ajustes"><button class="link" onclick="editarNombres()"><b>Nombres</b><small>Editar ✎</small></button><button class="link" onclick="ajustesSpotify()"><b>Spotify</b><small>${SP.on?'✅ Conectado':'Sin conectar'}</small></button><button class="link" onclick="ajustesContenido()"><b>Canciones</b><small>${resumenContenido()}</small></button></div>
         ${prev?`<button class="pill sec" id="seguir">Continuar partida guardada</button>`:''}`,
       foot:`<div class="fila" style="gap:10px"><button class="pill" id="start" style="flex:1.4">A jugar</button><button class="pill sec" id="unir" style="flex:1">Unirse</button></div>`});
-    $('#start').onclick=()=>{ac();act('start')};
+    $('#start').onclick=()=>{ac();TVP.activar();act('start')};
+    $('#tvt').onclick=()=>{ac();TVP.activar();act('tv',{on:!S.tv})};
+    if(S.tv&&SP.on)TVP.iniciar();
     $('#unir').onclick=()=>{cerrarSalaLocal();pantallaUnirse('')};
     $('#segn').onclick=e=>{if(e.target.dataset.n)act('setN',{n:+e.target.dataset.n})};
     $('#segm').onclick=e=>{if(e.target.dataset.m)act('meta',{m:+e.target.dataset.m})};
     if(prev)$('#seguir').onclick=()=>{ac();seguirPartida(prev)};
   }else{
-    scene({scroll:true,s:'celeste',head:`<span class="eti">Sala ${esc(NET.code)}</span><h1>Elige tu equipo</h1>${netHTML()}`,body:cards+`<button class="link" onclick="ajustesSpotify()"><span class="esp"><b>Spotify en este celular</b><small>${SP.on?'✅ Conectado: si eres juez, la música suena aquí':'Conéctalo para que la música suene sola cuando seas juez'}</small></span><span>›</span></button><p class="sub">Cuando el anfitrión toque “A jugar”, esta pantalla cambia sola.</p>`,foot:`<button class="pill sec" onclick="salir()">Salir</button>`});
+    scene({scroll:true,s:'celeste',head:`<span class="eti">Sala ${esc(NET.code)}</span><h1>Elige tu equipo</h1>${netHTML()}`,body:cards+`<button class="link" onclick="ajustesSpotify()"><span class="esp"><b>Spotify en este celular</b><small>${SP.on?'✅ Conectado: si eres juez, la música suena aquí':'Conéctalo para que la música suene sola cuando seas juez'}</small></span><span>›</span></button><p class="sub">${S.tv?'📺 Se juega en la TV: este celular es tu mando.':'Cuando el anfitrión toque “A jugar”, esta pantalla cambia sola.'}</p>`,
+      foot:`${S.tv?`<button class="pill" id="start">A jugar</button>`:''}<button class="pill sec" onclick="salir()">Salir</button>`});
+    if($('#start'))$('#start').onclick=()=>{ac();act('start')};
   }
-  document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{ac();act('setTeam',{team:+b.dataset.t,name:ROLE.name,cid:CID})});
+  if(!esTV())document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{ac();act('setTeam',{team:+b.dataset.t,name:ROLE.name,cid:CID})});
 };
 /* cantidad de equipos: sigue a los celulares conectados (2 a 4) hasta que el anfitrión la elija a mano */
 function ajustaN(n){n=Math.max(2,Math.min(4,n));while(S.teams.length<n)S.teams.push({name:`Equipo ${S.teams.length+1}`,score:0,flags:{}});S.teams.length=n;
@@ -644,8 +694,19 @@ ACT.setTeam=(p,from)=>{const cid=from.cid||p.cid;const t=+p.team;if(!S.teams[t])
 ACT.setN=(p,from)=>{if(!from.host||V.k!=='lobby')return;S.autoN=false;ajustaN(+p.n);sync()};
 ACT.meta=(p,from)=>{if(!from.host||V.k!=='lobby'||![15,20,25].includes(+p.m))return;S.meta=+p.m;sync()};
 ACT.nombres=(p,from)=>{if(!from.host||V.k!=='lobby')return;(p.noms||[]).forEach((n,i)=>{if(S.teams[i])S.teams[i].name=String(n).trim().slice(0,16)||`Equipo ${i+1}`});sync()};
+/* modo TV (opcional): esta pantalla deja de ser un equipo y pasa a mostrar el juego; los celulares son los mandos */
+ACT.tv=(p,from)=>{if(!from.host||V.k!=='lobby')return;S.tv=!!p.on;
+  if(S.tv){delete S.phones[CID];ROLE.team=null}else{S.phones[CID]={name:'Anfitrión',team:null,on:true};S.phones[CID].team=equipoLibre();ROLE.team=S.phones[CID].team}
+  autoEquipos();sync()};
+function tvEstado(){if(!S.tv)return 'Apagado: se juega solo con celulares. Enciéndelo si esta pantalla es la tele';
+  if(!SP.on)return 'Esta pantalla muestra el juego. Conecta Spotify aquí para que la música suene en la tele';
+  return TVP.listo?'🔊 La música sonará en esta pantalla':TVP.error?'Este navegador no puede sonar Spotify: en “Spotify” elige la tele o un parlante':'Preparando el sonido de Spotify…';}
 /* si nadie más se conectó, se juega con un solo celular */
-ACT.start=(p,from)=>{if(!from.host||V.k!=='lobby')return;
+ACT.start=(p,from)=>{if(V.k!=='lobby'||!(from.host||S.tv))return;
+  if(S.tv){const falta=S.teams.findIndex((t,i)=>!hayTel(i));
+    if(falta>=0){if(!from.host)enviarA(from.cid,{aviso:`A ${S.teams[falta].name} le falta un celular`});else aviso('Falta un celular',`En modo TV cada equipo juega desde su celular: conecta uno para ${S.teams[falta].name}.`);return;}
+    S.spTV=SP.on;S.empezada=true;pantallaTurno();return;}
+  if(!from.host)return;
   const otros=Object.entries(S.phones).some(([c,ph])=>c!==CID&&ph.on);
   if(!otros){ROLE.solo=true;S.phones={};cerrarSalaLocal();}
   S.empezada=true;pantallaTurno()};
@@ -657,7 +718,7 @@ function pantallaTurno(){
   setV({k:'turno',rolling:false,j:null,g:null});
 }
 /* ruleta (ref. "Audio Sphere"): abanico de cartas, una por prueba, y una esfera que se toca para girar y muestra el género */
-const JCOL={1:['var(--oro)','var(--mostaza)'],2:['var(--cerul)','var(--aqua)'],3:['var(--lima)','var(--uva)'],4:['var(--magenta)','var(--lincoln)'],5:['var(--bebe)','var(--oro)'],6:['var(--uva)','var(--sinopia)']};
+const JCOL={1:['var(--citric)','var(--klein)'],2:['var(--klein)','var(--citric)'],3:['var(--aquam)','var(--fushia)'],4:['var(--fushia)','var(--aquam)'],5:['var(--tang)','var(--black)'],6:['var(--black)','var(--tang)']};
 function posAbanico(i,cur){return ((i-cur)%6+9)%6-3}/* -3..2 respecto a la carta del centro */
 function cartaJuego(j,cur,sel){const p=posAbanico(j-1,cur),[bg,ink]=JCOL[j],pal=JUEGOS[j].n.split(' ');
   return `<div class="carta-j ${sel?'sel':''}" data-j="${j}" style="--a:${p*16}deg;--z:${10-Math.abs(p)};--o:${Math.abs(p)>=3?0:1};background:${bg};color:${ink}">
@@ -721,7 +782,9 @@ ACT.empezar=(p,from)=>{if(V.k!=='prep'||!esActor(from))return;const j=V.j,g=V.g;
 /* ---------- juez: música ---------- */
 function btnSonar(i,song,modo){if(!SP.on)return '';if(modo==='10s')return `<button class="mini acc" data-s="${i}">▶ Sonar 10 s</button>`;
   const p=msPausa(song.pausa);return p?`<button class="mini acc" data-s="${i}">▶ Hasta la pausa</button>`:`<button class="mini acc" data-s="${i}">▶ Sonar</button><button class="mini sec" data-pa="${i}">⏸</button>`;}
-function wireSonar(root,songs,modo){root.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{const s=songs[+b.dataset.s];if(modo==='10s')sonar(b,s,0,10000);else{const p=s.pausaMs!=null?s.pausaMs:msPausa(s.pausa);if(p)sonar(b,s,Math.max(0,p-10000),10000);else sonar(b,s,30000,0);}});
+function wireSonar(root,songs,modo){root.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{const i=+b.dataset.s,s=songs[i];
+    if(V.dj&&V.dj!==CID&&S.tv){act('sonarTV',{i});b.textContent='📺';return;}/* modo TV: la tele hace sonar */
+    const [a,c]=tramo(s,modo);sonar(b,s,a,c);});
   root.querySelectorAll('[data-pa]').forEach(b=>b.onclick=()=>SP.pause().catch(errorSpotify));}
 function cronometro(onTick,onFin){const iv=setInterval(()=>{V.t--;if(V.t<=5&&V.t>0)alerta();if(V.t<=0){clearInterval(iv);golpe();onFin();return}onTick()},1000);timers.push(iv);}
 
@@ -747,9 +810,12 @@ ACT.go=(p,from)=>{
       a.play().catch(()=>aviso('No se pudo reproducir la pista'));}
     return;}
   /* V.dj = el celular que confirmó el inicio: es el único que hace sonar Spotify solo */
-  if(V.k==='j2'&&!V.activo&&esJuez(from)){V.activo=true;V.dj=from.cid;sync();cronometro(sync,()=>finJ2());return;}
-  if(V.k==='j3'&&!V.activo&&esJuez(from)){V.activo=true;V.dj=from.cid;sync();return;}
-  if(V.k==='j45'&&!V.activo&&esActor(from)){V.activo=true;sync();cronometro(sync,()=>finJ45());return;}
+  /* en modo TV con Spotify en la tele, la música sale de la TV (este código corre en ella) */
+  const dj=S.tv&&S.spTV?CID:from.cid;
+  if(V.k==='j2'&&!V.activo&&esJuez(from)){V.activo=true;V.dj=dj;sync();cronometro(sync,()=>finJ2());return;}
+  if(V.k==='j3'&&!V.activo&&esJuez(from)){V.activo=true;V.dj=dj;sync();return;}
+  /* mímica / tarareo: solo el celular que tocó "Empezar" ve el título; sus compañeros adivinan */
+  if(V.k==='j45'&&!V.activo&&esActor(from)){V.activo=true;V.actorCid=from.cid;sync();cronometro(sync,()=>finJ45());return;}
 };
 ACT.marca1=(p,from)=>{if(V.k!=='j1'||V.idx<0||V.rest<=0||!esJuez(from))return;V.marcas[V.idx]=!V.marcas[V.idx];if(V.marcas[V.idx])ding();sync()};
 
@@ -757,18 +823,26 @@ ACT.marca1=(p,from)=>{if(V.k!=='j1'||V.idx<0||V.rest<=0||!esJuez(from))return;V.
 function linkDe(s){return trackId(s.link)?s.link:spotifySearch(s.t,s.a)}
 /* antes de empezar: si el juez no tiene Spotify, se le ofrece conectarlo ahí mismo (vuelve a esta misma pantalla) */
 function pieInicio(juez,txt){if(!juez)return esperaHTML('El juez pone la música');
+  if(S.tv&&S.spTV)return `<button class="pill" id="go">▶ ${txt} · suena en la TV</button>`;
   return SP.on?`<button class="pill" id="go">▶ ${txt} y sonar</button>`:`<button class="pill" id="conSp">🎧 Conectar Spotify</button><button class="pill sec" id="go">${txt} sin Spotify</button>`}
 function wirePieInicio(){if($('#go'))$('#go').onclick=()=>{ac();act('go')};if($('#conSp'))$('#conSp').onclick=()=>SP.conectar();}
-const FILAS=['var(--aqua)','var(--lima)','var(--sinopia)','var(--bebe)'];/* filas de color (ref. "Find your music") */
+const FILAS=['var(--aquam)','var(--citric)','var(--fushia)','var(--tang)'];/* filas de color (ref. "Find your music") */
 function discoMini(g){return `<div class="vinilo mini"><div class="label" style="background:${g?CGEN[g]:'#fff'}"></div></div>`}
 /* suena sola en el celular que confirmó el inicio, una vez por canción */
 function autoSonar(root,songs,modo){if(!SP.on||!V.activo||V.dj!==CID)return;const key=V.k+':'+V.sello+':'+V.cur;if(SONADO.has(key))return;
   const b=root.querySelector(`[data-s="${V.cur}"]`);if(!b)return;SONADO.add(key);b.click();}
+/* desde dónde y cuánto suena cada canción: 10 s desde el inicio (prueba 2) o los 10 s antes del corte (prueba 3) */
+function tramo(s,modo){if(modo==='10s')return [0,10000];const p=s.pausaMs!=null?s.pausaMs:msPausa(s.pausa);return p?[Math.max(0,p-10000),10000]:[30000,0]}
+/* la TV (sin botones a la vista) hace sonar sola la canción actual */
+function sonarSolo(song,modo){if(!SP.on||!V.activo||V.dj!==CID||!song)return;const key=V.k+':'+V.sello+':'+V.cur;if(SONADO.has(key))return;SONADO.add(key);
+  const [a,b]=tramo(song,modo);SP.play(song,a,b).catch(errorSpotify);}
+const hayPlay=()=>SP.on||(S.tv&&S.spTV);
+ACT.sonarTV=(p,from)=>{if(!esJuez(from)||V.dj!==CID)return;const s=V.songs&&V.songs[+p.i];if(!s)return;const [a,b]=tramo(s,V.k==='j2'?'10s':'pausa');SP.play(s,a,b).catch(errorSpotify)};
 RENDER.j2=function(){
   const juez=esJuez(),g=V.g,songs=V.songs;
   let body=relojHTML(V.t,V.total);
   if(juez){body+=`<div class="lista" id="lista">${songs.map((s,i)=>{const e=V.est[i];const on=i===V.cur&&V.activo;
-      const play=on?(SP.on?`<button class="redondo" data-s="${i}" aria-label="Sonar 10 segundos">▶</button>`:`<a class="redondo" target="_blank" rel="noopener" href="${esc(linkDe(s))}" aria-label="Abrir en Spotify">↗</a>`):'';
+      const play=on?(hayPlay()?`<button class="redondo" data-s="${i}" aria-label="Sonar 10 segundos">▶</button>`:`<a class="redondo" target="_blank" rel="noopener" href="${esc(linkDe(s))}" aria-label="Abrir en Spotify">↗</a>`):'';
       return `<div class="cancion ${i<V.cur?'done':''} ${on?'':'off'}" style="--fc:${FILAS[i%FILAS.length]}">${discoMini(g)}<div class="txt"><div class="tit">${esc(s.t)}</div><div class="art">${esc(s.a)}</div></div>${play}
         ${on?`<div class="acts"><button class="chipv ${e.a?'on':''}" data-a="${i}">Artista ✔</button><button class="chipv ${e.t?'on':''}" data-t="${i}">Título ✔</button><button class="chipv no" data-p="${i}">${e.a||e.t?'Siguiente':'Paso'}</button></div>`:''}</div>`}).join('')}</div>`;}
   else body+=`<div class="ahora"><span class="eti">Canción</span><div class="titulo-c">${Math.min(V.cur+1,3)} de 3</div><div class="sub" style="margin:0">${V.activo?'Escucha y responde artista y título':'Esperando al juez'}</div></div>`;
@@ -779,6 +853,7 @@ RENDER.j2=function(){
     L.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>act('j2t',{i:+b.dataset.t}));
     L.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{if(SP.on)SP.pause().catch(()=>{});act('j2p')});
     if(SP.on)SP.precargar(songs);autoSonar(L,songs,'10s');}
+  else sonarSolo(songs[V.cur],'10s');
 };
 ACT.j2a=(p,from)=>{if(V.k!=='j2'||!V.activo||p.i!==V.cur||!esJuez(from))return;V.est[p.i].a=!V.est[p.i].a;ding();sync()};
 ACT.j2t=(p,from)=>{if(V.k!=='j2'||!V.activo||p.i!==V.cur||!esJuez(from))return;V.est[p.i].t=!V.est[p.i].t;ding();sync()};
@@ -843,7 +918,7 @@ RENDER.j3=function(){
       foot:pieInicio(juez,'Empezar')});
     wirePieInicio();return;}
   /* el juez ve qué canción es y controla la música; el jugador elige */
-  const play=V.pick!=null?'':SP.on?`<button class="redondo" data-s="${V.cur}" aria-label="Sonar hasta la pausa">▶</button>`:`<a class="redondo" target="_blank" rel="noopener" href="${esc(linkDe(s))}" aria-label="Abrir en Spotify">↗</a>`;
+  const play=V.pick!=null?'':hayPlay()?`<button class="redondo" data-s="${V.cur}" aria-label="Sonar hasta la pausa">▶</button>`:`<a class="redondo" target="_blank" rel="noopener" href="${esc(linkDe(s))}" aria-label="Abrir en Spotify">↗</a>`;
   const ctrl=juez?`<div class="cancion" id="ctrl" style="--fc:var(--blanco)">${discoMini(g)}<div class="txt"><div class="tit">${esc(s.t)}</div><div class="art">${esc(s.a)}</div></div>${play}</div>`:'';
   const elige=actor&&V.pick==null,rival=juez&&!actor;/* el rival ve las mismas opciones, cuál es la correcta y qué eligió el jugador */
   const opciones=`<div class="opciones">${op.lista.map((f,k)=>{const cls=V.pick==null?(rival&&k===op.ok?'es':''):k===op.ok?'bien':k===V.pick?'mal':'apagada';
@@ -852,9 +927,9 @@ RENDER.j3=function(){
   const msg=V.pick!=null?`${actor?'Elegiste':quien+' eligió'} ${'ABCD'[V.pick]} · ${V.est[V.cur]?'¡Correcta! +2':'No era esa'}`:actor?'¿Cómo sigue la canción?':`${quien} está eligiendo…`;
   const previa=s.previa?`<div class="previa"><span class="eti">La canción dice…</span><div>“${esc(s.previa)}”</div></div>`:'';
   scene({s:SGEN[g],head:cab(3,g),body:`${dots}${ctrl}${previa}<div class="eti" style="opacity:.75">${msg}</div>${opciones}`});
-  if(juez){const C=$('#ctrl');wireSonar(C,songs,'pausa');if(SP.on)SP.precargar(songs);
-    if(V.pick==null)autoSonar(C,songs,'pausa');
-    else if(SP.on&&V.dj===CID){const k='pausa:'+V.sello+':'+V.cur;if(!SONADO.has(k)){SONADO.add(k);SP.pause().catch(()=>{})}}}
+  if(juez){const C=$('#ctrl');wireSonar(C,songs,'pausa');if(SP.on)SP.precargar(songs);if(V.pick==null)autoSonar(C,songs,'pausa');}
+  else if(V.pick==null)sonarSolo(s,'pausa');
+  if(V.pick!=null&&SP.on&&V.dj===CID){const k='pausa:'+V.sello+':'+V.cur;if(!SONADO.has(k)){SONADO.add(k);SP.pause().catch(()=>{})}}
   document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{if(b.disabled)return;act('j3pick',{o:+b.dataset.o})});
 };
 ACT.j3pick=(p,from)=>{if(V.k!=='j3'||V.modo!=='opciones'||!V.activo||V.pick!=null||V.cur>2||!esActor(from))return;
@@ -882,27 +957,32 @@ ACT.j3=(p,from)=>{if(V.k!=='j3'||V.modo!=='juez'||p.i!==V.cur||!esJuez(from))ret
 
 /* ---------- Juegos 4 y 5 ---------- */
 RENDER.j45=function(){
-  const actor=esActor(),j=V.j,g=V.g,it=V.items[V.idx];
+  const actor=esActor()&&(ROLE.solo||!V.activo||V.actorCid===CID),j=V.j,g=V.g,it=V.items[V.idx];
+  const listos=V.items.filter((x,i)=>V.res[i]===true).map(x=>`<span>${esc(x.t)}</span>`).join('');
   const dots=`<div class="dots">${V.items.map((_,i)=>`<b class="${V.res[i]===true?'si':V.res[i]===false?'nope':i===V.idx?'act':''}"></b>`).join('')}</div>`;
   let body=relojHTML(V.t,V.total)+dots;
   let foot='';
   if(actor){body+=`<div class="ahora"><span class="eti">${j===4?'Actúa':'Tararea'} · ${Math.min(V.idx+1,5)} de 5</span><div class="titulo-c">${V.activo&&it?esc(it.t):'Solo quien actúa mira'}</div><div class="sub" style="margin:0">${V.activo&&it?esc(it.a):'El resto del equipo se da vuelta'}</div></div>`;
     foot=V.activo?`<div class="fila" style="gap:10px"><button class="pill ok" id="si">✔ Adivinado</button><button class="pill no" id="paso">Paso</button></div>`:`<button class="pill" id="go">▶ Empezar (${V.total} s)</button>`;}
-  else body+=`<div class="ahora"><span class="eti">${j===4?'Mímica':'Melodía'}</span><div class="titulo-c">${Math.min(V.idx+1,5)} de 5</div><div class="sub" style="margin:0">${V.activo?'¡Adivinen el título exacto!':'Esperando a quien actúa'}</div></div>`;
+  else body+=`<div class="ahora"><span class="eti">${j===4?'Mímica':'Melodía'}</span><div class="titulo-c">${Math.min(V.idx+1,5)} de 5</div><div class="sub" style="margin:0">${V.activo?'¡Adivinen el título exacto!':'Esperando a quien actúa'}</div></div>${listos?`<div class="adivinados">${listos}</div>`:''}`;
   scene({s:g?SGEN[g]:JUEGOS[j].s,head:cab(j,g),body,foot});
   if($('#go'))$('#go').onclick=()=>{ac();act('go')};
   if($('#si'))$('#si').onclick=()=>act('j45',{v:true});if($('#paso'))$('#paso').onclick=()=>act('j45',{v:false});
 };
-ACT.j45=(p,from)=>{if(V.k!=='j45'||!V.activo||!esActor(from))return;V.res[V.idx]=!!p.v;if(p.v)ding();V.idx++;if(V.idx>=5)finJ45();else sync()};
+ACT.j45=(p,from)=>{if(V.k!=='j45'||!V.activo||!esActor(from)||(!ROLE.solo&&V.actorCid&&from.cid!==V.actorCid))return;V.res[V.idx]=!!p.v;if(p.v)ding();V.idx++;if(V.idx>=5)finJ45();else sync()};
 function finJ45(){limpiarTimers();const n=V.res.filter(x=>x).length;resultado({base:n,detalle:`${n} de 5 ${V.j===4?'títulos':'canciones'}`,perfecto:n===5,s:V.g?SGEN[V.g]:JUEGOS[V.j].s});}
 
 /* ---------- Juego 6: Duelo ---------- */
 function pistaDe(s){if(s.frase)return {tipo:'frase',txt:s.frase};
   const ini=s.t.split(/\s+/).map(w=>/^[A-Za-zÁÉÍÓÚÑáéíóúñ]/.test(w)?w[0].toUpperCase()+'·'.repeat(Math.max(1,w.length-1)):w).join('  ');return {tipo:'pista',txt:`${s.a}${s.y?' · '+s.y:''}\n${ini}`};}
+const DUELO_SEG=10;
 const duelo={
-  arranca(){/* cuenta regresiva en el anfitrión */
-    V.fase='cuenta';V.cnt=3;V.bloq=[];V.k2=null;sync();tic();
-    const iv=setInterval(()=>{V.cnt--;if(V.cnt>0){tic();sync()}else{clearInterval(iv);golpe();V.fase='abierto';sync()}},900);timers.push(iv);}
+  arranca(){/* cuenta regresiva 3-2-1 y luego 10 s por canción (el reloj se detiene mientras alguien responde) */
+    limpiarTimers();V.fase='cuenta';V.cnt=3;V.bloq=[];V.pasa=[];V.k2=null;V.t=DUELO_SEG;sync();tic();
+    const iv=setInterval(()=>{V.cnt--;if(V.cnt>0){tic();sync()}else{clearInterval(iv);golpe();V.fase='abierto';sync();duelo.reloj()}},900);timers.push(iv);},
+  reloj(){const iv=setInterval(()=>{if(V.k!=='j6'||V.fase==='cerrado'){clearInterval(iv);return}if(V.fase!=='abierto')return;
+      V.t--;if(V.t<=3&&V.t>0)alerta();if(V.t<=0){clearInterval(iv);duelo.cierra(null)}else sync()},1000);timers.push(iv);},
+  cierra(w){V.gan[V.i]=w;V.fase='cerrado';V.k2=null;if(w!=null)acorde();else golpe();sync();}
 };
 RENDER.j6=function(){
   const s=V.songs[V.i],p=pistaDe(s),n=S.teams.length;const txt=esc(p.txt).replace(/\n/g,'<br>');
@@ -910,37 +990,44 @@ RENDER.j6=function(){
   const cont=document.createElement('div');cont.id='duelo';$('#duelo-root').appendChild(cont);
   const centro=()=>{
     if(V.fase==='cuenta')return `<div class="sub" style="margin:0;color:rgba(0,0,0,.6)">Canción ${V.i+1} de 3</div><div class="grande">${V.cnt}</div>`;
-    const preg=`<div class="sub" style="margin:0;color:rgba(0,0,0,.6)">Canción ${V.i+1} de 3 · ${p.tipo==='frase'?'¿De qué canción es esta frase?':'¿Qué canción es?'}</div>`;
+    const preg=`<div class="sub" style="margin:0;color:rgba(0,0,0,.6)">Canción ${V.i+1} de 3 · ${p.tipo==='frase'?'¿De qué canción es esta frase?':'¿Qué canción es?'}${V.fase==='abierto'||V.fase==='responde'?` · <b class="${V.t<=3?'alerta-d':''}">${V.t} s</b>`:''}</div>`;
     if(V.fase==='abierto')return preg+(ROLE.solo?`<div class="frase invert" style="opacity:.9">${txt}</div>`:'')+`<div class="frase">${txt}</div>`;
     if(V.fase==='responde'){const k=V.k2;const valida=ROLE.solo||(ROLE.team!=null&&ROLE.team!==k)||(ROLE.host&&!S.teams.some((t,i)=>i!==k&&hayTel(i)));
       return preg+`<div class="frase">${txt}</div><div style="font-weight:800;margin-top:4px">${esc(S.teams[k].name)} responde</div>`+(valida?`<div class="acc"><button class="pill ok" id="bien">✔ +2</button><button class="pill no" id="mal">✗ Falló</button><button class="pill sec" id="verr">👀</button></div>`:`<div class="sub" style="margin:0">Los rivales validan la respuesta</div>`);}
-    if(V.fase==='cerrado'){const w=V.gan[V.i];const sig=ROLE.host||ROLE.solo;return `${ROLE.solo?`<div class="secreto invert" style="padding:8px"><b>${esc(s.t)}</b> — ${esc(s.a)}</div>`:''}<div class="secreto" style="padding:8px"><b>${esc(s.t)}</b> — ${esc(s.a)}<br><small>${w==null?'Nadie acertó':esc(S.teams[w].name)+' +2'}</small></div>${sig?`<button class="pill" id="sig" style="background:#141213;color:#fff">${V.i<2?'Siguiente canción ▶':'Ver resultado'}</button>`:''}`;}
+    if(V.fase==='cerrado'){const w=V.gan[V.i];const sig=!S.tv||!ROLE.host;return `${ROLE.solo?`<div class="secreto invert" style="padding:8px"><b>${esc(s.t)}</b> — ${esc(s.a)}</div>`:''}<div class="secreto" style="padding:8px"><b>${esc(s.t)}</b> — ${esc(s.a)}<br><small>${w==null?'Nadie acertó':esc(S.teams[w].name)+' +2'}</small></div>${sig?`<button class="pill negro" id="sig">${V.i<2?'Siguiente canción ▶':'Ver resultado'}</button>`:''}`;}
     return '';};
-  const zona=(t,k)=>`<button class="zona ${V.bloq.includes(k)?'bloq':''} ${V.fase==='responde'&&V.k2===k?'gano':''}" data-k="${k}" style="background:${COLEQ[k%4]}" ${V.fase==='abierto'&&!V.bloq.includes(k)?'':'disabled'}>${esc(t.name)}</button>`;
+  /* cada equipo tiene su zona para agarrar y su botón para pasar */
+  const abierta=k=>V.fase==='abierto'&&!V.bloq.includes(k);
+  const zona=(t,k,pasar)=>`<div class="zona-wrap"><button class="zona ${V.bloq.includes(k)?'bloq':''} ${V.fase==='responde'&&V.k2===k?'gano':''}" data-k="${k}" style="background:${COLEQ[k%4]}" ${abierta(k)&&pasar?'':'disabled'}>${esc(t.name)}${(V.pasa||[]).includes(k)?'<small>pasó</small>':''}</button>${pasar&&abierta(k)?`<button class="pasar-d" data-pk="${k}">Pasar</button>`:''}</div>`;
   if(ROLE.solo){
-    cont.innerHTML=`<div class="zonas ${n===2?'invert':''}">${S.teams.slice(0,Math.ceil(n/2)).map((t,k)=>zona(t,k)).join('')}</div><div class="centro">${centro()}</div><div class="zonas">${S.teams.slice(Math.ceil(n/2)).map((t,k)=>zona(t,k+Math.ceil(n/2))).join('')}</div>`;
+    cont.innerHTML=`<div class="zonas ${n===2?'invert':''}">${S.teams.slice(0,Math.ceil(n/2)).map((t,k)=>zona(t,k,true)).join('')}</div><div class="centro">${centro()}</div><div class="zonas">${S.teams.slice(Math.ceil(n/2)).map((t,k)=>zona(t,k+Math.ceil(n/2),true)).join('')}</div>`;
+  }else if(S.tv&&ROLE.host){/* TV: todas las zonas a la vista, sin tocar */
+    cont.innerHTML=`<div class="centro">${centro()}</div><div class="zonas tv-zonas">${S.teams.map((t,k)=>zona(t,k,false)).join('')}</div>`;
   }else{
     const mio=ROLE.team;
-    cont.innerHTML=`<div class="centro">${centro()}</div><div class="solo-zona">${mio!=null?zona(S.teams[mio],mio):`<div class="zona" style="background:#333;color:#fff" disabled>Sin equipo</div>`}</div>`;
+    cont.innerHTML=`<div class="centro">${centro()}</div><div class="solo-zona">${mio!=null?zona(S.teams[mio],mio,true):`<div class="zona" style="background:#333;color:#fff" disabled>Sin equipo</div>`}</div>`;
   }
   cont.querySelectorAll('.zona').forEach(z=>z.onclick=()=>{if(z.disabled)return;ac();act('agarra',{k:+z.dataset.k})});
+  cont.querySelectorAll('[data-pk]').forEach(b=>b.onclick=e=>{e.stopPropagation();act('pasaDuelo',{k:+b.dataset.pk})});
   const b=$('#bien');if(b)b.onclick=()=>act('duelo',{ok:true});const m=$('#mal');if(m)m.onclick=()=>act('duelo',{ok:false});
   const v=$('#verr');if(v)v.onclick=()=>abrirModal(`<div class="secreto"><h2>${esc(s.t)}</h2><div style="font-weight:700">${esc(s.a)}${s.y?' · '+esc(s.y):''}</div></div><button class="pill" onclick="cerrarModal()">Ocultar</button>`);
   const g=$('#sig');if(g)g.onclick=()=>act('sigDuelo');
 };
 ACT.agarra=(p,from)=>{if(V.k!=='j6'||V.fase!=='abierto')return;const k=+p.k;if(V.bloq.includes(k))return;if(!ROLE.solo&&from.team!==k&&!(from.host&&!hayTel(k)))return;ding();V.fase='responde';V.k2=k;sync()};
 ACT.duelo=(p,from)=>{if(V.k!=='j6'||V.fase!=='responde')return;const k=V.k2;if(!ROLE.solo&&!(from.team!=null&&from.team!==k)&&!(from.host&&!S.teams.some((t,i)=>i!==k&&hayTel(i))))return;
-  if(p.ok){V.gan[V.i]=k;acorde();V.fase='cerrado';sync()}
-  else{V.bloq.push(k);V.k2=null;if(V.bloq.length>=S.teams.length){V.gan[V.i]=null;golpe();V.fase='cerrado'}else V.fase='abierto';sync()}};
-ACT.sigDuelo=(p,from)=>{if(V.k!=='j6'||V.fase!=='cerrado'||!from.host)return;V.i++;if(V.i>=3)finDuelo();else duelo.arranca()};
+  if(p.ok)duelo.cierra(k);
+  else{V.bloq.push(k);V.k2=null;if(V.bloq.length>=S.teams.length)duelo.cierra(null);else{V.fase='abierto';sync()}}};
+ACT.pasaDuelo=(p,from)=>{if(V.k!=='j6'||V.fase!=='abierto')return;const k=+p.k;if(V.bloq.includes(k)||!S.teams[k])return;if(!ROLE.solo&&from.team!==k&&!(from.host&&!S.tv&&!hayTel(k)))return;
+  V.bloq.push(k);V.pasa=[...(V.pasa||[]),k];if(V.bloq.length>=S.teams.length)duelo.cierra(null);else sync()};
+ACT.sigDuelo=(p,from)=>{if(V.k!=='j6'||V.fase!=='cerrado')return;V.i++;if(V.i>=3)finDuelo();else duelo.arranca()};
 function finDuelo(){const suma=S.teams.map(()=>0);V.gan.forEach(w=>{if(w!=null)suma[w]+=2});
   const barrida=V.gan.every(w=>w===V.gan[0]&&w!=null)?V.gan[0]:null;S.teams.forEach((tm,k)=>tm.score+=suma[k]);
   const detalle=S.teams.map((tm,k)=>suma[k]?`${tm.name} +${suma[k]}`:null).filter(Boolean).join(' · ')||'Nadie sumó puntos';
   setV({k:'finDuelo',detalle,barrida,songs:V.songs});}
-RENDER.finDuelo=function(){const b=V.barrida;const sig=ROLE.host||ROLE.solo;
+RENDER.finDuelo=function(){const b=V.barrida;const sig=!(S.tv&&ROLE.host);
   scene({scroll:true,s:'negro',hero:pj('g6'),head:`<h1>Duelo terminado</h1><p class="sub">${esc(V.detalle)}</p>${b!==null?`<p class="sub"><b>${esc(S.teams[b].name)}</b> ganó las 3: puede tomar carta de riesgo.</p>`:''}`,body:revelaHTML(V.songs),foot:sig?`<button class="pill" id="segd">Continuar</button>`:esperaHTML('El anfitrión continúa')});
   if($('#segd'))$('#segd').onclick=()=>act('finDuelo')};
-ACT.finDuelo=(p,from)=>{if(V.k!=='finDuelo'||!from.host)return;if(V.barrida!==null)ofrecerRiesgo(V.barrida,{fn:'finTurno',pts:0,ya:true});else finTurno(0,true)};
+ACT.finDuelo=(p,from)=>{if(V.k!=='finDuelo')return;if(V.barrida!==null)ofrecerRiesgo(V.barrida,{fn:'finTurno',pts:0,ya:true});else finTurno(0,true)};
 
 /* ---------- resultado ---------- */
 function revelaHTML(songs){if(!songs)return'';return `<div class="lista">${songs.map(s=>`<div class="row" style="padding:8px 12px"><div class="t"><span class="esp"><b>${esc(s.t)}</b> — ${esc(s.a)}</span></div></div>`).join('')}</div>`}
@@ -1029,8 +1116,9 @@ function siguienteEquipo(){S.cur=(S.cur+1)%S.teams.length;if(S.final&&S.cur===0)
   setV({k:'aviso',s:'lima',tag:S.final?'🔥 Ronda final':'',pre:'Le toca a',titulo:S.teams[S.cur].name,btn:'Girar los discos',next:'turno',ti:S.cur,score:true});}
 function finPartida(){setV({k:'fin'});borrar();}
 RENDER.fin=function(){const orden=S.teams.map((t,i)=>({...t,i})).sort((a,b)=>b.score-a.score);const max=orden[0].score;const gan=orden.filter(t=>t.score===max);if(V.sonado!==true){acorde();V.sonado=true}
-  scene({scroll:true,s:'amarillo',hero:pj('g1'),head:`<h1>${gan.length>1?'¡Empate!':`¡Ganó ${esc(gan[0].name)}!`}</h1>`,
-    body:`<div class="score">${orden.map((t,k)=>`<div class="eq ${t.score===max?'gana':''}"><span class="n">${t.score}</span><span class="nm">${esc(t.name)}<small>${k+1}º lugar</small></span></div>`).join('')}</div>`,
+  scene({scroll:true,s:'gana',hero:`<img class="banda-img" src="${IMG.banda}" alt="">`,
+    head:`<div class="gana-card"><span class="eti">🏆 ${gan.length>1?'Empate':'Ganador'}</span><div class="marca">${gan.map(t=>esc(t.name)).join(' & ')}</div><div class="gana-pts">${max} puntos</div></div>`,
+    body:`<div class="score card">${orden.map((t,k)=>`<div class="eq ${t.score===max?'gana':''}"><span class="n">${t.score}</span><span class="nm">${esc(t.name)}<small>${k+1}º lugar</small></span></div>`).join('')}</div>`,
     foot:ROLE.host?`<button class="pill" onclick="salir()">Nueva partida</button>`:`<button class="pill sec" onclick="salir()">Salir</button>`});};
 function confirmarSalir(){abrirModal(`<h3 style="text-align:center">${ROLE.host?'¿Reiniciar la partida?':'¿Salir de la sala?'}</h3><p class="sub" style="text-align:center">${ROLE.host?'Se pierde el marcador actual y se cierra la sala.':'Puedes volver a entrar con el código.'}</p><button class="pill no" id="sirei">${ROLE.host?'Sí, reiniciar':'Salir'}</button><button class="pill sec" onclick="cerrarModal()">Cancelar</button>`);
   $('#sirei').onclick=()=>{cerrarModal();if(ROLE.host){borrar();try{NET.conns.forEach(c=>c.close())}catch(e){}}salir()};}
@@ -1048,7 +1136,7 @@ SP.callback().finally(()=>{
   const prev=cargar();
   if(sala){history.replaceState({},'',location.pathname);pantallaUnirse(sala.toUpperCase());}
   else if(volver&&prev)seguirPartida(prev);
-  else if(lobby&&lobby.S){ROLE={host:true,solo:false,team:(lobby.S.phones[CID]||{}).team??0,name:'Anfitrión'};S=lobby.S;Object.values(S.phones).forEach(p=>{p.on=false});S.phones[CID]={name:'Anfitrión',team:ROLE.team,on:true};abrirSala(lobby.code||codigoNuevo());V={k:'lobby'};render();}
+  else if(lobby&&lobby.S){S=lobby.S;ROLE={host:true,solo:false,team:S.tv?null:(S.phones[CID]||{}).team??0,name:'Anfitrión'};Object.values(S.phones).forEach(p=>{p.on=false});if(!S.tv)S.phones[CID]={name:'Anfitrión',team:ROLE.team,on:true};abrirSala(lobby.code||codigoNuevo());V={k:'lobby'};render();}
   else if(enSesion||(guardada&&!prev)){ROLE.name=localStorage.getItem('bb_nom')||'';unirse(enSesion||guardada,false);}
   else inicio();
   if(SP.error)aviso('Spotify no se conectó',SP.error);
