@@ -168,6 +168,8 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 .aro .fondo-aro{stroke:var(--suave)}
 .aro .prog-aro{stroke:var(--ink);transition:stroke-dasharray .9s linear}
 .aro-wrap.quieto{width:min(36vw,20vh,150px)}
+.aro-wrap.chico{width:min(26vw,14vh,110px)}
+.chip.vidas{padding:4px 12px;letter-spacing:1px}
 
 /* filas de canción de color */
 .cancion{display:grid;grid-template-columns:44px 1fr auto;gap:4px 12px;align-items:center;width:100%;border-radius:24px;padding:10px 12px;background:var(--fc,var(--blanco));color:var(--ink);box-shadow:var(--sombra);transition:opacity .2s}
@@ -360,6 +362,11 @@ const JUEGOS={
  6:{n:"Duelo",img:"g6",gen:true,s:"rnb",pts:"2 pts por canción · las 3 = riesgo",
     reglas:["Aparece una frase (o pista) en todos los celulares.","El primero en tocar su pantalla responde el título.","Si falla queda bloqueado y siguen los demás."]}
 };
+/* Modo solitario: 1 jugador y 3 vidas, sin meta. Solo pruebas que se juegan de a uno (sin Mímica ni Tararea).
+   Una ronda quita una vida si los errores superan el 40% de los intentos (5 → 2 permitidos, 6 → 2, 3 → 1). */
+const SOLO_JUEGOS=[1,2,3,6],VIDAS=3,TOT={1:6,2:6,3:3,6:3};
+function permitidos(n){return Math.floor(n*0.4)}
+function juegosActivos(){return S&&S.solitario?SOLO_JUEGOS:[1,2,3,4,5,6]}
 const FLAGICON={escudo:"🛡️",doble:"✖️2",sil:"🤫",eligen:"👉",reloj:"⏱️",dj:"🎧",extra:"➕"};
 const NEG=['m2','sil','eligen','reloj','regalo','gratis'];
 const COLEQ=['var(--fushia)','var(--citric)','var(--aquam)','var(--tang)'];
@@ -586,12 +593,13 @@ function setV(v){limpiarTimers();V=v;sync()}
 /* arriba solo van los puntajes; tocarlos abre el menú (reglas, Spotify, salir) */
 function topbar(){
   if(!S||!S.empezada)return '';
+  if(S.solitario)return `<button class="top" onclick="menuJuego()" aria-label="Puntaje y vidas. Toca para ver el menú"><span class="chip turno" style="--c:var(--citric)"><span class="pts">${S.teams[0].score}</span>Solitario</span><span class="chip vidas">${'❤️'.repeat(Math.max(0,S.vidas))}${'🤍'.repeat(Math.max(0,VIDAS-S.vidas))}</span></button>`;
   const chips=S.teams.map((t,i)=>{const fl=Object.keys(t.flags).filter(k=>t.flags[k]).map(k=>k==='escudo'?FLAGICON.escudo.repeat(t.flags.escudo):FLAGICON[k]).join('');
     return `<span class="chip ${i===S.cur?'turno':''} ${!ROLE.solo&&ROLE.team===i?'mio':''}" style="--c:${COLEQ[i%4]}"><span class="pts">${t.score}</span>${esc(t.name.length>9?t.name.slice(0,8)+'…':t.name)}${fl?' '+fl:''}<i class="prog" style="width:${Math.min(100,100*t.score/S.meta)}%"></i></span>`}).join('');
   return `<button class="top" onclick="menuJuego()" aria-label="Marcador. Toca para ver el menú">${chips}</button>`;
 }
 function menuJuego(){
-  abrirModal(`<h3>Marcador · meta ${S.meta}</h3>${scoreHTML()}<button class="pill sec" onclick="verReglas()">Reglas</button><button class="pill sec" onclick="ajustesSpotify()">Spotify${SP.on?' · conectado':''}</button><button class="pill no" onclick="confirmarSalir()">${ROLE.host?'Terminar partida':'Salir de la sala'}</button><button class="pill negro" onclick="cerrarModal()">Volver al juego</button>`);}
+  abrirModal(`<h3>${S.solitario?`Solitario · ${S.vidas} ${S.vidas===1?'vida':'vidas'}`:`Marcador · meta ${S.meta}`}</h3>${scoreHTML()}<button class="pill sec" onclick="verReglas()">Reglas</button><button class="pill sec" onclick="ajustesSpotify()">Spotify${SP.on?' · conectado':''}</button><button class="pill no" onclick="confirmarSalir()">${ROLE.host?'Terminar partida':'Salir de la sala'}</button><button class="pill negro" onclick="cerrarModal()">Volver al juego</button>`);}
 /* en las escenas con scroll solo se desliza el contenido: la barra de botones queda fija abajo */
 function esTV(){return !!(S&&S.tv&&ROLE.host)}
 function zoomTV(){document.body.style.setProperty('--z',Math.max(1,Math.min(innerHeight/640,innerWidth/560)).toFixed(3))}
@@ -605,8 +613,8 @@ function scene(o){$('#duelo-root').innerHTML='';document.body.className='s-'+(o.
 function pj(k){return `<div class="disco"></div><img class="pj" src="${IMG[k]}" alt="">`}
 function cab(j,g){return `<div class="cab"><span>${j} · ${JUEGOS[j].n}</span>${g?`<span class="gpill">${g}</span>`:''}<span>🎙️ ${esc(S.teams[S.cur].name)}</span></div>`}
 /* reloj = vinilo con un aro de progreso (ref. "Now Playing") */
-function relojHTML(t,total){const p=Math.max(0,Math.min(100,100*t/(total||t||1)));
-  return `<div class="aro-wrap"><svg class="aro" viewBox="0 0 100 100" aria-hidden="true"><circle class="fondo-aro" cx="50" cy="50" r="47"/><circle class="prog-aro" cx="50" cy="50" r="47" pathLength="100" stroke-dasharray="${p.toFixed(1)} 100"/></svg>
+function relojHTML(t,total,cls){const p=Math.max(0,Math.min(100,100*t/(total||t||1)));
+  return `<div class="aro-wrap ${cls||''}"><svg class="aro" viewBox="0 0 100 100" aria-hidden="true"><circle class="fondo-aro" cx="50" cy="50" r="47"/><circle class="prog-aro" cx="50" cy="50" r="47" pathLength="100" stroke-dasharray="${p.toFixed(1)} 100"/></svg>
     <div class="vinilo"><div class="label"><span class="seg ${t<=5?'alerta':''}">${t}</span></div></div></div>`}
 function esperaHTML(txt){return `<div class="card tab"><span class="eti">Este celular</span><div style="font-weight:800;font-size:1.1rem;text-align:center">${txt}</div></div>`}
 function netHTML(){const e=estadoNet();return e?`<div class="estado-net" style="text-align:center">${esc(e)}</div>`:''}
@@ -623,7 +631,7 @@ function seguirPartida(prev){cerrarSalaLocal();S=prev.S;V=prev.V;ROLE={host:true
 function reanudar(){/* al continuar una partida guardada vuelve a una pantalla segura (no a mitad de un cronómetro);
   una prueba que aún no empezaba (p. ej. el juez fue a conectar Spotify) se conserva */
   limpiarTimers();if(V&&(V.k==='prep'||((V.k==='j2'||V.k==='j3')&&!V.activo&&!V.cargando))){sync();return;}
-  if(!V||['j1','j2','j3','j45','j6'].includes(V.k))pantallaTurno();else sync();}
+  if(!V||['j1','j2','j3','j45','j6','j6s'].includes(V.k))pantallaTurno();else sync();}
 function editarNombres(){
   abrirModal(`<h3>Nombres de los equipos</h3>${S.teams.map((t,i)=>`<input type="text" id="nom${i}" maxlength="16" placeholder="Equipo ${i+1}" value="${esc(t.name)}">`).join('')}<button class="pill negro" id="oknom">Listo</button>`);
   $('#oknom').onclick=()=>{act('nombres',{noms:S.teams.map((_,i)=>$('#nom'+i).value)});cerrarModal()};
@@ -668,7 +676,8 @@ RENDER.lobby=function(){
         <div class="fila"><label>Meta</label><div class="seg" id="segm">${[15,20,25].map(m=>`<button data-m="${m}" class="${m===S.meta?'sel':''}">${m}</button>`).join('')}</div></div>
         <div class="ajustes"><button class="link" onclick="editarNombres()"><b>Nombres</b><small>Editar ✎</small></button><button class="link" onclick="ajustesSpotify()"><b>Spotify</b><small>${SP.on?'✅ Conectado':'Sin conectar'}</small></button><button class="link" onclick="ajustesContenido()"><b>Canciones</b><small>${resumenContenido()}</small></button></div>
         ${prev?`<button class="pill sec" id="seguir">Continuar partida guardada</button>`:''}`,
-      foot:`<div class="fila" style="gap:10px"><button class="pill" id="start" style="flex:1.4">A jugar</button><button class="pill sec" id="unir" style="flex:1">Unirse</button></div>`});
+      foot:`<div class="fila" style="gap:10px"><button class="pill" id="start" style="flex:1.4">A jugar</button><button class="pill sec" id="unir" style="flex:1">Unirse</button></div>${S.tv?'':`<button class="pill sec" id="solo1" style="height:46px;font-size:1rem">🎧 Modo solitario · ${'❤️'.repeat(VIDAS)}</button>`}`});
+    if($('#solo1'))$('#solo1').onclick=()=>{ac();empezarSolitario()};
     $('#start').onclick=()=>{ac();TVP.activar();act('start')};
     $('#tvt').onclick=()=>{ac();TVP.activar();act('tv',{on:!S.tv})};
     if(S.tv&&SP.on)TVP.iniciar();
@@ -719,14 +728,16 @@ function pantallaTurno(){
 }
 /* ruleta (ref. "Audio Sphere"): abanico de cartas, una por prueba, y una esfera que se toca para girar y muestra el género */
 const JCOL={1:['var(--citric)','var(--klein)'],2:['var(--klein)','var(--citric)'],3:['var(--aquam)','var(--fushia)'],4:['var(--fushia)','var(--aquam)'],5:['var(--tang)','var(--black)'],6:['var(--black)','var(--tang)']};
-function posAbanico(i,cur){return ((i-cur)%6+9)%6-3}/* -3..2 respecto a la carta del centro */
-function cartaJuego(j,cur,sel){const p=posAbanico(j-1,cur),[bg,ink]=JCOL[j],pal=JUEGOS[j].n.split(' ');
-  return `<div class="carta-j ${sel?'sel':''}" data-j="${j}" style="--a:${p*16}deg;--z:${10-Math.abs(p)};--o:${Math.abs(p)>=3?0:1};background:${bg};color:${ink}">
+/* posición de la carta i respecto a la del centro, en un abanico de N cartas (la de más atrás queda oculta) */
+function posAbanico(i,cur,N){N=N||6;const h=Math.floor(N/2);return ((i-cur)%N+N+h)%N-h}
+function estiloCarta(el,p,N){el.style.setProperty('--a',p*16+'deg');el.style.setProperty('--z',10-Math.abs(p));el.style.setProperty('--o',p===-Math.floor(N/2)?0:1)}
+function cartaJuego(j,cur,sel,L){const N=L.length,p=posAbanico(L.indexOf(j),cur,N),[bg,ink]=JCOL[j],pal=JUEGOS[j].n.split(' ');
+  return `<div class="carta-j ${sel?'sel':''}" data-j="${j}" style="--a:${p*16}deg;--z:${10-Math.abs(p)};--o:${p===-Math.floor(N/2)?0:1};background:${bg};color:${ink}">
     <b>${esc(pal[0])}</b><span>${esc(pal.slice(1).join(' '))}</span><img src="${IMG['g'+j]}" alt=""><i>${j}</i></div>`;}
 RENDER.turno=function(){
   const t=S.teams[S.cur];const eligen=t.flags.eligen,dj=t.flags.dj;const actor=esActor();
   const tags=[t.flags.doble?'✖️2 vale el doble':'',t.flags.reloj?'⏱️ mitad de tiempo':'',eligen?`👉 ${esc(S.teams[rivalIdx()].name)} elige`:dj?'🎧 DJ: tú eliges':''].filter(Boolean);
-  const cur=V.j?V.j-1:(V.cur0||0);
+  const L=juegosActivos(),cur=V.j?Math.max(0,L.indexOf(V.j)):0;
   const linea2=V.rolling?'girando…':V.j?esc(JUEGOS[V.j].n):eligen||dj?'elige la prueba':'a girar';
   const quienElige=eligen?puede(rivalIdx()):actor;
   const puedeGirar=actor&&!V.rolling&&!V.j&&!eligen&&!dj;
@@ -741,18 +752,18 @@ RENDER.turno=function(){
   const conOrbe=!((eligen||dj)&&!V.j);
   scene({s:'amarillo',
     head:`<div class="titulo2"><span>${esc(t.name)}</span><span class="gris">${linea2}</span></div>${tags.length?`<div class="cab" style="justify-content:flex-start;margin-top:6px">${tags.map(x=>`<span>${x}</span>`).join('')}</div>`:''}`,
-    body:`<div class="abanico" id="abanico">${[1,2,3,4,5,6].map(j=>cartaJuego(j,cur,V.j===j&&!V.rolling)).join('')}</div>${conOrbe?`<div class="orbe-wrap">${orbe}</div>`:''}`,
+    body:`<div class="abanico" id="abanico">${L.map(j=>cartaJuego(j,cur,V.j===j&&!V.rolling,L)).join('')}</div>${conOrbe?`<div class="orbe-wrap">${orbe}</div>`:''}`,
     foot:pie});
   if(puedeGirar)$('#orbe').onclick=()=>{ac();act('lanzar')};
   if($('#elegido'))$('#elegido').onclick=()=>{ac();act('elegir',{j:+$('#selj').value,g:$('#selg').value})};
   if(V.rolling){/* animación local: el abanico avanza carta a carta y la esfera recorre los géneros */
     let c=cur,i=0;const cartas=[...document.querySelectorAll('.carta-j')],ot=$('#orbetxt'),ob=$('#orbe');
-    const seq=setInterval(()=>{c=(c+1)%6;cartas.forEach(el=>{const p=posAbanico(+el.dataset.j-1,c);el.style.setProperty('--a',p*16+'deg');el.style.setProperty('--z',10-Math.abs(p));el.style.setProperty('--o',Math.abs(p)>=3?0:1)});
+    const seq=setInterval(()=>{c=(c+1)%L.length;cartas.forEach(el=>estiloCarta(el,posAbanico(L.indexOf(+el.dataset.j),c,L.length),L.length));
       const g=GENEROS[(i*5)%6];if(ob){ob.style.background=CGEN[g.n];ob.style.color=CINK[g.n]}if(ot)ot.textContent=g.n;tic();i++},130);timers.push(seq);}
   if(V.j&&!V.rolling&&V.fijado!==V.sello){V.fijado=V.sello;golpe();}
 };
 ACT.lanzar=(p,from)=>{if(V.k!=='turno'||V.rolling||V.j)return;const t=S.teams[S.cur];if(t.flags.eligen||t.flags.dj)return;if(!esActor(from))return;
-  const j=1+Math.floor(Math.random()*6);const g=JUEGOS[j].gen?generoDisponible(j):null;fijar(j,g)};
+  const L=juegosActivos(),j=L[Math.floor(Math.random()*L.length)];const g=JUEGOS[j].gen?generoDisponible(j):null;fijar(j,g)};
 ACT.elegir=(p,from)=>{if(V.k!=='turno'||V.rolling||V.j)return;const t=S.teams[S.cur];if(!(t.flags.eligen||t.flags.dj))return;
   if(t.flags.eligen&&!puede(rivalIdx(),from))return;if(t.flags.dj&&!esActor(from))return;
   const j=+p.j;if(!JUEGOS[j])return;const g=JUEGOS[j].gen?(GENEROS.some(x=>x.n===p.g)?p.g:generoDisponible(j)):null;delete t.flags.eligen;delete t.flags.dj;fijar(j,g)};
@@ -763,7 +774,7 @@ function fijar(j,g){setV({k:'turno',rolling:true,j:null,g:null});
 function prep(j,g){const songs=null;setV({k:'prep',j,g});}
 RENDER.prep=function(){
   const j=V.j,g=V.g,J=JUEGOS[j];const t=S.teams[S.cur];const actor=esActor();
-  const quien=j===6?'Todos a la vez':`Juez: ${esc(S.teams[rivalIdx()].name)}`;
+  const quien=S.solitario?`❤️ Puedes fallar ${permitidos(TOT[j])} de ${TOT[j]}`:j===6?'Todos a la vez':`Juez: ${esc(S.teams[rivalIdx()].name)}`;
   const foot=actor?`<button class="pill" id="ir">Empezar</button>`:esperaHTML(`${esc(t.name)} empieza cuando esté listo`);
   scene({scroll:true,s:g?SGEN[g]:J.s,hero:pj(J.img),
     head:`<h1>${J.n}</h1><div class="tags" style="margin-top:8px">${g?`<span class="gpill">${g}</span>`:''}<span class="tag">🎙️ ${esc(t.name)}</span><span class="tag">${quien}</span></div>`,
@@ -772,7 +783,9 @@ RENDER.prep=function(){
 };
 ACT.empezar=(p,from)=>{if(V.k!=='prep'||!esActor(from))return;const j=V.j,g=V.g;
   if(j===1)setV({k:'j1',palabras:tomar('pal',null,6),idx:-1,rest:10,marcas:[false,false,false,false,false,false],fase:'listo'});
-  else if(j===2){const songs=tomar('qr',g,3);const total=dur(60);setV({k:'j2',g,songs,est:songs.map(()=>({a:false,t:false})),cur:0,t:total,total,activo:false,sello:Date.now()})}
+  else if(j===2){const songs=tomar('qr',g,3);const total=dur(60);setV({k:'j2',g,songs,est:songs.map(()=>({a:false,t:false})),rev:[false,false,false],cur:0,t:total,total,activo:false,sello:Date.now()})}
+  else if(j===6&&S.solitario){const sello=Date.now();setV({k:'j6s',g,cargando:true,songs:[],ops:[],cur:0,est:[null,null,null],pick:null,t:DUELO_SEG,fase:'listo',sello});
+    prepararFrases(g).then(r=>{if(V.k!=='j6s'||V.sello!==sello)return;V.songs=r.songs;V.ops=r.songs.map(s=>opcionesTitulo(s,g));V.cargando=false;sync()});}
   else if(j===3){const sello=Date.now();setV({k:'j3',g,cargando:true,songs:[],ops:null,modo:'opciones',est:[null,null,null],cur:0,activo:false,pick:null,sello});
     prepararFrases(g).then(r=>{if(V.k!=='j3'||V.sello!==sello)return;Object.assign(V,r,{cargando:false,activo:r.modo==='juez'});sync()});}
   else if(j===4||j===5){const items=j===4?tomar('mim',g,5):tomar('mel',null,5);const total=dur(60);setV({k:'j45',j,g,items,idx:0,res:[null,null,null,null,null],t:total,total,activo:false})}
@@ -843,13 +856,18 @@ RENDER.j2=function(){
   let body=relojHTML(V.t,V.total);
   if(juez){body+=`<div class="lista" id="lista">${songs.map((s,i)=>{const e=V.est[i];const on=i===V.cur&&V.activo;
       const play=on?(hayPlay()?`<button class="redondo" data-s="${i}" aria-label="Sonar 10 segundos">▶</button>`:`<a class="redondo" target="_blank" rel="noopener" href="${esc(linkDe(s))}" aria-label="Abrir en Spotify">↗</a>`):'';
-      return `<div class="cancion ${i<V.cur?'done':''} ${on?'':'off'}" style="--fc:${FILAS[i%FILAS.length]}">${discoMini(g)}<div class="txt"><div class="tit">${esc(s.t)}</div><div class="art">${esc(s.a)}</div></div>${play}
-        ${on?`<div class="acts"><button class="chipv ${e.a?'on':''}" data-a="${i}">Artista ✔</button><button class="chipv ${e.t?'on':''}" data-t="${i}">Título ✔</button><button class="chipv no" data-p="${i}">${e.a||e.t?'Siguiente':'Paso'}</button></div>`:''}</div>`}).join('')}</div>`;}
+      /* en solitario el título queda oculto hasta que el jugador responde en voz alta y toca "Revelar" */
+      const oculto=S.solitario&&i>=V.cur&&!(V.rev&&V.rev[i]);
+      const acts=!on?'':oculto?`<button class="chipv on" data-rv="${i}">👀 Revelar</button><button class="chipv no" data-p="${i}">Paso</button>`
+        :`<button class="chipv ${e.a?'on':''}" data-a="${i}">Artista ✔</button><button class="chipv ${e.t?'on':''}" data-t="${i}">Título ✔</button><button class="chipv no" data-p="${i}">${e.a||e.t?'Siguiente':'Paso'}</button>`;
+      return `<div class="cancion ${i<V.cur?'done':''} ${on?'':'off'}" style="--fc:${FILAS[i%FILAS.length]}">${discoMini(g)}<div class="txt"><div class="tit">${oculto?`Canción ${i+1}`:esc(s.t)}</div><div class="art">${oculto?'Di artista y título, luego revela':esc(s.a)}</div></div>${play}
+        ${on?`<div class="acts">${acts}</div>`:''}</div>`}).join('')}</div>`;}
   else body+=`<div class="ahora"><span class="eti">Canción</span><div class="titulo-c">${Math.min(V.cur+1,3)} de 3</div><div class="sub" style="margin:0">${V.activo?'Escucha y responde artista y título':'Esperando al juez'}</div></div>`;
   scene({s:SGEN[g],head:cab(2,g),body,foot:!V.activo?pieInicio(juez,`Empezar (${V.total} s)`):''});
   wirePieInicio();
   if(juez){const L=$('#lista');wireSonar(L,songs,'10s');
     L.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>act('j2a',{i:+b.dataset.a}));
+    L.querySelectorAll('[data-rv]').forEach(b=>b.onclick=()=>act('j2rev',{i:+b.dataset.rv}));
     L.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>act('j2t',{i:+b.dataset.t}));
     L.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{if(SP.on)SP.pause().catch(()=>{});act('j2p')});
     if(SP.on)SP.precargar(songs);autoSonar(L,songs,'10s');}
@@ -857,8 +875,9 @@ RENDER.j2=function(){
 };
 ACT.j2a=(p,from)=>{if(V.k!=='j2'||!V.activo||p.i!==V.cur||!esJuez(from))return;V.est[p.i].a=!V.est[p.i].a;ding();sync()};
 ACT.j2t=(p,from)=>{if(V.k!=='j2'||!V.activo||p.i!==V.cur||!esJuez(from))return;V.est[p.i].t=!V.est[p.i].t;ding();sync()};
+ACT.j2rev=(p,from)=>{if(V.k!=='j2'||!V.activo||p.i!==V.cur||!esJuez(from))return;V.rev=V.rev||[];V.rev[p.i]=true;sync()};
 ACT.j2p=(p,from)=>{if(V.k!=='j2'||!V.activo||!esJuez(from))return;V.cur++;if(V.cur>=3)finJ2();else sync()};
-function finJ2(){limpiarTimers();const pts=V.est.reduce((s,e)=>s+(e.a?1:0)+(e.t?1:0),0);resultado({base:pts,detalle:`${pts} de 6 aciertos`,perfecto:V.est.every(e=>e.a&&e.t),revela:V.songs,s:SGEN[V.g]});}
+function finJ2(){limpiarTimers();const pts=V.est.reduce((s,e)=>s+(e.a?1:0)+(e.t?1:0),0);resultado({base:pts,ok:pts,tot:6,detalle:`${pts} de 6 aciertos`,perfecto:V.est.every(e=>e.a&&e.t),revela:V.songs,s:SGEN[V.g]});}
 
 /* ---------- Juego 3: la frase que sigue, entre 4 opciones ----------
    La correcta es la "Frase (respuesta)" de la planilla. Las falsas salen de las columnas
@@ -936,7 +955,7 @@ ACT.j3pick=(p,from)=>{if(V.k!=='j3'||V.modo!=='opciones'||!V.activo||V.pick!=nul
   const op=V.ops[V.cur],o=+p.o;if(!(o>=0&&o<op.lista.length))return;
   V.pick=o;V.est[V.cur]=o===op.ok;if(V.est[V.cur])ding();else golpe();sync();
   const t=setTimeout(()=>{if(V.k!=='j3')return;V.cur++;V.pick=null;
-    if(V.cur>=3){const n=V.est.filter(x=>x).length;resultado({base:n*2,detalle:`${n} de 3 frases`,perfecto:n===3,revela:V.songs,s:SGEN[V.g]})}else sync()},1900);timers.push(t);};
+    if(V.cur>=3){const n=V.est.filter(x=>x).length;resultado({base:n*2,ok:n,tot:3,detalle:`${n} de 3 frases`,perfecto:n===3,revela:V.songs,s:SGEN[V.g]})}else sync()},1900);timers.push(t);};
 /* modo sin frases cargadas: el juez pausa y valida de palabra */
 function j3Juez(){
   const juez=esJuez(),g=V.g,songs=V.songs;
@@ -953,7 +972,7 @@ function j3Juez(){
     if(SP.on)SP.precargar(songs);}
 }
 ACT.j3=(p,from)=>{if(V.k!=='j3'||V.modo!=='juez'||p.i!==V.cur||!esJuez(from))return;V.est[p.i]=!!p.v;if(p.v)ding();V.cur++;
-  if(V.cur>=3){const n=V.est.filter(x=>x).length;resultado({base:n*2,detalle:`${n} de 3 frases`,perfecto:n===3,revela:V.songs,s:SGEN[V.g]})}else sync()};
+  if(V.cur>=3){const n=V.est.filter(x=>x).length;resultado({base:n*2,ok:n,tot:3,detalle:`${n} de 3 frases`,perfecto:n===3,revela:V.songs,s:SGEN[V.g]})}else sync()};
 
 /* ---------- Juegos 4 y 5 ---------- */
 RENDER.j45=function(){
@@ -1029,21 +1048,62 @@ RENDER.finDuelo=function(){const b=V.barrida;const sig=!(S.tv&&ROLE.host);
   if($('#segd'))$('#segd').onclick=()=>act('finDuelo')};
 ACT.finDuelo=(p,from)=>{if(V.k!=='finDuelo')return;if(V.barrida!==null)ofrecerRiesgo(V.barrida,{fn:'finTurno',pts:0,ya:true});else finTurno(0,true)};
 
+/* ---------- Modo solitario ---------- */
+function empezarSolitario(){cerrarSalaLocal();limpiarTimers();ROLE={host:true,solo:true,team:0,name:''};
+  S=nuevoEstado(['Tú'],999);S.solitario=true;S.vidas=VIDAS;S.rondas=0;S.empezada=true;pantallaTurno();}
+/* Duelo de uno: aparece la frase y hay 10 s para elegir de qué canción es, entre 4 títulos */
+function opcionesTitulo(s,g){const otros=[...new Set(barajar(CONTENT.qr.filter(o=>o.t!==s.t&&o.g===g)).map(o=>o.t))].slice(0,3);
+  const lista=barajar([s.t,...otros]);return {lista,ok:lista.indexOf(s.t)}}
+RENDER.j6s=function(){const g=V.g;
+  if(V.cargando){scene({s:SGEN[g],head:cab(6,g),body:`<div class="aro-wrap quieto"><div class="vinilo gira"><div class="label" style="background:${CGEN[g]}"></div></div></div><div class="ahora"><span class="eti">Duelo de uno</span><div class="titulo-c">Buscando frases…</div></div>`});return;}
+  const dots=`<div class="dots">${V.est.map((e,i)=>`<b class="${e===true?'si':e===false?'nope':i===V.cur?'act':''}"></b>`).join('')}</div>`;
+  if(V.fase==='listo'){scene({s:SGEN[g],head:cab(6,g),body:`<div class="aro-wrap quieto"><div class="vinilo"><div class="label" style="background:${CGEN[g]};color:${CINK[g]}"><span class="seg">10</span></div></div></div><div class="ahora"><span class="eti">Duelo de uno</span><div class="titulo-c">3 canciones</div><div class="sub" style="margin:0">Aparece una frase: tienes 10 segundos para elegir de qué canción es.</div></div>${dots}`,
+      foot:`<button class="pill" id="go">▶ Empezar</button>`});$('#go').onclick=()=>{ac();act('j6sGo')};return;}
+  const s=V.songs[Math.min(V.cur,2)],op=V.ops[Math.min(V.cur,2)],p=pistaDe(s),txt=esc(p.txt).replace(/\n/g,'<br>');
+  const opciones=`<div class="opciones">${op.lista.map((f,k)=>{const cls=V.pick==null?'':k===op.ok?'bien':k===V.pick?'mal':'apagada';
+    return `<button class="opcion ${cls}" data-o="${k}" ${V.pick==null?'':'disabled'}><span class="let">${'ABCD'[k]}</span><span class="tx">${esc(f)}</span></button>`}).join('')}</div>`;
+  const msg=V.pick==null?(p.tipo==='frase'?'¿De qué canción es?':'¿Qué canción es?'):V.est[V.cur]?'¡Correcta! +2':V.pick<0?'Se acabó el tiempo':'No era esa';
+  scene({s:SGEN[g],head:cab(6,g),body:`${dots}${relojHTML(V.t,DUELO_SEG,'chico')}<div class="previa"><span class="eti">${msg}</span><div>${txt}</div></div>${opciones}`});
+  document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{if(!b.disabled)act('j6sPick',{o:+b.dataset.o})});
+};
+ACT.j6sGo=(p,from)=>{if(V.k!=='j6s'||V.fase!=='listo'||V.cargando)return;V.fase='juego';V.t=DUELO_SEG;sync();
+  const iv=setInterval(()=>{if(V.k!=='j6s'){clearInterval(iv);return}if(V.pick!=null)return;V.t--;if(V.t<=3&&V.t>0)alerta();if(V.t<=0)resuelveJ6s(-1);else sync()},1000);timers.push(iv);};
+ACT.j6sPick=(p,from)=>{if(V.k!=='j6s'||V.fase!=='juego'||V.pick!=null)return;const o=+p.o;if(!(o>=0&&o<4))return;resuelveJ6s(o)};
+function resuelveJ6s(o){const op=V.ops[V.cur];V.pick=o;V.est[V.cur]=o===op.ok;if(V.est[V.cur])ding();else golpe();sync();
+  const t=setTimeout(()=>{if(V.k!=='j6s')return;V.cur++;V.pick=null;V.t=DUELO_SEG;
+    if(V.cur>=3){const n=V.est.filter(x=>x).length;resultado({base:n*2,ok:n,tot:3,detalle:`${n} de 3 canciones`,perfecto:n===3,revela:V.songs,s:SGEN[V.g]})}else sync()},1700);timers.push(t);}
+/* al confirmar la ronda: se suman los puntos y se pierde una vida si hubo más errores de los permitidos */
+function cierreSolitario(){const ok=V.n!=null?V.n:V.ok,tot=V.tot,errs=Math.max(0,tot-ok),perm=permitidos(tot),pierde=errs>perm;
+  S.teams[0].score+=ptsRes();S.rondas++;if(pierde)S.vidas--;
+  if(S.vidas<=0){finSolitario();return;}
+  setV({k:'aviso',s:pierde?'rock':'reg',ico:pierde?'💔':'✅',titulo:pierde?'Pierdes una vida':'¡Ronda superada!',
+    txt:`${errs} ${errs===1?'error':'errores'} de ${perm} permitidos. Te ${S.vidas===1?'queda 1 vida':`quedan ${S.vidas} vidas`}.`,btn:'Girar la ruleta',next:'turno',ti:0});}
+function finSolitario(){let rec=0;try{rec=+localStorage.getItem('bb_record')||0}catch(e){}
+  const pts=S.teams[0].score,nuevo=pts>rec;if(nuevo)try{localStorage.setItem('bb_record',pts)}catch(e){}
+  setV({k:'finSolo',pts,rondas:S.rondas,rec:Math.max(rec,pts),nuevo});borrar();}
+RENDER.finSolo=function(){if(V.sonado!==true){acorde();V.sonado=true}
+  scene({scroll:true,s:'gana',hero:`<img class="banda-img" src="${IMG.banda}" alt="">`,
+    head:`<div class="gana-card"><span class="eti">${V.nuevo?'🏆 Nuevo récord':'💔 Sin vidas'}</span><div class="marca">${V.pts} puntos</div><div class="gana-pts">${V.rondas} ${V.rondas===1?'ronda':'rondas'} · récord ${V.rec}</div></div>`,
+    foot:`<button class="pill" id="otra">Jugar de nuevo</button><button class="pill sec" onclick="salir()">Volver al inicio</button>`});
+  $('#otra').onclick=()=>{ac();empezarSolitario()};};
+
 /* ---------- resultado ---------- */
 function revelaHTML(songs){if(!songs)return'';return `<div class="lista">${songs.map(s=>`<div class="row" style="padding:8px 12px"><div class="t"><span class="esp"><b>${esc(s.t)}</b> — ${esc(s.a)}</span></div></div>`).join('')}</div>`}
 function resultado(o){limpiarTimers();pararPista();if(SP.on)SP.pause().catch(()=>{});
-  const t=S.teams[S.cur];setV({k:'res',detalle:o.detalle,n:o.n??null,max:o.max??null,porUnidad:o.porUnidad||1,base:o.base??null,doble:!!t.flags.doble,perfecto:!!o.perfecto,revela:o.revela||null,s:o.s});}
+  const t=S.teams[S.cur];setV({k:'res',detalle:o.detalle,n:o.n??null,max:o.max??null,ok:o.ok??null,tot:o.tot??o.max??null,porUnidad:o.porUnidad||1,base:o.base??null,doble:!!t.flags.doble,perfecto:!!o.perfecto,revela:o.revela||null,s:o.s});}
 function ptsRes(){const base=V.n!=null?V.n*V.porUnidad:V.base;return V.doble?base*2:base}
 function perfRes(){return V.n!=null?V.n===V.max:V.perfecto}
 RENDER.res=function(){const juez=esJuez();if(V.sonado!==true){acorde();V.sonado=true}
-  scene({scroll:true,s:'negro',head:`<span class="eti">Fin de la ronda · ${esc(V.detalle)}</span><div class="grande" style="font-size:clamp(4.5rem,30vw,8rem)">+${ptsRes()}${V.doble?'<span style="font-size:.35em"> ×2</span>':''}</div><p class="sub" style="margin:4px 0 0">${perfRes()?'🎉 ¡Ronda perfecta! Puede tomar carta de riesgo':''}</p>`,
-    body:`${V.n!=null&&juez?`<div class="stepper"><button id="menos">−</button><div class="grande" style="font-size:3rem">${V.n}</div><button id="mas">+</button></div><p class="sub" style="margin:0">El juez puede corregir el conteo</p>`:''}${revelaHTML(V.revela)}`,
+  scene({scroll:true,s:'negro',head:`<span class="eti">Fin de la ronda · ${esc(V.detalle)}</span><div class="grande" style="font-size:clamp(4.5rem,30vw,8rem)">+${ptsRes()}${V.doble?'<span style="font-size:.35em"> ×2</span>':''}</div><p class="sub" style="margin:4px 0 0">${S.solitario?soloErrTxt():perfRes()?'🎉 ¡Ronda perfecta! Puede tomar carta de riesgo':''}</p>`,
+    body:`${V.n!=null&&juez?`<div class="stepper"><button id="menos">−</button><div class="grande" style="font-size:3rem">${V.n}</div><button id="mas">+</button></div><p class="sub" style="margin:0">${S.solitario?'Corrige el conteo si te equivocaste al marcar':'El juez puede corregir el conteo'}</p>`:''}${revelaHTML(V.revela)}`,
     foot:juez?`<button class="pill" id="conf">Confirmar</button>`:esperaHTML('El juez confirma el puntaje')});
   if($('#menos'))$('#menos').onclick=()=>act('ajusta',{d:-1});if($('#mas'))$('#mas').onclick=()=>act('ajusta',{d:1});
   if($('#conf'))$('#conf').onclick=()=>act('confirmar');
 };
 ACT.ajusta=(p,from)=>{if(V.k!=='res'||V.n==null||!esJuez(from))return;V.n=Math.max(0,Math.min(V.max,V.n+(p.d>0?1:-1)));sync()};
-ACT.confirmar=(p,from)=>{if(V.k!=='res'||!esJuez(from))return;const pts=ptsRes();if(perfRes())ofrecerRiesgo(S.cur,{fn:'finTurno',pts});else finTurno(pts)};
+function soloErrTxt(){const ok=V.n!=null?V.n:V.ok,errs=Math.max(0,V.tot-ok),perm=permitidos(V.tot);
+  return errs>perm?`💔 ${errs} errores: pierdes una vida (se permitían ${perm})`:`❤️ ${errs} ${errs===1?'error':'errores'} de ${perm} permitidos: conservas tus vidas`}
+ACT.confirmar=(p,from)=>{if(V.k!=='res'||!esJuez(from))return;if(S.solitario){cierreSolitario();return;}const pts=ptsRes();if(perfRes())ofrecerRiesgo(S.cur,{fn:'finTurno',pts});else finTurno(pts)};
 
 /* ---------- riesgo ---------- */
 function ofrecerRiesgo(ti,next){setV({k:'riesgo',ti,next,carta:null})}
