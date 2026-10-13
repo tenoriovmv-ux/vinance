@@ -248,6 +248,12 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 .opcion.bien{background:var(--ok);color:var(--ok-ink)}.opcion.bien .let{background:var(--ok-ink);color:var(--ok)}
 .opcion.mal{background:var(--no);color:var(--no-ink)}.opcion.mal .let{background:var(--no-ink);color:var(--no)}
 .opcion.apagada{opacity:.4}
+.opcion{position:relative}
+.opcion.es{box-shadow:inset 0 0 0 3px var(--ink),var(--sombra)}
+.opcion.es::after{content:"correcta";position:absolute;top:-8px;right:14px;background:var(--ink);color:#fff;font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:2px 8px}
+.opcion .eligio{margin-left:auto;flex:none;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:3px 8px;background:rgba(255,255,255,.25)}
+.previa{width:100%;text-align:center;padding:2px 6px}
+.previa div{font-family:var(--display);font-weight:800;font-stretch:62%;text-transform:uppercase;font-size:clamp(1.15rem,5.6vw,1.5rem);line-height:1.05;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .opcion[disabled]{cursor:default}
 
 /* modal (hoja inferior) */
@@ -402,14 +408,20 @@ const SP={
     const dig=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));
     const ch=btoa(String.fromCharCode(...new Uint8Array(dig))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
     localStorage.setItem('bb_sp_ver',v);
+    /* al volver de Spotify, el anfitrión retoma la misma sala o partida (los invitados vuelven solos con bb_sala) */
+    try{if(ROLE.host&&!ROLE.solo&&S&&!S.empezada)sessionStorage.setItem('bb_lobby',JSON.stringify({S,code:NET.code}));
+      if(ROLE.host&&S&&S.empezada){guardar();sessionStorage.setItem('bb_volver','1')}}catch(e){}
     const p=new URLSearchParams({client_id:cid,response_type:'code',redirect_uri:SP.redirect(),scope:'user-modify-playback-state user-read-playback-state',code_challenge_method:'S256',code_challenge:ch});
     location.href='https://accounts.spotify.com/authorize?'+p.toString();
   },
   async callback(){
-    const code=new URLSearchParams(location.search).get('code');if(!code)return;
-    const v=localStorage.getItem('bb_sp_ver');
-    try{const r=await fetch('https://accounts.spotify.com/api/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'authorization_code',code,redirect_uri:SP.redirect(),client_id:SP.cid,code_verifier:v})});
-      const j=await r.json();if(j.access_token){SP.tok={a:j.access_token,r:j.refresh_token,e:Date.now()+j.expires_in*1000-30000};}}catch(e){}
+    const q=new URLSearchParams(location.search),code=q.get('code'),err=q.get('error');if(!code&&!err)return;
+    if(err)SP.error=err==='access_denied'?'Cancelaste el permiso en Spotify.':'Spotify respondió: '+err;
+    else{const v=localStorage.getItem('bb_sp_ver');
+      try{const r=await fetch('https://accounts.spotify.com/api/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'authorization_code',code,redirect_uri:SP.redirect(),client_id:SP.cid,code_verifier:v})});
+        const j=await r.json();if(j.access_token){SP.tok={a:j.access_token,r:j.refresh_token,e:Date.now()+j.expires_in*1000-30000};SP.recien=true;}
+        else SP.error='Spotify no entregó el permiso: '+(j.error_description||j.error||'error desconocido')+'. Revisa el Redirect URI y que tu correo esté en User Management.';}
+      catch(e){SP.error='No pude terminar la conexión con Spotify ('+e.message+').'}}
     history.replaceState({},'',SP.redirect());
   },
   async token(){let t=SP.tok;if(!t)throw new Error('sin sesión');
@@ -561,8 +573,12 @@ function inicio(){
   S=nuevoEstado(['Equipo 1','Equipo 2'],25);S.autoN=true;S.phones[CID]={name:'Anfitrión',team:0,on:true};
   abrirSala(codigoNuevo());V={k:'lobby'};render();
 }
-function reanudar(){/* al continuar una partida guardada vuelve a una pantalla segura (no a mitad de un cronómetro) */
-  limpiarTimers();if(!V||['j1','j2','j3','j45','j6','prep'].includes(V.k))pantallaTurno();else sync();}
+function seguirPartida(prev){cerrarSalaLocal();S=prev.S;V=prev.V;ROLE={host:true,solo:!Object.keys(S.phones).length,team:(S.phones[CID]||{}).team??null,name:'Anfitrión'};
+  Object.values(S.phones).forEach(p=>{p.on=false});if(S.phones[CID])S.phones[CID].on=true;if(!ROLE.solo)abrirSala(prev.code||codigoNuevo());reanudar();}
+function reanudar(){/* al continuar una partida guardada vuelve a una pantalla segura (no a mitad de un cronómetro);
+  una prueba que aún no empezaba (p. ej. el juez fue a conectar Spotify) se conserva */
+  limpiarTimers();if(V&&(V.k==='prep'||((V.k==='j2'||V.k==='j3')&&!V.activo&&!V.cargando))){sync();return;}
+  if(!V||['j1','j2','j3','j45','j6'].includes(V.k))pantallaTurno();else sync();}
 function editarNombres(){
   abrirModal(`<h3>Nombres de los equipos</h3>${S.teams.map((t,i)=>`<input type="text" id="nom${i}" maxlength="16" placeholder="Equipo ${i+1}" value="${esc(t.name)}">`).join('')}<button class="pill negro" id="oknom">Listo</button>`);
   $('#oknom').onclick=()=>{act('nombres',{noms:S.teams.map((_,i)=>$('#nom'+i).value)});cerrarModal()};
@@ -611,9 +627,9 @@ RENDER.lobby=function(){
     $('#unir').onclick=()=>{cerrarSalaLocal();pantallaUnirse('')};
     $('#segn').onclick=e=>{if(e.target.dataset.n)act('setN',{n:+e.target.dataset.n})};
     $('#segm').onclick=e=>{if(e.target.dataset.m)act('meta',{m:+e.target.dataset.m})};
-    if(prev)$('#seguir').onclick=()=>{ac();cerrarSalaLocal();S=prev.S;V=prev.V;ROLE={host:true,solo:!Object.keys(S.phones).length,team:(S.phones[CID]||{}).team??null,name:'Anfitrión'};if(!ROLE.solo)abrirSala(prev.code||codigoNuevo());reanudar()};
+    if(prev)$('#seguir').onclick=()=>{ac();seguirPartida(prev)};
   }else{
-    scene({scroll:true,s:'celeste',head:`<span class="eti">Sala ${esc(NET.code)}</span><h1>Elige tu equipo</h1>${netHTML()}`,body:cards+`<p class="sub">Cuando el anfitrión toque “A jugar”, esta pantalla cambia sola.</p>`,foot:`<button class="pill sec" onclick="salir()">Salir</button>`});
+    scene({scroll:true,s:'celeste',head:`<span class="eti">Sala ${esc(NET.code)}</span><h1>Elige tu equipo</h1>${netHTML()}`,body:cards+`<button class="link" onclick="ajustesSpotify()"><span class="esp"><b>Spotify en este celular</b><small>${SP.on?'✅ Conectado: si eres juez, la música suena aquí':'Conéctalo para que la música suene sola cuando seas juez'}</small></span><span>›</span></button><p class="sub">Cuando el anfitrión toque “A jugar”, esta pantalla cambia sola.</p>`,foot:`<button class="pill sec" onclick="salir()">Salir</button>`});
   }
   document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{ac();act('setTeam',{team:+b.dataset.t,name:ROLE.name,cid:CID})});
 };
@@ -696,7 +712,8 @@ RENDER.prep=function(){
 ACT.empezar=(p,from)=>{if(V.k!=='prep'||!esActor(from))return;const j=V.j,g=V.g;
   if(j===1)setV({k:'j1',palabras:tomar('pal',null,6),idx:-1,rest:10,marcas:[false,false,false,false,false,false],fase:'listo'});
   else if(j===2){const songs=tomar('qr',g,3);const total=dur(60);setV({k:'j2',g,songs,est:songs.map(()=>({a:false,t:false})),cur:0,t:total,total,activo:false,sello:Date.now()})}
-  else if(j===3){const r=armarFrases(g);setV({k:'j3',g,songs:r.songs,ops:r.ops,modo:r.modo,est:[null,null,null],cur:0,activo:r.modo==='juez',pick:null,sello:Date.now()})}
+  else if(j===3){const sello=Date.now();setV({k:'j3',g,cargando:true,songs:[],ops:null,modo:'opciones',est:[null,null,null],cur:0,activo:false,pick:null,sello});
+    prepararFrases(g).then(r=>{if(V.k!=='j3'||V.sello!==sello)return;Object.assign(V,r,{cargando:false,activo:r.modo==='juez'});sync()});}
   else if(j===4||j===5){const items=j===4?tomar('mim',g,5):tomar('mel',null,5);const total=dur(60);setV({k:'j45',j,g,items,idx:0,res:[null,null,null,null,null],t:total,total,activo:false})}
   else if(j===6){const songs=tomar('qr',g,3);setV({k:'j6',g,songs,i:0,gan:[],fase:'cuenta',cnt:3,bloq:[],k2:null});duelo.arranca()}
 };
@@ -704,7 +721,7 @@ ACT.empezar=(p,from)=>{if(V.k!=='prep'||!esActor(from))return;const j=V.j,g=V.g;
 /* ---------- juez: música ---------- */
 function btnSonar(i,song,modo){if(!SP.on)return '';if(modo==='10s')return `<button class="mini acc" data-s="${i}">▶ Sonar 10 s</button>`;
   const p=msPausa(song.pausa);return p?`<button class="mini acc" data-s="${i}">▶ Hasta la pausa</button>`:`<button class="mini acc" data-s="${i}">▶ Sonar</button><button class="mini sec" data-pa="${i}">⏸</button>`;}
-function wireSonar(root,songs,modo){root.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{const s=songs[+b.dataset.s];if(modo==='10s')sonar(b,s,0,10000);else{const p=msPausa(s.pausa);if(p)sonar(b,s,Math.max(0,p-10000),10000);else sonar(b,s,30000,0);}});
+function wireSonar(root,songs,modo){root.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{const s=songs[+b.dataset.s];if(modo==='10s')sonar(b,s,0,10000);else{const p=s.pausaMs!=null?s.pausaMs:msPausa(s.pausa);if(p)sonar(b,s,Math.max(0,p-10000),10000);else sonar(b,s,30000,0);}});
   root.querySelectorAll('[data-pa]').forEach(b=>b.onclick=()=>SP.pause().catch(errorSpotify));}
 function cronometro(onTick,onFin){const iv=setInterval(()=>{V.t--;if(V.t<=5&&V.t>0)alerta();if(V.t<=0){clearInterval(iv);golpe();onFin();return}onTick()},1000);timers.push(iv);}
 
@@ -738,6 +755,10 @@ ACT.marca1=(p,from)=>{if(V.k!=='j1'||V.idx<0||V.rest<=0||!esJuez(from))return;V.
 
 /* ---------- Juego 2 ---------- */
 function linkDe(s){return trackId(s.link)?s.link:spotifySearch(s.t,s.a)}
+/* antes de empezar: si el juez no tiene Spotify, se le ofrece conectarlo ahí mismo (vuelve a esta misma pantalla) */
+function pieInicio(juez,txt){if(!juez)return esperaHTML('El juez pone la música');
+  return SP.on?`<button class="pill" id="go">▶ ${txt} y sonar</button>`:`<button class="pill" id="conSp">🎧 Conectar Spotify</button><button class="pill sec" id="go">${txt} sin Spotify</button>`}
+function wirePieInicio(){if($('#go'))$('#go').onclick=()=>{ac();act('go')};if($('#conSp'))$('#conSp').onclick=()=>SP.conectar();}
 const FILAS=['var(--aqua)','var(--lima)','var(--sinopia)','var(--bebe)'];/* filas de color (ref. "Find your music") */
 function discoMini(g){return `<div class="vinilo mini"><div class="label" style="background:${g?CGEN[g]:'#fff'}"></div></div>`}
 /* suena sola en el celular que confirmó el inicio, una vez por canción */
@@ -751,8 +772,8 @@ RENDER.j2=function(){
       return `<div class="cancion ${i<V.cur?'done':''} ${on?'':'off'}" style="--fc:${FILAS[i%FILAS.length]}">${discoMini(g)}<div class="txt"><div class="tit">${esc(s.t)}</div><div class="art">${esc(s.a)}</div></div>${play}
         ${on?`<div class="acts"><button class="chipv ${e.a?'on':''}" data-a="${i}">Artista ✔</button><button class="chipv ${e.t?'on':''}" data-t="${i}">Título ✔</button><button class="chipv no" data-p="${i}">${e.a||e.t?'Siguiente':'Paso'}</button></div>`:''}</div>`}).join('')}</div>`;}
   else body+=`<div class="ahora"><span class="eti">Canción</span><div class="titulo-c">${Math.min(V.cur+1,3)} de 3</div><div class="sub" style="margin:0">${V.activo?'Escucha y responde artista y título':'Esperando al juez'}</div></div>`;
-  scene({s:SGEN[g],head:cab(2,g),body,foot:!V.activo?(juez?`<button class="pill" id="go">▶ Empezar${SP.on?' y sonar':''} (${V.total} s)</button>`:''):''});
-  if($('#go'))$('#go').onclick=()=>{ac();act('go')};
+  scene({s:SGEN[g],head:cab(2,g),body,foot:!V.activo?pieInicio(juez,`Empezar (${V.total} s)`):''});
+  wirePieInicio();
   if(juez){const L=$('#lista');wireSonar(L,songs,'10s');
     L.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>act('j2a',{i:+b.dataset.a}));
     L.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>act('j2t',{i:+b.dataset.t}));
@@ -778,22 +799,59 @@ function armarFrases(g){
     const falsas=[...new Set([...(s.alts||[]),...otras])].filter(f=>f&&f!==s.frase).slice(0,3);
     const lista=barajar([s.frase,...falsas]);return {lista,ok:lista.indexOf(s.frase)};});
   return {modo:'opciones',songs,ops};}
+/* Frases automáticas desde LRCLIB (letras sincronizadas, lrclib.net): de cada canción se toma una línea,
+   la línea anterior como pista y el segundo exacto donde cortar la música. Las 3 opciones falsas son
+   líneas de otras canciones (mismo idioma primero). Si la planilla trae ≥4 frases, se usan esas. */
+const LRC={};
+function parseLrc(t){return String(t||'').split('\n').map(l=>{const m=l.match(/^\[(\d+):(\d+(?:\.\d+)?)\]\s*(.*)$/);return m?{t:+m[1]*60+ +m[2],x:m[3].trim()}:null}).filter(l=>l&&l.x&&!/^[♪(\[]/.test(l.x));}
+async function letraDe(s){const k=s.t+'|'+s.a;if(LRC[k]!==undefined)return LRC[k];
+  const art=s.a.split(/ ft\.| feat\.| & |, | y /i)[0];const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),7000);
+  try{const r=await fetch('https://lrclib.net/api/search?'+new URLSearchParams({track_name:s.t,artist_name:art}),{signal:ctl.signal});const arr=await r.json();
+    const it=(Array.isArray(arr)?arr:[]).find(x=>x.syncedLyrics&&!x.instrumental);LRC[k]=it?parseLrc(it.syncedLyrics):null;}
+  catch(e){LRC[k]=null}finally{clearTimeout(to)}
+  return LRC[k];}
+function eligeLinea(ls){const c=[];
+  for(let i=1;i<ls.length;i++){const a=ls[i],b=ls[i-1];if(a.t>=20&&a.x.length>=10&&a.x.length<=60&&b.x.length>=6&&a.x.toLowerCase()!==b.x.toLowerCase()&&a.t-b.t<12)c.push(i)}
+  if(!c.length)return null;const i=c[Math.floor(Math.random()*c.length)];
+  return {frase:ls[i].x,previa:ls[i-1].x,pausaMs:Math.max(0,Math.round(ls[i].t*1000)-250)};}
+async function prepararFrases(g){
+  if(CONTENT.qr.filter(s=>s.frase).length>=4)return armarFrases(g);
+  let cand=barajar(pool('qr',g));if(cand.length<8){const ya=new Set(cand.map(x=>x.i));cand=cand.concat(barajar(pool('qr',null)).filter(x=>!ya.has(x.i)))}
+  const elegidas=[],otras=[];
+  /* se buscan al menos 8 canciones para tener líneas falsas del mismo idioma */
+  for(let k=0;k<cand.length&&k<16&&(elegidas.length<3||k<8);k+=4){
+    const lote=cand.slice(k,k+4),res=await Promise.all(lote.map(x=>letraDe(x.s)));
+    lote.forEach((x,n)=>{const ls=res[n];if(!ls)return;const l=elegidas.length<3?eligeLinea(ls):null;
+      if(l)elegidas.push({x,l,ls});else otras.push(...ls.map(z=>({x:z.x,l:x.s.l})));});}
+  if(elegidas.length<3)return armarFrases(g);/* sin internet o sin letras: el juez valida de palabra */
+  elegidas.forEach(e=>S.usado.qr.push(e.x.i));
+  const songs=elegidas.map(e=>({...e.x.s,frase:e.l.frase,previa:e.l.previa,pausaMs:e.l.pausaMs}));
+  const ops=elegidas.map(e=>{const f=e.l.frase,lang=e.x.s.l,fl=f.toLowerCase();
+    const pozo=barajar([...otras,...elegidas.filter(o=>o!==e).flatMap(o=>o.ls.map(z=>({x:z.x,l:o.x.s.l})))]).sort((a,b)=>(b.l===lang)-(a.l===lang));
+    const vale=z=>z.x.toLowerCase()!==fl&&z.x!==e.l.previa;
+    let falsas=[...new Set(pozo.filter(z=>vale(z)&&z.x.length>=8&&Math.abs(z.x.length-f.length)<=25).map(z=>z.x))].slice(0,3);
+    if(falsas.length<3)falsas=[...new Set([...falsas,...pozo.filter(vale).map(z=>z.x)])].slice(0,3);
+    const lista=barajar([f,...falsas]);return {lista,ok:lista.indexOf(f)};});
+  return {modo:'opciones',songs,ops};}
 RENDER.j3=function(){
+  if(V.cargando){scene({s:SGEN[V.g],head:cab(3,V.g),body:`<div class="aro-wrap quieto"><div class="vinilo gira"><div class="label" style="background:${CGEN[V.g]}"></div></div></div><div class="ahora"><span class="eti">Completa la frase</span><div class="titulo-c">Buscando frases…</div></div>`});return;}
   if(V.modo==='juez')return j3Juez();
   const juez=esJuez(),actor=esActor(),g=V.g,songs=V.songs,s=songs[Math.min(V.cur,2)],op=V.ops[Math.min(V.cur,2)];
   const dots=`<div class="dots">${V.est.map((e,i)=>`<b class="${e===true?'si':e===false?'nope':i===V.cur?'act':''}"></b>`).join('')}</div>`;
   if(!V.activo){
     scene({s:SGEN[g],head:cab(3,g),body:`<div class="aro-wrap quieto"><div class="vinilo"><div class="label" style="background:${CGEN[g]};color:${CINK[g]}"><span class="seg">3</span></div></div></div><div class="ahora"><span class="eti">Completa la frase</span><div class="titulo-c">3 frases</div><div class="sub" style="margin:0">La música se corta y ${actor&&!ROLE.solo?'eliges':'el jugador elige'} cómo sigue entre 4 opciones.</div></div>${dots}`,
-      foot:juez?`<button class="pill" id="go">▶ Empezar${SP.on?' y sonar':''}</button>`:esperaHTML('El juez pone la música')});
-    if($('#go'))$('#go').onclick=()=>{ac();act('go')};return;}
+      foot:pieInicio(juez,'Empezar')});
+    wirePieInicio();return;}
   /* el juez ve qué canción es y controla la música; el jugador elige */
   const play=V.pick!=null?'':SP.on?`<button class="redondo" data-s="${V.cur}" aria-label="Sonar hasta la pausa">▶</button>`:`<a class="redondo" target="_blank" rel="noopener" href="${esc(linkDe(s))}" aria-label="Abrir en Spotify">↗</a>`;
   const ctrl=juez?`<div class="cancion" id="ctrl" style="--fc:var(--blanco)">${discoMini(g)}<div class="txt"><div class="tit">${esc(s.t)}</div><div class="art">${esc(s.a)}</div></div>${play}</div>`:'';
-  const elige=actor&&V.pick==null;
-  const opciones=`<div class="opciones">${op.lista.map((f,k)=>{const cls=V.pick==null?'':k===op.ok?'bien':k===V.pick?'mal':'apagada';
-    return `<button class="opcion ${cls}" data-o="${k}" ${elige?'':'disabled'}><span class="let">${'ABCD'[k]}</span><span class="tx">${esc(f)}</span></button>`}).join('')}</div>`;
-  const msg=V.pick!=null?(V.est[V.cur]?'¡Correcta! +2':'No era esa'):actor?'¿Cómo sigue la canción?':'El jugador está eligiendo…';
-  scene({s:SGEN[g],head:cab(3,g),body:`${dots}${ctrl}<div class="eti" style="opacity:.75">${msg}</div>${opciones}`});
+  const elige=actor&&V.pick==null,rival=juez&&!actor;/* el rival ve las mismas opciones, cuál es la correcta y qué eligió el jugador */
+  const opciones=`<div class="opciones">${op.lista.map((f,k)=>{const cls=V.pick==null?(rival&&k===op.ok?'es':''):k===op.ok?'bien':k===V.pick?'mal':'apagada';
+    return `<button class="opcion ${cls}" data-o="${k}" ${elige?'':'disabled'}><span class="let">${'ABCD'[k]}</span><span class="tx">${esc(f)}</span>${V.pick===k&&!actor?'<span class="eligio">eligió</span>':''}</button>`}).join('')}</div>`;
+  const quien=esc(S.teams[S.cur].name);
+  const msg=V.pick!=null?`${actor?'Elegiste':quien+' eligió'} ${'ABCD'[V.pick]} · ${V.est[V.cur]?'¡Correcta! +2':'No era esa'}`:actor?'¿Cómo sigue la canción?':`${quien} está eligiendo…`;
+  const previa=s.previa?`<div class="previa"><span class="eti">La canción dice…</span><div>“${esc(s.previa)}”</div></div>`:'';
+  scene({s:SGEN[g],head:cab(3,g),body:`${dots}${ctrl}${previa}<div class="eti" style="opacity:.75">${msg}</div>${opciones}`});
   if(juez){const C=$('#ctrl');wireSonar(C,songs,'pausa');if(SP.on)SP.precargar(songs);
     if(V.pick==null)autoSonar(C,songs,'pausa');
     else if(SP.on&&V.dj===CID){const k='pausa:'+V.sello+':'+V.cur;if(!SONADO.has(k)){SONADO.add(k);SP.pause().catch(()=>{})}}}
@@ -986,9 +1044,15 @@ SP.callback().finally(()=>{
   const sala=new URLSearchParams(location.search).get('sala');
   /* invitado que recarga: vuelve solo a su sala (sessionStorage manda; localStorage sirve si el navegador cerró la pestaña) */
   let enSesion=null,guardada=null;try{enSesion=sessionStorage.getItem('bb_sala');guardada=localStorage.getItem('bb_sala')}catch(e){}
+  let lobby=null,volver=false;try{lobby=JSON.parse(sessionStorage.getItem('bb_lobby')||'null');volver=sessionStorage.getItem('bb_volver')==='1';sessionStorage.removeItem('bb_lobby');sessionStorage.removeItem('bb_volver')}catch(e){}
+  const prev=cargar();
   if(sala){history.replaceState({},'',location.pathname);pantallaUnirse(sala.toUpperCase());}
-  else if(enSesion||(guardada&&!cargar())){ROLE.name=localStorage.getItem('bb_nom')||'';unirse(enSesion||guardada,false);}
+  else if(volver&&prev)seguirPartida(prev);
+  else if(lobby&&lobby.S){ROLE={host:true,solo:false,team:(lobby.S.phones[CID]||{}).team??0,name:'Anfitrión'};S=lobby.S;Object.values(S.phones).forEach(p=>{p.on=false});S.phones[CID]={name:'Anfitrión',team:ROLE.team,on:true};abrirSala(lobby.code||codigoNuevo());V={k:'lobby'};render();}
+  else if(enSesion||(guardada&&!prev)){ROLE.name=localStorage.getItem('bb_nom')||'';unirse(enSesion||guardada,false);}
   else inicio();
+  if(SP.error)aviso('Spotify no se conectó',SP.error);
+  else if(SP.recien)aviso('Spotify conectado ✅','Abre la app de Spotify en este celular (o en un parlante) para que la música pueda sonar. Necesita cuenta Premium.');
 });
 </script>
 </body>
