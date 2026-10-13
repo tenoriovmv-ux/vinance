@@ -204,6 +204,16 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 .abanico:has(.sel)::before{content:"";position:fixed;inset:0;z-index:15;background:rgba(237,237,235,.3);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);animation:aparece .35s}
 @keyframes aparece{from{opacity:0}}
 .orbe-wrap{position:relative;z-index:21}
+/* celular como mando en modo TV: esfera grande al centro */
+.mando{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;width:100%}
+.mando .orbe{width:min(64vw,40vh,280px)}
+.mando .orbe-txt{font-size:clamp(1.4rem,8vw,2.2rem)}
+.mando-res{font-family:var(--display);font-weight:800;font-stretch:62%;text-transform:uppercase;font-size:clamp(1.4rem,7vw,2rem);text-align:center;line-height:1}
+/* la ruleta en la tele, más grande */
+body.tv .carta-j{width:min(36%,215px);border-radius:20px;padding:14px}
+body.tv .carta-j b{font-size:1.25rem}body.tv .carta-j span{font-size:1.1rem}
+body.tv .abanico{min-height:300px}
+body.tv .orbe{width:min(24vw,15vh,130px)}
 .orbe-wrap{flex:none;display:flex;justify-content:center;padding:4px 0}
 .orbe{position:relative;width:min(30vw,17vh,124px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 30% 25%,var(--fushia) 0,transparent 55%),radial-gradient(circle at 70% 85%,var(--klein) 0,transparent 60%),linear-gradient(160deg,var(--aquam),var(--citric));color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 30px rgba(20,18,19,.2);transition:background .12s}
 .orbe[disabled]{cursor:default}
@@ -586,7 +596,8 @@ function hayTel(ti){return S&&Object.values(S.phones).some(p=>p.on&&p.team===ti)
 function puede(ti,from){from=from||{host:ROLE.host,team:ROLE.team};return ROLE.solo||from.team===ti||(from.host&&!S.tv&&!hayTel(ti))}
 function rivalIdx(){return (S.cur+1)%S.teams.length}
 /* ¿puede juzgar? Cualquier celular de un equipo distinto al que juega; el anfitrión si no hay rivales conectados. */
-function esJuez(from){from=from||{host:ROLE.host,team:ROLE.team};if(ROLE.solo)return true;if(from.team!=null&&from.team!==S.cur)return true;return from.host&&!S.tv&&!S.teams.some((t,i)=>i!==S.cur&&hayTel(i))}
+function esJuez(from){from=from||{host:ROLE.host,team:ROLE.team};if(ROLE.solo)return true;
+  if(S.solitario&&from.team===S.cur)return true;/* solitario en TV: el jugador se valida a sí mismo desde su celular */if(from.team!=null&&from.team!==S.cur)return true;return from.host&&!S.tv&&!S.teams.some((t,i)=>i!==S.cur&&hayTel(i))}
 function esActor(from){from=from||{host:ROLE.host,team:ROLE.team};return puede(S.cur,from)}
 function sync(){guardar();render();broadcast()}
 function ejecutar(name,p,from){const f=ACT[name];if(!f||!S)return;try{f(p,from)}catch(e){console.error(name,e)}}
@@ -697,7 +708,7 @@ RENDER.lobby=function(){
     const botones=`<div class="fila" style="gap:10px"><button class="pill" id="start" style="flex:1.4">A jugar</button><button class="pill sec" id="unir" style="flex:1">Unirse</button></div><button class="pill sec" id="solo1" style="height:46px;font-size:1rem">🎧 Modo solitario · ${'❤️'.repeat(VIDAS)}</button>`;
     if(pantallaAncha())scene({ancho:true,s:'lima',body:`<div class="lobby-ancho"><div class="col-izq">${banda}${marca}</div><div class="col-der">${controles}<div class="lobby-botones">${botones}</div></div></div>`});
     else scene({scroll:true,s:'lima',hero:banda,head:marca,body:controles,foot:botones});
-    if($('#solo1'))$('#solo1').onclick=()=>{ac();empezarSolitario()};
+    if($('#solo1'))$('#solo1').onclick=()=>{ac();if(S.tv){TVP.activar();act('solo')}else empezarSolitario()};
     $('#start').onclick=()=>{ac();TVP.activar();act('start')};
     $('#tvt').onclick=()=>{ac();TVP.activar();act('tv',{on:!S.tv})};
     if(S.tv&&SP.on)TVP.iniciar();
@@ -707,8 +718,9 @@ RENDER.lobby=function(){
     if(prev)$('#seguir').onclick=()=>{ac();seguirPartida(prev)};
   }else{
     scene({scroll:true,s:'celeste',head:`<span class="eti">Sala ${esc(NET.code)}</span><h1>Elige tu equipo</h1>${netHTML()}`,body:cards+`<button class="link" onclick="ajustesSpotify()"><span class="esp"><b>Spotify en este celular</b><small>${SP.on?'✅ Conectado: si eres juez, la música suena aquí':'Conéctalo para que la música suene sola cuando seas juez'}</small></span><span>›</span></button><p class="sub">${S.tv?'📺 Se juega en la TV: este celular es tu mando.':'Cuando el anfitrión toque “A jugar”, esta pantalla cambia sola.'}</p>`,
-      foot:`${S.tv?`<button class="pill" id="start">A jugar</button>`:''}<button class="pill sec" onclick="salir()">Salir</button>`});
+      foot:`${S.tv?`<button class="pill" id="start">A jugar</button><button class="pill sec" id="solo1">🎧 Solitario en la TV · ${'❤️'.repeat(VIDAS)}</button>`:''}<button class="pill sec" onclick="salir()">Salir</button>`});
     if($('#start'))$('#start').onclick=()=>{ac();act('start')};
+    if($('#solo1'))$('#solo1').onclick=()=>{ac();act('solo')};
   }
   if(!esTV())document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{ac();act('setTeam',{team:+b.dataset.t,name:ROLE.name,cid:CID})});
 };
@@ -772,7 +784,9 @@ RENDER.turno=function(){
   const conOrbe=!((eligen||dj)&&!V.j);
   scene({s:'amarillo',
     head:`<div class="titulo2"><span>${esc(t.name)}</span><span class="gris">${linea2}</span></div>${tags.length?`<div class="cab" style="justify-content:flex-start;margin-top:6px">${tags.map(x=>`<span>${x}</span>`).join('')}</div>`:''}`,
-    body:`<div class="abanico" id="abanico">${L.map(j=>cartaJuego(j,cur,V.j===j&&!V.rolling,L)).join('')}</div>${conOrbe?`<div class="orbe-wrap">${orbe}</div>`:''}`,
+    /* modo TV: la ruleta grande va en la tele; el celular es el mando (solo la esfera para girar) */
+    body:S.tv&&!ROLE.host?`<div class="mando">${conOrbe?`<div class="orbe-wrap">${orbe}</div>`:''}<div class="mando-res">${V.j?`${esc(JUEGOS[V.j].n)}${V.g?` · ${V.g}`:''}`:'📺 Mira la ruleta en la TV'}</div></div>`
+      :`<div class="abanico" id="abanico">${L.map(j=>cartaJuego(j,cur,V.j===j&&!V.rolling,L)).join('')}</div>${conOrbe?`<div class="orbe-wrap">${orbe}</div>`:''}`,
     foot:pie});
   if(puedeGirar)$('#orbe').onclick=()=>{ac();act('lanzar')};
   if($('#elegido'))$('#elegido').onclick=()=>{ac();act('elegir',{j:+$('#selj').value,g:$('#selg').value})};
@@ -1069,9 +1083,17 @@ RENDER.finDuelo=function(){const b=V.barrida;const sig=!(S.tv&&ROLE.host);
 ACT.finDuelo=(p,from)=>{if(V.k!=='finDuelo')return;if(V.barrida!==null)ofrecerRiesgo(V.barrida,{fn:'finTurno',pts:0,ya:true});else finTurno(0,true)};
 
 /* ---------- Modo solitario ---------- */
-function empezarSolitario(){const tv=!!(S&&S.tv&&ROLE.host);cerrarSalaLocal();limpiarTimers();ROLE={host:true,solo:true,team:0,name:''};
-  /* en modo TV el solitario se juega en la tele (con el control o el mouse) y la música suena ahí */
-  S=nuevoEstado(['Tú'],999);S.tv=tv;S.spTV=tv&&SP.on;S.solitario=true;S.vidas=VIDAS;S.rondas=0;S.empezada=true;pantallaTurno();}
+function empezarSolitario(){cerrarSalaLocal();limpiarTimers();ROLE={host:true,solo:true,team:0,name:''};
+  S=nuevoEstado(['Tú'],999);S.solitario=true;S.vidas=VIDAS;S.rondas=0;S.empezada=true;pantallaTurno();}
+/* Solitario en la TV: la tele muestra el juego y hace sonar la música; el celular conectado es el control */
+function soloTV(from){const ph=S.phones,hay=Object.values(ph).some(p=>p.on);
+  if(!hay){const txt='Escanea el QR con tu celular: en el solitario de la TV el celular es tu control.';if(from&&!from.host)enviarA(from.cid,{aviso:txt});else aviso('Conecta tu celular',txt);return;}
+  limpiarTimers();S=nuevoEstado(['Tú'],999);S.phones=ph;Object.values(ph).forEach(p=>{p.team=0});S.tv=true;S.spTV=SP.on;
+  S.solitario=true;S.vidas=VIDAS;S.rondas=0;S.empezada=true;ROLE.team=null;pantallaTurno();}
+ACT.solo=(p,from)=>{if(V.k!=='lobby'||!S.tv)return;soloTV(from)};
+ACT.reSolo=(p,from)=>{if(V.k!=='finSolo'||!S.tv)return;soloTV(from)};
+ACT.alLobby=(p,from)=>{if(!S.tv||!['finSolo','fin'].includes(V.k))return;const ph=S.phones;limpiarTimers();
+  S=nuevoEstado(['Equipo 1','Equipo 2'],25);S.autoN=true;S.tv=true;S.phones=ph;autoEquipos();setV({k:'lobby'})};
 /* Duelo de uno: aparece la frase y hay 10 s para elegir de qué canción es, entre 4 títulos */
 function opcionesTitulo(s,g){const otros=[...new Set(barajar(CONTENT.qr.filter(o=>o.t!==s.t&&o.g===g)).map(o=>o.t))].slice(0,3);
   const lista=barajar([s.t,...otros]);return {lista,ok:lista.indexOf(s.t)}}
@@ -1079,17 +1101,17 @@ RENDER.j6s=function(){const g=V.g;
   if(V.cargando){scene({s:SGEN[g],head:cab(6,g),body:`<div class="aro-wrap quieto"><div class="vinilo gira"><div class="label" style="background:${CGEN[g]}"></div></div></div><div class="ahora"><span class="eti">Duelo de uno</span><div class="titulo-c">Buscando frases…</div></div>`});return;}
   const dots=`<div class="dots">${V.est.map((e,i)=>`<b class="${e===true?'si':e===false?'nope':i===V.cur?'act':''}"></b>`).join('')}</div>`;
   if(V.fase==='listo'){scene({s:SGEN[g],head:cab(6,g),body:`<div class="aro-wrap quieto"><div class="vinilo"><div class="label" style="background:${CGEN[g]};color:${CINK[g]}"><span class="seg">10</span></div></div></div><div class="ahora"><span class="eti">Duelo de uno</span><div class="titulo-c">3 canciones</div><div class="sub" style="margin:0">Aparece una frase: tienes 10 segundos para elegir de qué canción es.</div></div>${dots}`,
-      foot:`<button class="pill" id="go">▶ Empezar</button>`});$('#go').onclick=()=>{ac();act('j6sGo')};return;}
+      foot:esTV()?esperaHTML('Empieza desde tu celular'):`<button class="pill" id="go">▶ Empezar</button>`});if($('#go'))$('#go').onclick=()=>{ac();act('j6sGo')};return;}
   const s=V.songs[Math.min(V.cur,2)],op=V.ops[Math.min(V.cur,2)],p=pistaDe(s),txt=esc(p.txt).replace(/\n/g,'<br>');
   const opciones=`<div class="opciones">${op.lista.map((f,k)=>{const cls=V.pick==null?'':k===op.ok?'bien':k===V.pick?'mal':'apagada';
-    return `<button class="opcion ${cls}" data-o="${k}" ${V.pick==null?'':'disabled'}><span class="let">${'ABCD'[k]}</span><span class="tx">${esc(f)}</span></button>`}).join('')}</div>`;
+    return `<button class="opcion ${cls}" data-o="${k}" ${V.pick==null&&!esTV()?'':'disabled'}><span class="let">${'ABCD'[k]}</span><span class="tx">${esc(f)}</span></button>`}).join('')}</div>`;
   const msg=V.pick==null?(p.tipo==='frase'?'¿De qué canción es?':'¿Qué canción es?'):V.est[V.cur]?'¡Correcta! +2':V.pick<0?'Se acabó el tiempo':'No era esa';
   scene({s:SGEN[g],head:cab(6,g),body:`${dots}${relojHTML(V.t,DUELO_SEG,'chico')}<div class="previa"><span class="eti">${msg}</span><div>${txt}</div></div>${opciones}`});
   document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{if(!b.disabled)act('j6sPick',{o:+b.dataset.o})});
 };
-ACT.j6sGo=(p,from)=>{if(V.k!=='j6s'||V.fase!=='listo'||V.cargando)return;V.fase='juego';V.t=DUELO_SEG;sync();
+ACT.j6sGo=(p,from)=>{if(V.k!=='j6s'||V.fase!=='listo'||V.cargando||!esActor(from))return;V.fase='juego';V.t=DUELO_SEG;sync();
   const iv=setInterval(()=>{if(V.k!=='j6s'){clearInterval(iv);return}if(V.pick!=null)return;V.t--;if(V.t<=3&&V.t>0)alerta();if(V.t<=0)resuelveJ6s(-1);else sync()},1000);timers.push(iv);};
-ACT.j6sPick=(p,from)=>{if(V.k!=='j6s'||V.fase!=='juego'||V.pick!=null)return;const o=+p.o;if(!(o>=0&&o<4))return;resuelveJ6s(o)};
+ACT.j6sPick=(p,from)=>{if(V.k!=='j6s'||V.fase!=='juego'||V.pick!=null||!esActor(from))return;const o=+p.o;if(!(o>=0&&o<4))return;resuelveJ6s(o)};
 function resuelveJ6s(o){const op=V.ops[V.cur];V.pick=o;V.est[V.cur]=o===op.ok;if(V.est[V.cur])ding();else golpe();sync();
   const t=setTimeout(()=>{if(V.k!=='j6s')return;V.cur++;V.pick=null;V.t=DUELO_SEG;
     if(V.cur>=3){const n=V.est.filter(x=>x).length;resultado({base:n*2,ok:n,tot:3,detalle:`${n} de 3 canciones`,perfecto:n===3,revela:V.songs,s:SGEN[V.g]})}else sync()},1700);timers.push(t);}
@@ -1105,8 +1127,9 @@ function finSolitario(){let rec=0;try{rec=+localStorage.getItem('bb_record')||0}
 RENDER.finSolo=function(){if(V.sonado!==true){acorde();V.sonado=true}
   scene({scroll:true,s:'gana',hero:`<img class="banda-img" src="${IMG.banda}" alt="">`,
     head:`<div class="gana-card"><span class="eti">${V.nuevo?'🏆 Nuevo récord':'💔 Sin vidas'}</span><div class="marca">${V.pts} puntos</div><div class="gana-pts">${V.rondas} ${V.rondas===1?'ronda':'rondas'} · récord ${V.rec}</div></div>`,
-    foot:`<button class="pill" id="otra">Jugar de nuevo</button><button class="pill sec" onclick="salir()">Volver al inicio</button>`});
-  $('#otra').onclick=()=>{ac();empezarSolitario()};};
+    foot:esTV()?esperaHTML('Elige en tu celular: jugar de nuevo o volver al inicio'):`<button class="pill" id="otra">Jugar de nuevo</button><button class="pill sec" id="volver">Volver al inicio</button>`});
+  if($('#otra'))$('#otra').onclick=()=>{ac();if(S.tv)act('reSolo');else empezarSolitario()};
+  if($('#volver'))$('#volver').onclick=()=>{if(S.tv)act('alLobby');else salir()};};
 
 /* ---------- resultado ---------- */
 function revelaHTML(songs){if(!songs)return'';return `<div class="lista">${songs.map(s=>`<div class="row" style="padding:8px 12px"><div class="t"><span class="esp"><b>${esc(s.t)}</b> — ${esc(s.a)}</span></div></div>`).join('')}</div>`}
