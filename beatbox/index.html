@@ -48,10 +48,10 @@ img{max-width:100%;flex:none}
 .hero .banda-img{width:100%;height:auto;max-height:34vh;object-fit:contain;filter:drop-shadow(0 12px 18px rgba(20,18,19,.14))}
 
 /* marcador: lo único arriba (tocarlo abre el menú) */
-.top{flex:none;display:flex;align-items:center;gap:6px;min-height:42px;width:100%;overflow-x:auto;scrollbar-width:none;justify-content:safe center;padding:2px 0}
+.top{flex:none;display:flex;align-items:center;gap:6px;min-height:42px;width:100%;overflow-x:auto;scrollbar-width:none;justify-content:safe center;padding:2px 0;margin-bottom:6px}
 .top::-webkit-scrollbar{display:none}
 .chip{flex:none;display:inline-flex;align-items:center;gap:7px;background:var(--blanco);color:var(--ink);border-radius:999px;padding:4px 12px 4px 4px;font-weight:700;font-size:.82rem;white-space:nowrap;position:relative;overflow:hidden;box-shadow:var(--sombra)}
-.chip .pts{background:var(--c,var(--fondo));color:var(--ink);border-radius:999px;min-width:30px;height:28px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:900;font-stretch:125%;font-size:.95rem}
+.chip .pts{background:var(--c,var(--fondo));color:#fff;border-radius:999px;min-width:30px;height:28px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:900;font-stretch:125%;font-size:.95rem}
 .chip.turno{background:var(--ink);color:#fff}
 .chip.mio{box-shadow:inset 0 0 0 2px var(--ink),var(--sombra)}
 .chip.turno.mio{box-shadow:inset 0 0 0 2px var(--c),var(--sombra)}
@@ -204,7 +204,10 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 /* la elegida crece en su mismo lugar y todo lo demás queda desenfocado detrás */
 .carta-j.sel{transform:translateX(-50%) scale(1.42);transform-origin:50% 50%;z-index:20;animation:pumc .45s;box-shadow:0 22px 44px rgba(20,18,19,.3)}
 @keyframes pumc{0%{transform:translateX(-50%) scale(1)}60%{transform:translateX(-50%) scale(1.5)}100%{transform:translateX(-50%) scale(1.42)}}
-.abanico:has(.sel)::before{content:"";position:fixed;inset:0;z-index:15;background:rgba(237,237,235,.3);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);animation:aparece .35s}
+/* al caer la carta, todo lo demás (cartas, título y pie) se desenfoca; el velo cubre la pantalla completa */
+.abanico:has(.sel) .carta-j:not(.sel){filter:blur(7px);opacity:.45}
+.scene:has(.carta-j.sel) .head,.scene:has(.carta-j.sel) .foot,.scene:has(.carta-j.sel) .top{filter:blur(5px);opacity:.6;transition:filter .35s,opacity .35s}
+body:has(.carta-j.sel)::before,body:has(.carta-j.sel)::after{filter:blur(30px)}
 @keyframes aparece{from{opacity:0}}
 .orbe-wrap{position:relative;z-index:21}
 /* celular como mando en modo TV: esfera grande al centro */
@@ -252,7 +255,7 @@ body.tv .orbe{width:min(24vw,15vh,130px)}
 .score .eq.gana .n{color:var(--klein)}
 .equipos{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
 .equipos .card{padding:12px;gap:4px;align-items:flex-start;min-height:84px;cursor:pointer;text-align:left;border-radius:24px}
-.equipos .card.sel{box-shadow:inset 0 0 0 3px var(--ink),var(--sombra)}
+.equipos .card.sel{background:var(--ink);color:#fff}.equipos .card.sel .tel{color:rgba(255,255,255,.7)}
 .equipos .card .nm{font-weight:800;font-size:1.02rem;line-height:1.1;padding-right:18px}
 .equipos .card .tel{font-size:.76rem;color:var(--sub);line-height:1.25}
 .equipos .card .c{width:16px;height:16px;border-radius:50%;position:absolute;top:12px;right:12px}
@@ -295,7 +298,7 @@ body.tv .orbe{width:min(24vw,15vh,130px)}
 #duelo .zonas{flex:1;display:flex;flex-direction:column;min-height:0}
 #duelo .zona{flex:1;font-family:var(--display);font-weight:900;font-stretch:125%;font-size:clamp(1.6rem,8vw,2.8rem);text-transform:uppercase;letter-spacing:-.02em;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:opacity .2s}
 #duelo .zona.bloq{opacity:.3}
-#duelo .zona.gano{box-shadow:inset 0 0 0 8px var(--ink)}
+#duelo .zona.gano{filter:brightness(.72) saturate(1.3);transform:scale(.97)}
 #duelo .zona[disabled]{cursor:default}
 #duelo .invert{transform:rotate(180deg)}
 #duelo .acc{display:flex;gap:8px;width:100%}
@@ -409,11 +412,31 @@ body::after{animation:flota 18s ease-in-out infinite alternate-reverse}
 .tv-info .equipos{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
 
 /* previa */
-.regla-card{width:100%;background:#fff;border-radius:26px;padding:20px 20px;display:flex;flex-direction:column;gap:14px}
-.regla-txt{font-size:1.05rem;line-height:1.55;font-weight:600}
-.regla-pts{font-weight:800;color:var(--sub);font-size:.9rem;border-top:1.5px solid var(--linea);padding-top:12px}
-.hero.chico{height:17%}
+/* previa: mascota grande con aire, título montado sobre ella, texto libre al centro */
+.hero.previa{height:30%;margin-top:18px;align-items:flex-end}
+.desliza .hero.previa{max-height:30vh;min-height:150px;margin-top:18px}
+.hero.previa img.pj{height:100%;filter:drop-shadow(0 16px 24px rgba(20,18,19,.22))}
+.titulo-previa{margin-top:-14px;position:relative;z-index:2;font-size:clamp(2rem,10.5vw,3.2rem);text-shadow:0 2px 0 rgba(255,255,255,.6)}
+.scene .head:has(.titulo-previa){padding:0 0 6px}
+.head:has(.titulo-previa) .tags{margin-top:18px}
+.regla-libre{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;flex:1;padding:18px 8px;text-align:center}
+.regla-txt{font-size:1.08rem;line-height:1.6;font-weight:600;margin:0;max-width:34ch}
+.regla-pts{font-weight:800;color:var(--sub);font-size:.88rem;margin:0;background:rgba(255,255,255,.6);border-radius:999px;padding:8px 16px}
+.hero.chico{height:17%;margin-top:14px}
 .desliza .hero.chico{max-height:19vh;min-height:96px}
+/* pantalla de título: banda completa y "BEAT BOX" en una línea */
+.hero.inicio{height:auto;flex:none;margin-top:28px}
+.hero.inicio .banda-img{max-height:30vh}
+.marca.una{white-space:nowrap;font-size:clamp(2.2rem,12.5vw,4rem);margin-top:6px}
+/* configuración: más aire bajo el título y equipos en filas */
+.scene:has(.bloque) .head{padding-bottom:22px}
+.bloque{gap:12px;padding:16px}
+.eq-lista{display:flex;flex-direction:column;gap:8px}
+.eq-row{display:flex;align-items:center;gap:10px}
+.eq-row input{flex:1;height:46px;border-radius:14px}
+.col-dot{width:44px;height:44px;border-radius:50%;flex:none;color:rgba(255,255,255,.9);font-weight:800;font-size:1.1rem;box-shadow:0 6px 14px rgba(20,18,19,.2)}
+.col-dot:active{transform:scale(.92)}
+.equipos .card .c{width:18px;height:18px}
 
 /* ruleta 3D */
 .abanico{perspective:900px}
@@ -434,12 +457,12 @@ body::after{animation:flota 18s ease-in-out infinite alternate-reverse}
 .adivinados span.mal{background:#fff;color:var(--sub);text-decoration:line-through}
 
 /* duelo: mitad responder, mitad pasar */
-#duelo .zona-wrap{flex-direction:row;gap:0}
-#duelo .zona-wrap .zona{flex:1.3;border-radius:0}
-#duelo .zona-wrap .zona b{display:block;font-family:var(--texto);font-size:.85rem;letter-spacing:.12em;opacity:.7;font-stretch:100%;margin-top:6px}
-#duelo .pasar-d{position:static;flex:1;height:auto;border-radius:0;background:rgba(255,255,255,.55);font-family:var(--display);font-weight:900;font-stretch:112%;text-transform:uppercase;font-size:clamp(1.2rem,6vw,2rem);box-shadow:inset 3px 0 0 var(--ink);padding:0}
-#duelo .invert .zona-wrap{flex-direction:row-reverse}
-#duelo .invert .pasar-d{box-shadow:inset -3px 0 0 var(--ink)}
+/* responder arriba, PASAR abajo (en el lado girado 180° queda igual de natural) */
+#duelo .zona-wrap{flex-direction:column;gap:0}
+#duelo .zona-wrap .zona{flex:1.4;border-radius:0}
+#duelo .zona-wrap .zona b{display:block;font-family:var(--texto);font-size:.85rem;letter-spacing:.12em;opacity:.8;font-stretch:100%;margin-top:6px}
+#duelo .pasar-d{position:static;flex:1;height:auto;border-radius:0;background:rgba(255,255,255,.6);color:var(--ink);font-family:var(--display);font-weight:900;font-stretch:112%;text-transform:uppercase;font-size:clamp(1.2rem,6vw,2rem);box-shadow:none;padding:0}
+#duelo .pasar-d:active{background:rgba(255,255,255,.85)}
 #duelo .solo-zona .zona-wrap .zona{font-size:clamp(2rem,11vw,3.6rem)}
 body.tv #duelo .tv-zonas .zona{font-size:2.6rem}
 
@@ -498,7 +521,12 @@ function permitidos(n){return Math.floor(n*0.4)}
 function juegosActivos(){const base=S&&S.juegos&&S.juegos.length?S.juegos:[1,2,3,4,5,6,7];return S&&S.solitario?base.filter(j=>SOLO_JUEGOS.includes(j)):base}
 const FLAGICON={escudo:"🛡️",doble:"✖️2",sil:"🤫",eligen:"👉",reloj:"⏱️",dj:"🎧",extra:"➕"};
 const NEG=['m2','sil','eligen','reloj','regalo','gratis'];
-const COLEQ=['var(--fushia)','var(--citric)','var(--aquam)','var(--tang)'];
+/* colores de equipo: cada uno es un degradé (color → más oscuro). El anfitrión puede cambiarlos en la configuración. */
+const PALEQ=[{n:'Fushia',a:'#F037A5',b:'#8E1560',t:'#fff'},{n:'Citric',a:'#CDF564',b:'#6E9A12',t:'#191414'},{n:'Aqua',a:'#9BF0E1',b:'#1E9D8B',t:'#191414'},{n:'Tangerine',a:'#FF4632',b:'#9E1A0C',t:'#fff'},{n:'Klein',a:'#4100F5',b:'#1B0068',t:'#fff'},{n:'Storm',a:'#8FA9C9',b:'#3F5A7E',t:'#fff'}];
+function colIdx(i){const t=S&&S.teams[i];return (t&&t.col!=null?t.col:i)%PALEQ.length}
+function colEq(i){const c=PALEQ[colIdx(i)];return `linear-gradient(160deg,${c.a},${c.b})`}
+function inkEq(i){return PALEQ[colIdx(i)].t}
+const COLEQ={get length(){return 4}};
 const SONADO=new Set();/* canciones que este celular ya hizo sonar solo (para no repetir al redibujar) */
 
 /* S = estado de la partida (lo manda el anfitrión). V = vista actual (qué pantalla y qué está pasando).
@@ -720,7 +748,7 @@ function topbar(){
   if(!S||!S.empezada)return '';
   if(S.solitario)return `<button class="top" onclick="menuJuego()" aria-label="Puntaje y vidas. Toca para ver el menú"><span class="chip turno" style="--c:var(--citric)"><span class="pts">${S.teams[0].score}</span>Solitario</span><span class="chip vidas">${'❤️'.repeat(Math.max(0,S.vidas))}${'🤍'.repeat(Math.max(0,VIDAS-S.vidas))}</span></button>`;
   const chips=S.teams.map((t,i)=>{const fl=Object.keys(t.flags).filter(k=>t.flags[k]).map(k=>k==='escudo'?FLAGICON.escudo.repeat(t.flags.escudo):FLAGICON[k]).join('');
-    return `<span class="chip ${i===S.cur?'turno':''} ${!ROLE.solo&&ROLE.team===i?'mio':''}" style="--c:${COLEQ[i%4]}"><span class="pts">${t.score}</span>${esc(t.name.length>9?t.name.slice(0,8)+'…':t.name)}${fl?' '+fl:''}<i class="prog" style="width:${Math.min(100,100*t.score/S.meta)}%"></i></span>`}).join('');
+    return `<span class="chip ${i===S.cur?'turno':''} ${!ROLE.solo&&ROLE.team===i?'mio':''}" style="--c:${colEq(i)}"><span class="pts" style="color:${inkEq(i)}">${t.score}</span>${esc(t.name.length>9?t.name.slice(0,8)+'…':t.name)}${fl?' '+fl:''}<i class="prog" style="width:${Math.min(100,100*t.score/S.meta)}%"></i></span>`}).join('');
   return `<button class="top" onclick="menuJuego()" aria-label="Marcador. Toca para ver el menú">${chips}</button>`;
 }
 function menuJuego(){
@@ -737,7 +765,7 @@ function scene(o){$('#duelo-root').innerHTML='';const grande=esTV(),ancho=grande
   $('#app').innerHTML=`<section class="scene ${o.scroll?'scroll':''} ${ancho?'ancho':''}">${topbar()}${o.scroll?`<div class="desliza">${dentro}</div>`:dentro}${o.foot?`<div class="foot">${o.foot}</div>`:''}</section>`;
   if(top)$('.desliza').scrollTop=top;
 }
-function pj(k){return `<div class="disco"></div><img class="pj" src="${IMG[k]}" alt="">`}
+function pj(k){return `<img class="pj" src="${IMG[k]}" alt="">`}
 function cab(j,g){return `<div class="cab"><span>${j} · ${JUEGOS[j].n}</span>${g?`<span class="gpill">${g}</span>`:''}<span>🎙️ ${esc(S.teams[S.cur].name)}</span></div>`}
 /* reloj = vinilo con un aro de progreso (ref. "Now Playing") */
 function relojHTML(t,total,cls){const p=Math.max(0,Math.min(100,100*t/(total||t||1)));
@@ -750,7 +778,7 @@ function netHTML(){const e=estadoNet();return e?`<div class="estado-net" style="
 function inicio(){
   limpiarTimers();pararPista();cerrarSalaLocal();S=null;V=null;ROLE={host:true,solo:true,team:null,name:'',display:false};
   const prev=cargar();
-  scene({s:'lima',hero:`<img class="banda-img" src="${IMG.banda}" alt="La banda de BeatBox">`,head:`<div class="marca">Beat Box</div><p class="sub">El juego de mesa musical</p>`,
+  scene({s:'lima',hero:`<img class="banda-img" src="${IMG.banda}" alt="La banda de BeatBox">`,heroCls:'inicio',head:`<div class="marca una">Beat Box</div><p class="sub">El juego de mesa musical</p>`,
     body:`<div class="menu-inicio">
       <button class="pill grande-btn" id="crear">🎉 Crear partida</button>
       <button class="pill sec grande-btn" id="unir">🔗 Unirse con código</button>
@@ -817,8 +845,8 @@ RENDER.config=function(){
     body:`<div class="bloque"><span class="eti">Mazo</span><div class="mazos"><button class="mazo on">🎵 General<small>${CONTENT.qr.length} canciones</small></button><button class="mazo off" disabled>🌎 Latino<small>Pronto</small></button><button class="mazo off" disabled>🇬🇧 Inglés<small>Pronto</small></button></div></div>
       ${solo?`<div class="bloque"><span class="eti">Vidas</span><div class="vidas-cfg">${'❤️'.repeat(VIDAS)}<small>Pierdes una si fallas más del 40% de una ronda</small></div></div>`:
       `<div class="bloque"><span class="eti">Cómo se juega</span><div class="seg"><button data-uc="0" class="${S.unCel?'':'sel'}">📱 Un celular por equipo</button><button data-uc="1" class="${S.unCel?'sel':''}">🤝 Un solo celular</button></div></div>
-      <div class="bloque"><div class="fila"><span class="eti">Equipos</span><div class="seg chico"><button data-n="2" class="${S.teams.length===2?'sel':''}">2</button><button data-n="3" class="${S.teams.length===3?'sel':''}">3</button><button data-n="4" class="${S.teams.length===4?'sel':''}">4</button></div></div>
-        <div class="nombres">${S.teams.map((t,i)=>`<button class="nombre-eq" data-ne="${i}" style="--c:${COLEQ[i%4]}"><i></i>${esc(t.name)} ✎</button>`).join('')}</div></div>
+      <div class="bloque"><span class="eti">¿Cuántos equipos?</span><div class="seg"><button data-n="2" class="${S.teams.length===2?'sel':''}">2</button><button data-n="3" class="${S.teams.length===3?'sel':''}">3</button><button data-n="4" class="${S.teams.length===4?'sel':''}">4</button></div>
+        <span class="eti" style="margin-top:6px">Nombre y color</span><div class="eq-lista">${S.teams.map((t,i)=>`<div class="eq-row"><button class="col-dot" data-ci="${i}" style="background:${colEq(i)}" title="Cambiar color">↻</button><input type="text" data-ni="${i}" maxlength="16" value="${esc(t.name)}" placeholder="Equipo ${i+1}"></div>`).join('')}</div></div>
       <div class="bloque"><div class="fila"><span class="eti">Meta</span><div class="seg chico"><button data-m="15" class="${S.meta===15?'sel':''}">15</button><button data-m="20" class="${S.meta===20?'sel':''}">20</button><button data-m="25" class="${S.meta===25?'sel':''}">25</button></div></div></div>`}
       <div class="bloque"><span class="eti">Pruebas (${S.juegos.length})</span>${chipsJuegos()}</div>
       ${sp}<button class="link" onclick="ajustesContenido()"><span class="esp"><b>📄 Canciones y planilla</b><small>${resumenContenido()}</small></span><span>›</span></button>`,
@@ -826,7 +854,8 @@ RENDER.config=function(){
   document.querySelectorAll('[data-uc]').forEach(b=>b.onclick=()=>act('unCel',{v:b.dataset.uc==='1'}));
   document.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>act('setN',{n:+b.dataset.n}));
   document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>act('meta',{m:+b.dataset.m}));
-  document.querySelectorAll('[data-ne]').forEach(b=>b.onclick=()=>editarNombres());
+  document.querySelectorAll('[data-ci]').forEach(b=>b.onclick=()=>act('color',{i:+b.dataset.ci}));
+  document.querySelectorAll('[data-ni]').forEach(inp=>{inp.onchange=()=>act('nombres',{noms:S.teams.map((t,i)=>{const el=document.querySelector(`[data-ni="${i}"]`);return el?el.value:t.name})})});
   document.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>act('juego',{j:+b.dataset.j}));
   $('#atras').onclick=()=>salir();
   $('#sig').onclick=()=>{ac();if(solo||S.unCel)act('start');else{V={k:'lobby'};sync()}};
@@ -837,7 +866,7 @@ function modalTV(){abrirModal(`<h3>📺 Proyectar en una TV</h3><ol class="pasos
 RENDER.lobby=function(){
   const tels=Object.values(S.phones).filter(p=>p.on&&!p.display),n=tels.length,tvs=Object.values(S.phones).filter(p=>p.on&&p.display).length;
   const tel=i=>tels.filter(p=>p.team===i).map(p=>esc(p.name)).join(', ');
-  const cards=`<div class="equipos">${S.teams.map((t,i)=>`<button class="card eq-card ${ROLE.team===i?'sel':''}" data-t="${i}" ${ROLE.display?'disabled':''}><span class="c" style="background:${COLEQ[i%4]}"></span><div class="nm">${esc(t.name)}</div><div class="tel">${tel(i)||'sin celular'}</div></button>`).join('')}</div>`;
+  const cards=`<div class="equipos">${S.teams.map((t,i)=>`<button class="card eq-card ${ROLE.team===i?'sel':''}" data-t="${i}" ${ROLE.display?'disabled':''}><span class="c" style="background:${colEq(i)}"></span><div class="nm">${esc(t.name)}</div><div class="tel">${tel(i)||'sin celular'}</div></button>`).join('')}</div>`;
   if(ROLE.display){
     scene({s:'lima',body:`<div class="tv-sala"><div class="qr grande">${qrHTML()}</div><div class="tv-info"><div class="marca">Beat Box</div><span class="eti">Escanea para unirte · o escribe el código</span><div class="codigo xl">${esc(NET.code)}</div><div class="contador"><b>${n}</b> ${n===1?'celular':'celulares'} · <b>${S.teams.length}</b> equipos</div>${cards}</div></div>`});
     return;}
@@ -865,6 +894,7 @@ ACT.setN=(p,from)=>{if(!from.host||V.k!=='config')return;S.autoN=false;ajustaN(+
 ACT.meta=(p,from)=>{if(!from.host||V.k!=='config'||![15,20,25].includes(+p.m))return;S.meta=+p.m;sync()};
 ACT.unCel=(p,from)=>{if(!from.host||V.k!=='config')return;S.unCel=!!p.v;sync()};
 ACT.juego=(p,from)=>{if(!from.host||V.k!=='config')return;const j=+p.j;if(S.juegos.includes(j)){if(S.juegos.length>2)S.juegos=S.juegos.filter(x=>x!==j)}else S.juegos=[...S.juegos,j].sort();sync()};
+ACT.color=(p,from)=>{if(!from.host||V.k!=='config')return;const i=+p.i,t=S.teams[i];if(!t)return;const usados=S.teams.map((x,k)=>k===i?-1:colIdx(k));let c=colIdx(i);for(let n=0;n<PALEQ.length;n++){c=(c+1)%PALEQ.length;if(!usados.includes(c))break}t.col=c;sync()};
 ACT.nombres=(p,from)=>{if(!from.host)return;(p.noms||[]).forEach((n,i)=>{if(S.teams[i])S.teams[i].name=String(n).trim().slice(0,16)||`Equipo ${i+1}`});sync()};
 /* empezar: con un solo celular (o nadie más conectado) todo pasa en este teléfono; la sala sigue abierta para una TV */
 ACT.start=(p,from)=>{if(!from.host||!['lobby','config'].includes(V.k))return;
@@ -935,9 +965,10 @@ RENDER.prep=function(){
   const j=V.j,g=V.g,J=JUEGOS[j];const t=S.teams[S.cur];const actor=esActor();
   const quien=S.solitario?`❤️ Puedes fallar ${permitidos(TOT[j])} de ${TOT[j]}`:j===6?'👥 Todos a la vez':`⚖️ Juez: ${esc(S.teams[rivalIdx()].name)}`;
   const foot=actor?`<button class="pill" id="ir">▶ Empezar</button>`:`<div class="orbe-cap">${esc(t.name)} empieza cuando esté listo</div>`;
-  scene({scroll:true,s:g?SGEN[g]:J.s,hero:pj(J.img),heroCls:'chico',
-    head:`<h1>${J.n}</h1><div class="tags"><span class="gpill">${g?g:'Sin género'}</span><span class="tag">🎙️ ${esc(t.name)}</span><span class="tag">${quien}</span></div>`,
-    body:`<div class="regla-card"><div class="regla-txt">${J.como}</div><div class="regla-pts">${J.pts}</div></div>`,foot});
+  /* la mascota grande "sostiene" el título: sin semicírculo, el título se monta un poco sobre ella */
+  scene({scroll:true,s:g?SGEN[g]:J.s,hero:pj(J.img),heroCls:'previa',
+    head:`<h1 class="titulo-previa">${J.n}</h1><div class="tags"><span class="gpill">${g?g:'Sin género'}</span><span class="tag">🎙️ ${esc(t.name)}</span><span class="tag">${quien}</span></div>`,
+    body:`<div class="regla-libre"><p class="regla-txt">${J.como}</p><p class="regla-pts">${J.pts}</p></div>`,foot});
   if($('#ir'))$('#ir').onclick=()=>{ac();act('empezar')};
 };
 ACT.empezar=(p,from)=>{if(V.k!=='prep'||!esActor(from))return;const j=V.j,g=V.g;
@@ -1156,16 +1187,16 @@ function finJ45(){limpiarTimers();const n=V.res.filter(x=>x).length;resultado({b
    Aparecen emojis que representan el título de una canción (con el género como pista) y hay que escribirlo.
    5 canciones en 60 s · 1 pt por título · 5/5 = carta de riesgo. Se valida solo (acepta pequeños errores de tipeo). */
 const EMOJIS={
-"Amor Prohibido":"❤️🚫","Bailando":"💃🕺","Ciega, Sordomuda":"🙈🙉🙊","Colgando en Tus Manos":"🪢🙌","Corazón Partío":"💔","Cuando Me Enamoro":"⏰😍","Duele el Corazón":"🤕❤️","Hijo de la Luna":"👶🌙","La Camisa Negra":"👕⬛","La Tortura":"😖⛓️","Limón y Sal":"🍋🧂","Macarena":"💃🙌🇪🇸","Tacones Rojos":"👠🔴","Torero":"🧑‍🎤🐂🟥","Un Año":"📅1️⃣","Vivir Mi Vida":"🌞🙌🎉",
-"...Baby One More Time":"👶1️⃣⏰","As It Was":"⏪🕰️","Bad Guy":"😈👤","Billie Jean":"👩🚫👶🕺","Blinding Lights":"😎💡💡🌃","Dancing Queen":"💃👑","Espresso":"☕","Flowers":"💐","Girls Just Want to Have Fun":"👧👧🎉","I Want It That Way":"👉➡️","Karma Chameleon":"☯️🦎","Levitating":"🧘‍♀️⬆️✨","Like a Prayer":"🙏🎶","Poker Face":"🃏😐","Rolling in the Deep":"🌊🔄","Shake It Off":"🤷‍♀️💃🚫","Shape of You":"📐👤","Uptown Funk":"🏙️⬆️🕺","Wannabe":"👯‍♀️💖➡️","Yes Sir, I Can Boogie":"✅🫡🕺",
-"Corazón Espinado":"❤️🌵","De Música Ligera":"🎵🪶","Devuélveme a Mi Chica":"↩️👧","Entre Dos Tierras":"🌍↔️🌎","Eres":"👉🫵","La Bamba":"🎸🇲🇽💃","La Flaca":"🦴👩","Labios Rotos":"👄💔","Lamento Boliviano":"😢🇧🇴","Lobo-hombre en París":"🐺👨🗼","Matador":"🧑‍🎤🐂🔪","Mil Horas":"1️⃣0️⃣0️⃣0️⃣⏰","Mujer Amante":"👩💋","Persiana Americana":"🪟🇺🇸","Rayando el Sol":"✏️☀️","Sin Documentos":"🚫📄","Tren al Sur":"🚂⬇️",
-"Back in Black":"🔙⬛","Believer":"🙏💪","Bohemian Rhapsody":"🎭👑🎹","Boulevard of Broken Dreams":"🛣️💔💭","Don't Stop Believin'":"🚫🛑🙏","Enter Sandman":"🚪😴🧙","Eye of the Tiger":"👁️🐯","Hey Jude":"👋🧑","Hotel California":"🏨🌴🇺🇸","I Love Rock 'n' Roll":"🙋❤️🎸","In the End":"⏭️🔚","Livin' on a Prayer":"🏠🙏","Rock and Roll All Nite":"🎸🌙🎉","Seven Nation Army":"7️⃣🌍⚔️","Smells Like Teen Spirit":"👃🧑‍🎓👻","Stairway to Heaven":"🪜☁️😇","Sweet Child O' Mine":"🍬👶🫶","We Will Rock You":"👥🎸🫵",
-"Adan y Eva":"🍎🐍👫","Adicto":"💊😵","Amorfoda":"❤️🤬","Beso":"💋","Culpables":"⚖️😳","Ella y Yo":"👩➕🙋‍♂️","Fantasías":"💭✨","Hawái":"🌺🏝️","La Canción":"🎵","Me Llamas":"📞🙋","Me Rehúso":"🙅‍♂️","Obsesión":"😍🔁🔁","Propuesta Indecente":"💍😏","Sana Sana":"🤕🐸","Si Veo a Tu Mamá":"👀👩‍🦳","Telepatía":"🧠📡🧠","Todo de Ti":"💯🫵","Tuyo":"🫵👐","Una Lady Como Tú":"👸🫵",
-"Ain't No Mountain High Enough":"🚫⛰️📏","Crazy in Love":"🤪❤️","Die For You":"⚰️🫵","Fallin'":"🍂⬇️","I Want You Back":"🙏🫵🔙","I Will Always Love You":"🙋♾️❤️🫵","Kill Bill":"🔪🧑","Leave the Door Open":"🚪🔓","Let's Stay Together":"🤝👫","No Scrubs":"🚫🧽","Respect":"🙇‍♀️✊","Say My Name":"🗣️📛","Stand By Me":"🧍🤝🧍","Superstition":"🐈‍⬛🪞🔮","Umbrella":"☔","Water":"💧","Yeah!":"🙌‼️",
-"Bichota":"👑💅🔥","China":"🇨🇳","Con Calma":"😌🧘","Despacito":"🐢🎶","Dile":"🗣️👉","Down":"⬇️","El Perdón":"🙏🙇","Felices los 4":"😄4️⃣","Gasolina":"⛽🚗","Gata Only":"🐈🚫👥","La Bebé (Remix)":"👶🔁","Lo Que Pasó, Pasó":"⏮️🤷","Mayor Que Yo":"👵➕🙋","Me Porto Bonito":"😇✨","Mi Gente":"🙋👥","Otro Trago":"🥃➕","Pepas":"💊🍬","Pobre Diabla":"😢😈👩","Provenza":"🌿🇫🇷🏖️","Sexy Movimiento":"😏💃","Sin Pijama":"🚫🩳🛏️","Tití Me Preguntó":"👵❓","Travesuras":"😈🤭","Tusa":"💔🍻😢","Ultra Solo":"🔝1️⃣🧍","Una Noche en Medellín":"🌙🇨🇴",
-"1977":"1️⃣9️⃣7️⃣7️⃣","Amor Completo":"❤️💯","Atrévete-te-te":"😏💃🎷","Copenhague":"🇩🇰","Cómo Te Extraño Mi Amor":"😢❤️","Disfruto":"😊🍰","Hasta la Raíz":"⬇️🌱🌳","Llueve Sobre la Ciudad":"🌧️🏙️","Malamente":"👏👏😈","Mariposa Tecknicolor":"🦋🌈","Me Gustas Tú":"😍🫵","Me Voy":"🚶‍♀️👋","Muérdete la Lengua":"😬👅","San Lucas":"⛪🧔","Soy Yo":"🙋‍♀️✌️","Soñé":"😴💭","Tú Me Dejaste de Querer":"🫵💔🙅","Vidas Paralelas":"🛤️👥","Vámonos de Viaje":"🧳✈️",
-"Do I Wanna Know?":"🤔❓","Feel Good Inc.":"😊🏢","Heat Waves":"🔥🌊","Just Like Heaven":"☁️😇","Kids":"🧒🧒","Losing My Religion":"📉🙏","Mr. Brightside":"🧔☀️👍","Pumped Up Kicks":"👟💪","Sex on Fire":"🔥🛏️","Somebody That I Used to Know":"👤🤷🔙","Song 2":"🎵2️⃣","Stressed Out":"😫","Sweater Weather":"🧶🌦️","Take Me Out":"🙋🚪➡️","Take Me to Church":"🙋⛪","Wicked Game":"😈🎮","Wonderwall":"🤩🧱","Yellow":"💛","Zombie":"🧟",
-"Algo Más":"➕❓","Amor Eterno":"❤️♾️","Burbujas de Amor":"🫧❤️🐟","Bésame Mucho":"💋💋💋","Cuando Nadie Me Ve":"🙈👤","El Triste":"😢🧑","Entra en Mi Vida":"🚪➡️❤️","Eres Tú":"🫵✨","Hoy Tengo Ganas de Ti":"📅😍🫵","La Incondicional":"👩💯🤍","Lloraré las Penas":"😭🍷","Me Olvidé de Vivir":"🤦‍♂️⏳","Mi Historia Entre Tus Dedos":"📖🖐️","Mientes":"🤥","Querida":"💌👩","Sin Miedo a Nada":"🚫😱","Te Amaré":"🫵❤️🔜","Tu Falta de Querer":"🫵❌❤️","Tu Recuerdo":"🫵🧠📸","Vivir Sin Aire":"😮‍💨🚫💨",
+"Amor Prohibido":"❤️🚫","Bailando":"💃🕺🎶","Ciega, Sordomuda":"🙈🙉🙊","Colgando en Tus Manos":"🧗🙌","Corazón Partío":"❤️💔","Cuando Me Enamoro":"🕐😍","Duele el Corazón":"❤️🤕","Hijo de la Luna":"👶🌙","La Camisa Negra":"👕⬛","La Tortura":"😩🔗","Limón y Sal":"🍋🧂","Macarena":"💃🙌🙌","Tacones Rojos":"👠❤️","Torero":"🧑🐂","Un Año":"📅📅📅","Vivir Mi Vida":"🙋🎉🌴",
+"...Baby One More Time":"👶1️⃣🔁","As It Was":"🕰️⬅️","Bad Guy":"😈🧑","Billie Jean":"👩🕺🚫👶","Blinding Lights":"😎💡💡","Dancing Queen":"💃👑","Espresso":"☕☕","Flowers":"💐🌸","Girls Just Want to Have Fun":"👧👧🎉","I Want It That Way":"🙋➡️👉","Karma Chameleon":"🦎🌈","Levitating":"🧍⬆️✨","Like a Prayer":"🙏🛐","Poker Face":"🃏😐","Rolling in the Deep":"🌊🔄⬇️","Shake It Off":"🙅💃","Shape of You":"📐👤","Uptown Funk":"🏙️🕺🎺","Wannabe":"👯💖","Yes Sir, I Can Boogie":"✅🫡🕺",
+"Corazón Espinado":"❤️🌵","De Música Ligera":"🎵🪶","Devuélveme a Mi Chica":"↩️👧💔","Entre Dos Tierras":"🌍↔️🌎","Eres":"🫵✨","La Bamba":"🎸🇲🇽","La Flaca":"👩📏🦴","Labios Rotos":"👄💔","Lamento Boliviano":"😢🇧🇴","Lobo-hombre en París":"🐺👨🗼","Matador":"🐂🗡️","Mil Horas":"1000⏰","Mujer Amante":"👩❤️💋","Persiana Americana":"🪟🇺🇸","Rayando el Sol":"✏️☀️","Sin Documentos":"🚫📄🪪","Tren al Sur":"🚂⬇️🧭",
+"Back in Black":"🔙⬛🎸","Believer":"🙏💪🔥","Bohemian Rhapsody":"🎭👑🎹","Boulevard of Broken Dreams":"🛣️💔💭","Don't Stop Believin'":"🚫🛑🙏","Enter Sandman":"🚪😴🧙","Eye of the Tiger":"👁️🐯","Hey Jude":"👋🧑","Hotel California":"🏨🌴☀️","I Love Rock 'n' Roll":"🙋❤️🎸","In the End":"➡️🔚","Livin' on a Prayer":"🧑🙏","Rock and Roll All Nite":"🎸🌙🎉","Seven Nation Army":"7️⃣🌍⚔️","Smells Like Teen Spirit":"👃🧑‍🎓👻","Stairway to Heaven":"🪜☁️😇","Sweet Child O' Mine":"🍬👶🫶","We Will Rock You":"👥🎸🫵",
+"Adan y Eva":"👫🍎🐍","Adicto":"💊😵","Amorfoda":"❤️🤬","Beso":"💋","Culpables":"😳⚖️","Ella y Yo":"👩➕🙋","Fantasías":"💭✨","Hawái":"🌺🏝️🌊","La Canción":"🎵🎶","Me Llamas":"📞🙋","Me Rehúso":"🙅🚫","Obsesión":"😍🔁🔁","Propuesta Indecente":"💍😏","Sana Sana":"🤕🐸🩹","Si Veo a Tu Mamá":"👀👩‍🦳","Telepatía":"🧠📡🧠","Todo de Ti":"💯🫵","Tuyo":"🫵👐","Una Lady Como Tú":"👸🫵",
+"Ain't No Mountain High Enough":"🚫⛰️📏","Crazy in Love":"🤪❤️","Die For You":"⚰️🫵","Fallin'":"🍂⬇️","I Want You Back":"🙏🫵🔙","I Will Always Love You":"🙋♾️❤️🫵","Kill Bill":"🔪🧑","Leave the Door Open":"🚪🔓","Let's Stay Together":"🤝👫","No Scrubs":"🚫🧽","Respect":"🙇✊","Say My Name":"🗣️📛","Stand By Me":"🧍🤝🧍","Superstition":"🐈‍⬛🪞🔮","Umbrella":"☔","Water":"💧🌊","Yeah!":"🙌‼️",
+"Bichota":"👑💅🔥","China":"🇨🇳","Con Calma":"😌🛌🏖️","Despacito":"🐢🐌","Dile":"🗣️👉","Down":"⬇️⬇️","El Perdón":"🙏🙇","Felices los 4":"😄😄😄😄","Gasolina":"⛽🚗💃","Gata Only":"🐈🚫👥","La Bebé (Remix)":"👶🔁","Lo Que Pasó, Pasó":"⏮️🤷","Mayor Que Yo":"👵➕🙋","Me Porto Bonito":"😇✨","Mi Gente":"🙋👥👥","Otro Trago":"🥃➕🥃","Pepas":"💊💊","Pobre Diabla":"😢😈👩","Provenza":"🌿🏖️🇫🇷","Sexy Movimiento":"😏💃","Sin Pijama":"🚫🩳🛏️","Tití Me Preguntó":"👵❓","Travesuras":"😈🤭","Tusa":"💔🍻😢","Ultra Solo":"🧍1️⃣","Una Noche en Medellín":"🌙🇨🇴",
+"1977":"1️⃣9️⃣7️⃣7️⃣","Amor Completo":"❤️💯","Atrévete-te-te":"😏💃🎷","Copenhague":"🇩🇰","Cómo Te Extraño Mi Amor":"😢❤️🫵","Disfruto":"😋🎉👍","Hasta la Raíz":"⬇️🌱🌳","Llueve Sobre la Ciudad":"🌧️🏙️","Malamente":"👏👏😈","Mariposa Tecknicolor":"🦋🌈","Me Gustas Tú":"😍🫵","Me Voy":"🚶👋","Muérdete la Lengua":"😬👅","San Lucas":"⛪🧔","Soy Yo":"🙋‍♀️✌️","Soñé":"😴💭","Tú Me Dejaste de Querer":"🫵💔🙅","Vidas Paralelas":"🛤️👥","Vámonos de Viaje":"🧳✈️🗺️",
+"Do I Wanna Know?":"🤔❓","Feel Good Inc.":"😊🏢","Heat Waves":"🔥🌊","Just Like Heaven":"☁️😇","Kids":"🧒🧒","Losing My Religion":"📉🙏","Mr. Brightside":"🧔☀️👍","Pumped Up Kicks":"👟💪","Sex on Fire":"🔥🛏️","Somebody That I Used to Know":"👤🤷🔙","Song 2":"🎵2️⃣","Stressed Out":"😫😫","Sweater Weather":"🧶🌦️","Take Me Out":"🙋🚪➡️","Take Me to Church":"🙋⛪","Wicked Game":"😈🎮","Wonderwall":"🤩🧱","Yellow":"💛💛","Zombie":"🧟",
+"Algo Más":"➕❓","Amor Eterno":"❤️♾️","Burbujas de Amor":"🫧❤️🐟","Bésame Mucho":"💋💋💋","Cuando Nadie Me Ve":"🙈👤","El Triste":"😢🧑","Entra en Mi Vida":"🚪➡️❤️","Eres Tú":"🫵✨","Hoy Tengo Ganas de Ti":"📅😍🫵","La Incondicional":"👩💯🤍","Lloraré las Penas":"😭🍷","Me Olvidé de Vivir":"🤦⏳","Mi Historia Entre Tus Dedos":"📖🖐️","Mientes":"🤥","Querida":"💌👩","Sin Miedo a Nada":"🚫😱","Te Amaré":"🫵❤️🔜","Tu Falta de Querer":"🫵❌❤️","Tu Recuerdo":"🫵🧠📸","Vivir Sin Aire":"😮‍💨🚫💨",
 "(Everything I Do) I Do It for You":"🙋💯🫵","All of Me":"💯🙋","Always":"♾️","Angels":"😇😇","Careless Whisper":"🤫🎷","Die With a Smile":"⚰️😊","Favorite Crime":"⭐🚔","Hello":"👋📞","Iris":"👁️🌸","My Heart Will Go On":"❤️🚢➡️","Nothing Compares 2 U":"🚫⚖️2️⃣🫵","Right Here Waiting":"📍⏳","Shape of My Heart":"♠️♥️","Someone Like You":"👤≈🫵","Someone You Loved":"👤❤️⏮️","Tears in Heaven":"😢☁️","Total Eclipse of the Heart":"🌑❤️","Unchained Melody":"⛓️‍💥🎶","Wind of Change":"🌬️🔄"};
 function poolEmoji(g){return CONTENT.qr.map((s,i)=>({s,i})).filter(x=>EMOJIS[x.s.t]&&(!g||x.s.g===g)&&!(S.usado.emo||[]).includes(x.i))}
 function tomarEmojis(g,n){S.usado.emo=S.usado.emo||[];let p=poolEmoji(g);if(p.length<n){S.usado.emo=S.usado.emo.filter(i=>CONTENT.qr[i]&&CONTENT.qr[i].g!==g);p=poolEmoji(g)}if(p.length<n)p=poolEmoji(null);
@@ -1180,7 +1211,7 @@ RENDER.j7=function(){
   const actor=esActor()&&!ROLE.display,g=V.g,it=V.items[V.idx];
   const dots=`<div class="dots">${V.items.map((_,i)=>`<b class="${V.res[i]===true?'si':V.res[i]===false?'nope':i===V.idx?'act':''}"></b>`).join('')}</div>`;
   const listos=V.items.filter((x,i)=>V.res[i]!=null).map((x,i)=>`<span class="${V.res[V.items.indexOf(x)]?'':'mal'}">${esc(x.t)}</span>`).join('');
-  const emo=V.activo&&it?`<div class="emo-card"><div class="emo">${it.e}</div><div class="emo-pista">${esc(g||'')} · ${Math.min(V.idx+1,5)} de 5${V.ult?` · <b class="${V.ult.ok?'ok-t':'mal-t'}">${V.ult.ok?'¡Sí!':'No era'}</b>`:''}</div></div>`
+  const emo=V.activo&&it?`<div class="emo-card"><div class="emo">${it.e}</div><div class="emo-pista">${esc(g||'')} · ${/ingl/i.test(it.l)?'🇬🇧 En inglés':'🇪🇸 En español'} · ${Math.min(V.idx+1,5)} de 5${V.ult?` · <b class="${V.ult.ok?'ok-t':'mal-t'}">${V.ult.ok?'¡Sí!':'No era'}</b>`:''}</div></div>`
     :`<div class="emo-card"><div class="emo">🎵❓</div><div class="emo-pista">${V.activo?'':'Los emojis aparecen al empezar'}</div></div>`;
   let body=relojHTML(V.t,V.total)+dots+emo,foot='';
   if(actor){foot=V.activo?`<div class="escribe"><input type="text" id="resp" placeholder="Escribe el título…" autocomplete="off" autocapitalize="sentences" enterkeyhint="send"><button class="redondo negro" id="env" aria-label="Enviar">➤</button></div><button class="pill sec" id="paso" style="height:44px;font-size:.95rem">Paso</button>`:`<button class="pill" id="go">▶ Empezar (${V.total} s)</button>`;}
@@ -1224,7 +1255,7 @@ RENDER.j6=function(){
   /* cada equipo tiene su zona para agarrar y su botón para pasar */
   const abierta=k=>V.fase==='abierto'&&!V.bloq.includes(k);
   /* mitad y mitad: la zona grande para responder y, al lado, PASAR del mismo tamaño */
-  const zona=(t,k,pasar)=>`<div class="zona-wrap"><button class="zona ${V.bloq.includes(k)?'bloq':''} ${V.fase==='responde'&&V.k2===k?'gano':''}" data-k="${k}" style="background:${COLEQ[k%4]}" ${abierta(k)&&pasar?'':'disabled'}>${esc(t.name)}${(V.pasa||[]).includes(k)?'<small>pasó</small>':abierta(k)&&pasar?'<b>¡LO SÉ!</b>':''}</button>${pasar&&abierta(k)?`<button class="pasar-d" data-pk="${k}">Pasar</button>`:''}</div>`;
+  const zona=(t,k,pasar)=>`<div class="zona-wrap"><button class="zona ${V.bloq.includes(k)?'bloq':''} ${V.fase==='responde'&&V.k2===k?'gano':''}" data-k="${k}" style="background:${colEq(k)};color:${inkEq(k)}" ${abierta(k)&&pasar?'':'disabled'}>${esc(t.name)}${(V.pasa||[]).includes(k)?'<small>pasó</small>':abierta(k)&&pasar?'<b>¡LO SÉ!</b>':''}</button>${pasar&&abierta(k)?`<button class="pasar-d" data-pk="${k}">Pasar</button>`:''}</div>`;
   if(ROLE.display){/* TV: todas las zonas a la vista, sin tocar */
     cont.innerHTML=`<div class="centro">${centro()}</div><div class="zonas tv-zonas">${S.teams.map((t,k)=>zona(t,k,false)).join('')}</div>`;
   }else if(ROLE.solo){
@@ -1300,7 +1331,7 @@ function resultado(o){limpiarTimers();pararPista();if(SP.on)SP.pause().catch(()=
   const t=S.teams[S.cur];setV({k:'res',detalle:o.detalle,n:o.n??null,max:o.max??null,ok:o.ok??null,tot:o.tot??o.max??null,porUnidad:o.porUnidad||1,base:o.base??null,doble:!!t.flags.doble,perfecto:!!o.perfecto,revela:o.revela||null,s:o.s});}
 function ptsRes(){const base=V.n!=null?V.n*V.porUnidad:V.base;return V.doble?base*2:base}
 function perfRes(){return V.n!=null?V.n===V.max:V.perfecto}
-RENDER.res=function(){const juez=esJuez();if(V.sonado!==true){acorde();V.sonado=true}
+RENDER.res=function(){const juez=esJuez();if(V.sonado!==true){acorde();V.sonado=true;if(perfRes())confeti();}
   scene({scroll:true,s:'negro',head:`<span class="eti">Fin de la ronda · ${esc(V.detalle)}</span><div class="grande" style="font-size:clamp(4.5rem,30vw,8rem)">+${ptsRes()}${V.doble?'<span style="font-size:.35em"> ×2</span>':''}</div><p class="sub" style="margin:4px 0 0">${S.solitario?soloErrTxt():perfRes()?'🎉 ¡Ronda perfecta! Puede tomar carta de riesgo':''}</p>`,
     body:`${V.n!=null&&juez?`<div class="stepper"><button id="menos">−</button><div class="grande" style="font-size:3rem">${V.n}</div><button id="mas">+</button></div><p class="sub" style="margin:0">${S.solitario?'Corrige el conteo si te equivocaste al marcar':'El juez puede corregir el conteo'}</p>`:''}${revelaHTML(V.revela)}`,
     foot:juez?`<button class="pill" id="conf">Confirmar</button>`:esperaHTML('El juez confirma el puntaje')});
