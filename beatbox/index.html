@@ -42,6 +42,7 @@ img{max-width:100%;flex:none}
 /* con scroll: solo se desliza .desliza; la barra de botones (.foot) queda fija abajo y nada pasa por debajo */
 .desliza{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column;margin:0 -16px;padding:0 16px 14px;-webkit-mask-image:linear-gradient(#000 calc(100% - 16px),transparent);mask-image:linear-gradient(#000 calc(100% - 16px),transparent)}
 .desliza .hero{flex:none;height:auto;max-height:34vh;min-height:130px}
+.desliza .hero.chico{max-height:18vh;min-height:90px}
 .desliza .body{flex:none;overflow:visible;justify-content:flex-start;padding-bottom:6px}
 .scene.scroll .foot{padding-top:8px}
 .hero .banda-img{width:100%;height:auto;max-height:34vh;object-fit:contain;filter:drop-shadow(0 12px 18px rgba(20,18,19,.14))}
@@ -128,7 +129,10 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 .stepper{display:flex;align-items:center;gap:18px}
 .stepper button{width:52px;height:52px;border-radius:50%;background:var(--ink);color:#fff;font-size:1.5rem;font-weight:800}
 .pre{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;width:100%}
-.pre li{background:var(--blanco);border-radius:18px;padding:9px 12px;font-size:.9rem;line-height:1.3;display:flex;gap:10px;align-items:center;box-shadow:var(--sombra)}
+.pre{gap:10px}
+.pre li{background:var(--blanco);border-radius:18px;padding:12px 14px;font-size:.98rem;line-height:1.45;display:flex;gap:12px;align-items:center;box-shadow:var(--sombra)}
+.hero.chico{height:16%}
+.hero.chico .disco{width:50%}
 .pre li b{width:26px;height:26px;border-radius:50%;background:var(--acc);color:var(--acc-ink);display:flex;align-items:center;justify-content:center;flex:none;font-size:.8rem}
 
 /* vinilos (ref. Yandex Music) */
@@ -187,17 +191,16 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 .chipv.no{background:rgba(255,255,255,.5)}
 
 /* ruleta (ref. "Audio Sphere") */
-.titulo2{display:flex;flex-direction:column;text-align:left;font-family:var(--display);font-weight:900;font-stretch:112%;text-transform:uppercase;letter-spacing:-.03em;line-height:.92;font-size:clamp(2rem,10.5vw,3rem)}
+.titulo2{display:flex;flex-direction:column;align-items:center;text-align:center;font-family:var(--display);font-weight:900;font-stretch:112%;text-transform:uppercase;letter-spacing:-.03em;line-height:.92;font-size:clamp(2rem,10.5vw,3rem)}
 .titulo2 .gris{color:rgba(20,18,19,.32);font-size:.8em;overflow-wrap:anywhere}
-.scene .head:has(.titulo2){text-align:left}
+.scene .head:has(.titulo2){text-align:center;padding-top:14px}
 .abanico{position:relative;flex:1;width:100%;min-height:150px}
 .body:has(.abanico){overflow:visible}
-.carta-j{position:absolute;left:50%;bottom:16%;width:min(36%,150px);aspect-ratio:3/4;border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:0;overflow:hidden;
+.carta-j{position:absolute;left:50%;bottom:16%;width:min(36%,150px);aspect-ratio:3/4;border-radius:16px;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;overflow:hidden;
   transform:translateX(-50%) rotate(var(--a));transform-origin:50% 320%;z-index:var(--z);opacity:var(--o);transition:transform .12s linear,opacity .12s;box-shadow:0 12px 24px rgba(20,18,19,.16)}
-.carta-j b{font-weight:800;font-size:clamp(.85rem,3.8vw,1.05rem);line-height:1.05}
+.carta-j b{font-family:var(--display);font-weight:900;font-stretch:112%;text-transform:uppercase;letter-spacing:-.02em;font-size:clamp(1.1rem,5vw,1.4rem);line-height:1}
 .carta-j span{font-weight:700;font-size:clamp(.78rem,3.4vw,.95rem);line-height:1.05;opacity:.6}
-.carta-j img{position:absolute;bottom:-4%;left:50%;transform:translateX(-50%);height:60%;width:auto;filter:drop-shadow(0 6px 8px rgba(20,18,19,.2))}
-.carta-j i{position:absolute;bottom:8px;left:10px;font-style:normal;font-weight:800;font-size:.75rem;opacity:.6}
+.carta-j i{position:absolute;top:8px;left:10px;font-style:normal;font-weight:800;font-size:.75rem;opacity:.6}
 /* la elegida crece en su mismo lugar y todo lo demás queda desenfocado detrás */
 .carta-j.sel{transform:translateX(-50%) scale(1.42);transform-origin:50% 50%;z-index:20;animation:pumc .45s;box-shadow:0 22px 44px rgba(20,18,19,.3)}
 @keyframes pumc{0%{transform:translateX(-50%) scale(1)}60%{transform:translateX(-50%) scale(1.5)}100%{transform:translateX(-50%) scale(1.42)}}
@@ -211,7 +214,7 @@ select{height:48px;border-radius:16px;border:0;background:var(--blanco);padding:
 .mando-res{font-family:var(--display);font-weight:800;font-stretch:62%;text-transform:uppercase;font-size:clamp(1.4rem,7vw,2rem);text-align:center;line-height:1}
 /* la ruleta en la tele, más grande */
 body.tv .carta-j{width:min(36%,215px);border-radius:20px;padding:14px}
-body.tv .carta-j b{font-size:1.25rem}body.tv .carta-j span{font-size:1.1rem}
+body.tv .carta-j b{font-size:1.8rem}body.tv .carta-j span{font-size:1.2rem}
 body.tv .abanico{min-height:300px}
 body.tv .orbe{width:min(24vw,15vh,130px)}
 .orbe-wrap{flex:none;display:flex;justify-content:center;padding:4px 0}
@@ -373,17 +376,17 @@ const CINK={Pop:"var(--aquam)",Rock:"var(--black)","R&B":"var(--citric)","Reggae
 const SGEN={Pop:"pop",Rock:"rock","R&B":"rnb","Reggaetón":"reg",Alternativo:"alt",Baladas:"bal"};
 const JUEGOS={
  1:{n:"Canta la palabra",img:"g1",gen:false,s:"oro",pts:"1 pt por palabra · 6/6 = carta de riesgo",
-    reglas:["6 palabras, 10 s cada una. La pista marca el tiempo.","Canta un trozo real que diga la palabra exacta. Sin ayuda.","No repetir canciones ya cantadas en la partida."]},
+    reglas:["6 palabras, 10 segundos cada una.","Canta un trozo de canción que diga esa palabra.","Sin ayuda y sin repetir canciones."]},
  2:{n:"Adivina la canción",img:"g2",gen:true,s:"bal",pts:"1 pt artista + 1 pt título · 6/6 = riesgo",
-    reglas:["3 canciones, máx. 10 s cada una.","60 s en total. Solo responde el jugador de turno.","Una respuesta por canción. “Paso” es definitivo."]},
+    reglas:["Suenan 3 canciones, 10 segundos cada una.","Di el artista y el título.","Una sola respuesta por canción."]},
  3:{n:"Completa la frase",img:"g3",gen:true,s:"alt",pts:"2 pts por frase · 3/3 = riesgo",
-    reglas:["La música se corta justo antes de una frase.","Elige cómo sigue entre 4 opciones.","Solo responde el jugador de turno, sin ayuda."]},
+    reglas:["La música se corta antes de una frase.","Elige cómo sigue entre 4 opciones.","Sin ayuda del equipo."]},
  4:{n:"Mímica",img:"g4",gen:true,s:"pop",pts:"1 pt por título · 5/5 = riesgo",
-    reglas:["Solo quien actúa mira la pantalla.","60 s para 5 títulos. Sin hablar ni sonidos.","El equipo dice el título exacto."]},
+    reglas:["Solo quien actúa mira la pantalla.","5 títulos en 60 segundos, sin hablar.","El equipo adivina el título."]},
  5:{n:"Tararea o silba",img:"g5",gen:false,s:"bebe",pts:"1 pt por canción · 5/5 = riesgo",
-    reglas:["Solo quien actúa mira la pantalla.","60 s para 5 canciones. Solo melodía, nada de letra.","El equipo dice el título exacto."]},
+    reglas:["Solo quien actúa mira la pantalla.","5 canciones en 60 segundos, solo melodía.","El equipo adivina el título."]},
  6:{n:"Duelo",img:"g6",gen:true,s:"rnb",pts:"2 pts por canción · las 3 = riesgo",
-    reglas:["Aparece una frase (o pista) en todos los celulares.","El primero en tocar su pantalla responde el título.","Si falla queda bloqueado y siguen los demás."]}
+    reglas:["Aparece una frase de una canción.","El primero en tocar su pantalla responde.","Si falla, siguen los demás."]}
 };
 /* Modo solitario: 1 jugador y 3 vidas, sin meta. Solo pruebas que se juegan de a uno (sin Mímica ni Tararea).
    Una ronda quita una vida si los errores superan el 40% de los intentos (5 → 2 permitidos, 6 → 2, 3 → 1). */
@@ -633,7 +636,7 @@ addEventListener('resize',()=>{if(V&&V.k==='lobby'&&ROLE.host)render();else if(e
 function scene(o){$('#duelo-root').innerHTML='';const ancho=!!(o.ancho&&pantallaAncha()),grande=esTV()||ancho;
   document.body.className='s-'+(o.s||'lima')+(grande?' tv':'');if(grande)zoomTV(ancho);
   const k=V?V.k:'',prev=$('.desliza'),top=prev&&scene.k===k?prev.scrollTop:0;scene.k=k;
-  const dentro=`${o.hero!==undefined?`<div class="hero">${o.hero}</div>`:''}${o.head?`<div class="head">${o.head}</div>`:''}<div class="body">${o.body||''}</div>`;
+  const dentro=`${o.hero!==undefined?`<div class="hero ${o.heroCls||''}">${o.hero}</div>`:''}${o.head?`<div class="head">${o.head}</div>`:''}<div class="body">${o.body||''}</div>`;
   $('#app').innerHTML=`<section class="scene ${o.scroll?'scroll':''} ${ancho?'ancho':''}">${topbar()}${o.scroll?`<div class="desliza">${dentro}</div>`:dentro}${o.foot?`<div class="foot">${o.foot}</div>`:''}</section>`;
   if(top)$('.desliza').scrollTop=top;
 }
@@ -765,7 +768,7 @@ function posAbanico(i,cur,N){N=N||6;const h=Math.floor(N/2);return ((i-cur)%N+N+
 function estiloCarta(el,p,N){el.style.setProperty('--a',p*16+'deg');el.style.setProperty('--z',10-Math.abs(p));el.style.setProperty('--o',p===-Math.floor(N/2)?0:1)}
 function cartaJuego(j,cur,sel,L){const N=L.length,p=posAbanico(L.indexOf(j),cur,N),[bg,ink]=JCOL[j],pal=JUEGOS[j].n.split(' ');
   return `<div class="carta-j ${sel?'sel':''}" data-j="${j}" style="--a:${p*16}deg;--z:${10-Math.abs(p)};--o:${p===-Math.floor(N/2)?0:1};background:${bg};color:${ink}">
-    <b>${esc(pal[0])}</b><span>${esc(pal.slice(1).join(' '))}</span><img src="${IMG['g'+j]}" alt=""><i>${j}</i></div>`;}
+    <b>${esc(pal[0])}</b><span>${esc(pal.slice(1).join(' '))}</span><i>${j}</i></div>`;}
 RENDER.turno=function(){
   const t=S.teams[S.cur];const eligen=t.flags.eligen,dj=t.flags.dj;const actor=esActor();
   const tags=[t.flags.doble?'✖️2 vale el doble':'',t.flags.reloj?'⏱️ mitad de tiempo':'',eligen?`👉 ${esc(S.teams[rivalIdx()].name)} elige`:dj?'🎧 DJ: tú eliges':''].filter(Boolean);
@@ -783,7 +786,7 @@ RENDER.turno=function(){
   else pie=`<div class="orbe-cap">${V.rolling?'Girando…':puedeGirar?'Toca la esfera para girar':`${esc(t.name)} gira la ruleta`}</div>`;
   const conOrbe=!((eligen||dj)&&!V.j);
   scene({s:'amarillo',
-    head:`<div class="titulo2"><span>${esc(t.name)}</span><span class="gris">${linea2}</span></div>${tags.length?`<div class="cab" style="justify-content:flex-start;margin-top:6px">${tags.map(x=>`<span>${x}</span>`).join('')}</div>`:''}`,
+    head:`<div class="titulo2"><span>${esc(t.name)}</span><span class="gris">${linea2}</span></div>${tags.length?`<div class="cab" style="margin-top:6px">${tags.map(x=>`<span>${x}</span>`).join('')}</div>`:''}`,
     /* modo TV: la ruleta grande va en la tele; el celular es el mando (solo la esfera para girar) */
     body:S.tv&&!ROLE.host?`<div class="mando">${conOrbe?`<div class="orbe-wrap">${orbe}</div>`:''}<div class="mando-res">${V.j?`${esc(JUEGOS[V.j].n)}${V.g?` · ${V.g}`:''}`:'📺 Mira la ruleta en la TV'}</div></div>`
       :`<div class="abanico" id="abanico">${L.map(j=>cartaJuego(j,cur,V.j===j&&!V.rolling,L)).join('')}</div>${conOrbe?`<div class="orbe-wrap">${orbe}</div>`:''}`,
@@ -810,7 +813,7 @@ RENDER.prep=function(){
   const j=V.j,g=V.g,J=JUEGOS[j];const t=S.teams[S.cur];const actor=esActor();
   const quien=S.solitario?`❤️ Puedes fallar ${permitidos(TOT[j])} de ${TOT[j]}`:j===6?'Todos a la vez':`Juez: ${esc(S.teams[rivalIdx()].name)}`;
   const foot=actor?`<button class="pill" id="ir">Empezar</button>`:esperaHTML(`${esc(t.name)} empieza cuando esté listo`);
-  scene({scroll:true,s:g?SGEN[g]:J.s,hero:pj(J.img),
+  scene({scroll:true,s:g?SGEN[g]:J.s,hero:pj(J.img),heroCls:'chico',
     head:`<h1>${J.n}</h1><div class="tags" style="margin-top:8px">${g?`<span class="gpill">${g}</span>`:''}<span class="tag">🎙️ ${esc(t.name)}</span><span class="tag">${quien}</span></div>`,
     body:`<ol class="pre">${J.reglas.map((r,i)=>`<li><b>${i+1}</b><span>${r}</span></li>`).join('')}</ol><p class="sub" style="margin:0;font-weight:800">${J.pts}</p>`,foot});
   if($('#ir'))$('#ir').onclick=()=>{ac();act('empezar')};
