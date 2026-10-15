@@ -569,12 +569,12 @@ function leerPlanilla(file){
       const mel=hoja('Melodía').map(r=>({t:String(col(r,'Título')).trim(),a:String(col(r,'Artista')).trim(),estado:String(col(r,'Estado'))})).filter(s=>s.t&&!/^\(/.test(s.t)&&!/cambiar/i.test(s.estado));
       if(qr.length<30)throw new Error('La hoja “Mazo QR” tiene muy pocas canciones válidas.');
       CONTENT={qr,words:words.length>=12?words:DATA.words,mim:mim.length>=12?mim:DATA.mim,mel:mel.length>=5?mel:DATA.mel,origen:file.name};
-      try{localStorage.setItem('beatbox_contenido',JSON.stringify(CONTENT))}catch(e){}
+      try{localStorage.setItem('beatbox_contenido',JSON.stringify(CONTENT));localStorage.removeItem('bb_usado');Object.keys(USADO).forEach(k=>delete USADO[k])}catch(e){}
       cerrarModal();render();
     }catch(err){aviso('No pude leer la planilla',err.message+' Debe ser Beatbox_planilla_maestra (.xlsx).')}};
   r.readAsArrayBuffer(file);
 }
-function quitarPlanilla(){try{localStorage.removeItem('beatbox_contenido')}catch(e){}cargarContenido();cerrarModal();render()}
+function quitarPlanilla(){try{localStorage.removeItem('beatbox_contenido');localStorage.removeItem('bb_usado');Object.keys(USADO).forEach(k=>delete USADO[k])}catch(e){}cargarContenido();cerrarModal();render()}
 
 /* ---------- sonidos ---------- */
 let AC=null;
@@ -637,14 +637,19 @@ const SP={
     if(!items.length)throw new Error(`No encontré “${song.t}” en Spotify`);SP.cache[key]=items[0].uri;return items[0].uri;},
   precargar(songs){if(!SP.on)return;songs.forEach(s=>SP.uri(s).catch(()=>{}))},
   async dispositivos(){const j=await SP.api('/me/player/devices');return (j&&j.devices)||[]},
-  async play(song,posMs,stopMs){clearTimeout(SP.stopTimer);const uri=await SP.uri(song);let dev=SP.device;const q=dev?`?device_id=${dev}`:'';
-    try{await SP.api('/me/player/play'+q,'PUT',{uris:[uri],position_ms:posMs||0});}
-    catch(e){if(e.status===404||/device/i.test(e.message)){const ds=await SP.dispositivos();
-        if(!ds.length)throw new Error('No hay ningún dispositivo con Spotify abierto. Abre la app de Spotify en este celular y vuelve a intentar.');
-        dev=ds.find(d=>d.is_active)?.id||ds[0].id;localStorage.setItem('bb_sp_dev',dev);await SP.api(`/me/player/play?device_id=${dev}`,'PUT',{uris:[uri],position_ms:posMs||0});}else throw e;}
+  /* dónde suena: por defecto, la app de Spotify de ESTE celular (no un Alexa ni otro parlante que esté activo).
+     Solo si el anfitrión elige otro dispositivo a mano en "Spotify → Reproducir en", se usa ese. */
+  get manual(){return localStorage.getItem('bb_sp_manual')==='1'},
+  async elegirDispositivo(){const ds=await SP.dispositivos();if(!ds.length)throw new Error('No hay ningún dispositivo con Spotify abierto. Abre la app de Spotify en este celular y vuelve a intentar.');
+    if(SP.manual&&SP.device&&ds.some(d=>d.id===SP.device))return SP.device;
+    const tel=ds.find(d=>/smartphone|phone/i.test(d.type))||ds.find(d=>d.is_active)||ds[0];localStorage.setItem('bb_sp_dev',tel.id);return tel.id;},
+  async play(song,posMs,stopMs){clearTimeout(SP.stopTimer);const uri=await SP.uri(song);let dev=SP.manual?SP.device:(SP.devCache||'');
+    const ir=async d=>SP.api(`/me/player/play${d?`?device_id=${d}`:''}`,'PUT',{uris:[uri],position_ms:posMs||0});
+    try{if(!dev){dev=await SP.elegirDispositivo();SP.devCache=dev}await ir(dev);}
+    catch(e){if(e.status===404||/device/i.test(e.message)){dev=await SP.elegirDispositivo();SP.devCache=dev;await ir(dev);}else throw e;}
     if(stopMs)SP.stopTimer=setTimeout(()=>SP.pause().catch(()=>{}),stopMs);},
   async pause(){clearTimeout(SP.stopTimer);await SP.api('/me/player/pause','PUT')},
-  desconectar(){SP.tok=null;localStorage.removeItem('bb_sp_dev')}
+  desconectar(){SP.tok=null;localStorage.removeItem('bb_sp_dev');localStorage.removeItem('bb_sp_manual')}
 };
 function msPausa(p){const m=String(p||'').match(/(\d+):(\d{1,2})/);return m?(+m[1]*60+ +m[2])*1000:null}
 function errorSpotify(e){const msg=/premium/i.test(e.message)?'Spotify solo permite controlar la reproducción con una cuenta Premium.':/sin sesión|vencida/i.test(e.message)?'La sesión de Spotify se cerró. Vuelve a conectar desde el inicio.':/Failed to fetch|NetworkError/i.test(e.message)?'Este navegador bloqueó la conexión con Spotify. En la versión publicada en GitHub Pages funciona.':e.message;
@@ -663,8 +668,9 @@ function ajustesSpotify(){
   const guardaCid=()=>localStorage.setItem('bb_sp_cid',$('#spcid').value.trim());$('#spcid').onchange=guardaCid;
   const c=$('#spcon');if(c)c.onclick=()=>{guardaCid();SP.conectar()};
   const d=$('#spdesc');if(d)d.onclick=()=>{SP.desconectar();cerrarModal();render()};
-  if(SP.on)SP.dispositivos().then(ds=>{$('#spdevs').innerHTML=`<p class="sub" style="margin:0">Reproducir en:${ds.length?'':' (abre Spotify en algún dispositivo)'}</p><div class="equipo-btns">${ds.map(x=>`<button class="mini ${x.id===SP.device||(x.is_active&&!SP.device)?'on':'sec'}" data-d="${x.id}">${esc(x.name)}</button>`).join('')}</div>`;
-    $('#spdevs').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{localStorage.setItem('bb_sp_dev',b.dataset.d);ajustesSpotify()})}).catch(e=>{$('#spdevs').innerHTML=`<p class="sub">${esc(e.message)}</p>`});
+  if(SP.on)SP.dispositivos().then(ds=>{$('#spdevs').innerHTML=`<p class="sub" style="margin:0">Reproducir en:${ds.length?'':' (abre Spotify en algún dispositivo)'}</p><div class="equipo-btns"><button class="mini ${SP.manual?'sec':'on'}" data-auto="1">📱 Este celular</button>${ds.map(x=>`<button class="mini ${SP.manual&&x.id===SP.device?'on':'sec'}" data-d="${x.id}">${esc(x.name)}</button>`).join('')}</div>`;
+    $('#spdevs').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{localStorage.setItem('bb_sp_dev',b.dataset.d);localStorage.setItem('bb_sp_manual','1');SP.devCache='';ajustesSpotify()});
+    const au=$('#spdevs').querySelector('[data-auto]');if(au)au.onclick=()=>{localStorage.removeItem('bb_sp_manual');SP.devCache='';ajustesSpotify()}}).catch(e=>{$('#spdevs').innerHTML=`<p class="sub">${esc(e.message)}</p>`});
 }
 
 /* ---------- red: anfitrión + invitados (PeerJS, directo entre celulares) ---------- */
@@ -732,10 +738,17 @@ function ejecutar(name,p,from){const f=ACT[name];if(!f||!S)return;try{f(p,from)}
 
 /* ---------- estado ---------- */
 function nuevoEstado(nombres,meta){return {meta,cur:0,final:false,teams:nombres.map(n=>({name:n,score:0,flags:{}})),usado:{qr:[],mim:[],mel:[],pal:[],emo:[]},mazoRiesgo:barajar(DATA.risk.map((_,i)=>i)),phones:{},empezada:false,juegos:[1,2,3,4,5,6,7],ult:[]};}
-function pool(tipo,gen){const src={qr:CONTENT.qr,mim:CONTENT.mim,mel:CONTENT.mel,pal:CONTENT.words}[tipo];const used=new Set(S.usado[tipo]);
+/* Las canciones, palabras y mímicas van rotando: lo que ya salió se recuerda en el celular (también entre partidas)
+   y no se repite hasta agotar la lista completa. Si el género pedido se agota, se completa con las que falten de otros géneros. */
+const USADO=(()=>{try{return JSON.parse(localStorage.getItem('bb_usado')||'{}')}catch(e){return {}}})();
+function usadoDe(tipo){return new Set([...(S.usado[tipo]||[]),...(USADO[tipo]||[])])}
+function marcarUsado(tipo,i){(S.usado[tipo]=S.usado[tipo]||[]).push(i);(USADO[tipo]=USADO[tipo]||[]).push(i);try{localStorage.setItem('bb_usado',JSON.stringify(USADO))}catch(e){}}
+function pool(tipo,gen,used){const src={qr:CONTENT.qr,mim:CONTENT.mim,mel:CONTENT.mel,pal:CONTENT.words}[tipo];used=used||usadoDe(tipo);
   return src.map((s,i)=>({s,i})).filter(x=>!used.has(x.i)&&(gen?x.s.g===gen:true));}
-function tomar(tipo,gen,n){let p=pool(tipo,gen);if(p.length<n){S.usado[tipo]=[];p=pool(tipo,gen);}
-  const sel=barajar(p).slice(0,n);sel.forEach(x=>S.usado[tipo].push(x.i));return sel.map(x=>x.s);}
+function tomar(tipo,gen,n){let p=pool(tipo,gen);
+  if(p.length<n&&gen){const ya=new Set(p.map(x=>x.i));p=p.concat(barajar(pool(tipo,null)).filter(x=>!ya.has(x.i)));}
+  if(p.length<n){S.usado[tipo]=[];USADO[tipo]=[];p=pool(tipo,gen);if(p.length<n)p=pool(tipo,null);}
+  const sel=barajar(p).slice(0,n);sel.forEach(x=>marcarUsado(tipo,x.i));return sel.map(x=>x.s);}
 function generoDisponible(juego){const need=juego===4||juego===7?5:3,tipo=juego===4?'mim':'qr';
   if(juego===7){const ok7=GENEROS.filter(g=>poolEmoji(g.n).length>=need);if(ok7.length)return ok7[Math.floor(Math.random()*ok7.length)].n;}
   let ok=GENEROS.filter(g=>pool(tipo,g.n).length>=need);if(!ok.length)ok=GENEROS.filter(g=>CONTENT[tipo].some(s=>s.g===g.n));if(!ok.length)ok=GENEROS;return ok[Math.floor(Math.random()*ok.length)].n;}
@@ -1015,7 +1028,7 @@ ACT.go=(p,from)=>{
     return;}
   /* V.dj = el celular que confirmó el inicio: es el único que hace sonar Spotify solo */
   /* en modo TV con Spotify en la tele, la música sale de la TV (este código corre en ella) */
-  const dj=S.djHost?CID:from.cid;/* este código corre en el anfitrión: si él tiene Spotify, la música sale de su celular (o del parlante/TV elegido) */
+  S.djHost=SP.on;const dj=S.djHost?CID:from.cid;/* este código corre en el anfitrión: si él tiene Spotify, la música sale siempre de su celular, juegue quien juegue */
   if(V.k==='j2'&&!V.activo&&esJuez(from)){V.activo=true;V.dj=dj;sync();cronometro(sync,()=>finJ2());return;}
   if(V.k==='j3'&&!V.activo&&esJuez(from)){V.activo=true;V.dj=dj;sync();return;}
   /* mímica / tarareo: solo el celular que tocó "Empezar" ve el título; sus compañeros adivinan */
@@ -1198,9 +1211,10 @@ const EMOJIS={
 "Do I Wanna Know?":"🤔❓","Feel Good Inc.":"😊🏢","Heat Waves":"🔥🌊","Just Like Heaven":"☁️😇","Kids":"🧒🧒","Losing My Religion":"📉🙏","Mr. Brightside":"🧔☀️👍","Pumped Up Kicks":"👟💪","Sex on Fire":"🔥🛏️","Somebody That I Used to Know":"👤🤷🔙","Song 2":"🎵2️⃣","Stressed Out":"😫😫","Sweater Weather":"🧶🌦️","Take Me Out":"🙋🚪➡️","Take Me to Church":"🙋⛪","Wicked Game":"😈🎮","Wonderwall":"🤩🧱","Yellow":"💛💛","Zombie":"🧟",
 "Algo Más":"➕❓","Amor Eterno":"❤️♾️","Burbujas de Amor":"🫧❤️🐟","Bésame Mucho":"💋💋💋","Cuando Nadie Me Ve":"🙈👤","El Triste":"😢🧑","Entra en Mi Vida":"🚪➡️❤️","Eres Tú":"🫵✨","Hoy Tengo Ganas de Ti":"📅😍🫵","La Incondicional":"👩💯🤍","Lloraré las Penas":"😭🍷","Me Olvidé de Vivir":"🤦⏳","Mi Historia Entre Tus Dedos":"📖🖐️","Mientes":"🤥","Querida":"💌👩","Sin Miedo a Nada":"🚫😱","Te Amaré":"🫵❤️🔜","Tu Falta de Querer":"🫵❌❤️","Tu Recuerdo":"🫵🧠📸","Vivir Sin Aire":"😮‍💨🚫💨",
 "(Everything I Do) I Do It for You":"🙋💯🫵","All of Me":"💯🙋","Always":"♾️","Angels":"😇😇","Careless Whisper":"🤫🎷","Die With a Smile":"⚰️😊","Favorite Crime":"⭐🚔","Hello":"👋📞","Iris":"👁️🌸","My Heart Will Go On":"❤️🚢➡️","Nothing Compares 2 U":"🚫⚖️2️⃣🫵","Right Here Waiting":"📍⏳","Shape of My Heart":"♠️♥️","Someone Like You":"👤≈🫵","Someone You Loved":"👤❤️⏮️","Tears in Heaven":"😢☁️","Total Eclipse of the Heart":"🌑❤️","Unchained Melody":"⛓️‍💥🎶","Wind of Change":"🌬️🔄"};
-function poolEmoji(g){return CONTENT.qr.map((s,i)=>({s,i})).filter(x=>EMOJIS[x.s.t]&&(!g||x.s.g===g)&&!(S.usado.emo||[]).includes(x.i))}
-function tomarEmojis(g,n){S.usado.emo=S.usado.emo||[];let p=poolEmoji(g);if(p.length<n){S.usado.emo=S.usado.emo.filter(i=>CONTENT.qr[i]&&CONTENT.qr[i].g!==g);p=poolEmoji(g)}if(p.length<n)p=poolEmoji(null);
-  const sel=barajar(p).slice(0,n);sel.forEach(x=>S.usado.emo.push(x.i));return sel.map(x=>({...x.s,e:EMOJIS[x.s.t]}))}
+function poolEmoji(g){const used=usadoDe('emo');return CONTENT.qr.map((s,i)=>({s,i})).filter(x=>EMOJIS[x.s.t]&&(!g||x.s.g===g)&&!used.has(x.i))}
+function tomarEmojis(g,n){let p=poolEmoji(g);if(p.length<n){const ya=new Set(p.map(x=>x.i));p=p.concat(barajar(poolEmoji(null)).filter(x=>!ya.has(x.i)))}
+  if(p.length<n){S.usado.emo=[];USADO.emo=[];p=poolEmoji(g);if(p.length<n)p=poolEmoji(null)}
+  const sel=barajar(p).slice(0,n);sel.forEach(x=>marcarUsado('emo',x.i));return sel.map(x=>({...x.s,e:EMOJIS[x.s.t]}))}
 function normaliza(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\([^)]*\)/g,'').replace(/[^a-z0-9ñ ]+/g,' ').replace(/\s+/g,' ').trim()}
 function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let prev=Array.from({length:n+1},(_,j)=>j);for(let i=1;i<=m;i++){const cur=[i];for(let j=1;j<=n;j++)cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));prev=cur}return prev[n]}
 function aciertaTitulo(resp,tit){const r=normaliza(resp),t=normaliza(tit);if(!r)return false;if(r===t)return true;
@@ -1248,7 +1262,7 @@ RENDER.j6=function(){
     if(V.fase==='cuenta')return `<div class="sub" style="margin:0;color:rgba(0,0,0,.6)">Canción ${V.i+1} de 3</div><div class="grande">${V.cnt}</div>`;
     const preg=`<div class="sub" style="margin:0;color:rgba(0,0,0,.6)">Canción ${V.i+1} de 3 · ${p.tipo==='frase'?'¿De qué canción es esta frase?':'¿Qué canción es?'}${V.fase==='abierto'||V.fase==='responde'?` · <b class="${V.t<=3?'alerta-d':''}">${V.t} s</b>`:''}</div>`;
     if(V.fase==='abierto')return preg+(ROLE.solo?`<div class="frase invert" style="opacity:.9">${txt}</div>`:'')+`<div class="frase">${txt}</div>`;
-    if(V.fase==='responde'){const k=V.k2;const valida=ROLE.solo||(ROLE.team!=null&&ROLE.team!==k)||(ROLE.host&&!S.teams.some((t,i)=>i!==k&&hayTel(i)));
+    if(V.fase==='responde'){const k=V.k2;const valida=!ROLE.display;/* confirmar o falló aparece en todos los celulares */
       return preg+`<div class="frase">${txt}</div><div style="font-weight:800;margin-top:4px">${esc(S.teams[k].name)} responde</div>`+(valida?`<div class="acc"><button class="pill ok" id="bien">✔ +2</button><button class="pill no" id="mal">✗ Falló</button><button class="pill sec" id="verr">👀</button></div>`:`<div class="sub" style="margin:0">Los rivales validan la respuesta</div>`);}
     if(V.fase==='cerrado'){const w=V.gan[V.i];const sig=!S.tv||!ROLE.host;return `${ROLE.solo?`<div class="secreto invert" style="padding:8px"><b>${esc(s.t)}</b> — ${esc(s.a)}</div>`:''}<div class="secreto" style="padding:8px"><b>${esc(s.t)}</b> — ${esc(s.a)}<br><small>${w==null?'Nadie acertó':esc(S.teams[w].name)+' +2'}</small></div>${sig?`<button class="pill negro" id="sig">${V.i<2?'Siguiente canción ▶':'Ver resultado'}</button>`:''}`;}
     return '';};
@@ -1271,7 +1285,7 @@ RENDER.j6=function(){
   const g=$('#sig');if(g)g.onclick=()=>act('sigDuelo');
 };
 ACT.agarra=(p,from)=>{if(V.k!=='j6'||V.fase!=='abierto')return;const k=+p.k;if(V.bloq.includes(k))return;if(!ROLE.solo&&from.team!==k&&!(from.host&&!hayTel(k)))return;ding();V.fase='responde';V.k2=k;sync()};
-ACT.duelo=(p,from)=>{if(V.k!=='j6'||V.fase!=='responde')return;const k=V.k2;if(!ROLE.solo&&!(from.team!=null&&from.team!==k)&&!(from.host&&!S.teams.some((t,i)=>i!==k&&hayTel(i))))return;
+ACT.duelo=(p,from)=>{if(V.k!=='j6'||V.fase!=='responde'||from.display)return;const k=V.k2;
   if(p.ok)duelo.cierra(k);
   else{V.bloq.push(k);V.k2=null;if(V.bloq.length>=S.teams.length)duelo.cierra(null);else{V.fase='abierto';sync()}}};
 ACT.pasaDuelo=(p,from)=>{if(V.k!=='j6'||V.fase!=='abierto')return;const k=+p.k;if(V.bloq.includes(k)||!S.teams[k])return;if(!ROLE.solo&&from.team!==k&&!(from.host&&!S.tv&&!hayTel(k)))return;
