@@ -360,7 +360,8 @@ body.s-negro{--acc:var(--black);--acc-ink:var(--citric);--b1:var(--klein);--b2:v
 body.s-celeste{--acc:var(--klein);--acc-ink:var(--citric);--b1:var(--aquam);--b2:var(--klein)}
 
 /* ===== rediseño: aire, profundidad y movimiento ===== */
-.scene{animation:entra .38s cubic-bezier(.2,.8,.2,1)}
+/* la entrada se anima solo al cambiar de pantalla (no en cada tic del reloj: eso hacía tiritar todo) */
+.scene.nueva{animation:entra .38s cubic-bezier(.2,.8,.2,1)}
 @keyframes entra{from{opacity:0;transform:translateY(14px)}}
 body::before{animation:flota 14s ease-in-out infinite alternate}
 body::after{animation:flota 18s ease-in-out infinite alternate-reverse}
@@ -653,19 +654,30 @@ const SP={
 };
 function msPausa(p){const m=String(p||'').match(/(\d+):(\d{1,2})/);return m?(+m[1]*60+ +m[2])*1000:null}
 function errorSpotify(e){const msg=/premium/i.test(e.message)?'Spotify solo permite controlar la reproducción con una cuenta Premium.':/sin sesión|vencida/i.test(e.message)?'La sesión de Spotify se cerró. Vuelve a conectar desde el inicio.':/Failed to fetch|NetworkError/i.test(e.message)?'Este navegador bloqueó la conexión con Spotify. En la versión publicada en GitHub Pages funciona.':e.message;
+  if(/ningún dispositivo/i.test(e.message)){abrirModal(`<h3>Spotify está cerrado</h3><p class="sub">La app de Spotify de este celular tiene que estar abierta (aunque sea en segundo plano) para que la música suene. Ábrela y vuelve: la canción sonará sola.</p><a class="pill" href="spotify:" onclick="setTimeout(cerrarModal,500)">🎧 Abrir Spotify</a><button class="pill sec" onclick="cerrarModal()">Cerrar</button>`);return;}
   aviso('Spotify',msg);}
+/* Si la app de Spotify del celular está cerrada, no aparece como dispositivo. Antes de rendirse, la despertamos
+   con su enlace (spotify:) y reintentamos un par de veces: al volver a BeatBox la canción suena sola. */
+SP.despertar=async function(){if(SP.despertando)return false;SP.despertando=true;
+  try{const a=document.createElement('a');a.href='spotify:';a.style.display='none';document.body.appendChild(a);a.click();a.remove();}catch(e){}
+  for(let i=0;i<4;i++){await new Promise(r=>setTimeout(r,2500));try{const ds=await SP.dispositivos();if(ds.length){SP.despertando=false;return true}}catch(e){}}
+  SP.despertando=false;return false;};
+const _play=SP.play.bind(SP);
+SP.play=async function(song,posMs,stopMs){try{return await _play(song,posMs,stopMs)}catch(e){if(!/ningún dispositivo/i.test(e.message))throw e;
+  const ok=await SP.despertar();if(!ok)throw e;return _play(song,posMs,stopMs);}};
 async function sonar(btn,song,posMs,stopMs){const orig=btn.textContent;btn.textContent='⏳';btn.disabled=true;
   try{await SP.play(song,posMs,stopMs);btn.textContent=btn.classList.contains('redondo')?'🔊':'🔊 Sonando';setTimeout(()=>{btn.textContent=orig;btn.disabled=false},stopMs||3000);}catch(e){btn.textContent=orig;btn.disabled=false;errorSpotify(e)}}
 function ajustesSpotify(){
   abrirModal(`<h3>Spotify</h3>
-    <p class="sub">Conéctalo <b>solo en el celular del anfitrión</b>: la música sale de ahí, o del parlante o TV que elijas abajo. Requiere cuenta <b>Premium</b> y la app de Spotify abierta en algún dispositivo.</p>
+    <p class="sub">Conéctalo <b>solo en el celular del anfitrión</b>: la música sale de ahí, o del parlante o TV que elijas abajo. Requiere cuenta <b>Premium</b> y tener <b>la app de Spotify abierta</b> en este celular (basta en segundo plano). Prueba el sonido antes de empezar.</p>
     <details style="font-size:.9rem"><summary style="font-weight:800;cursor:pointer">Configuración (solo la primera vez)</summary>
     <ol style="margin:6px 0 0;padding-left:20px;line-height:1.4"><li>En developer.spotify.com → tu app → <b>Redirect URIs</b> pega:<br><code style="user-select:all;word-break:break-all">${esc(SP.redirect())}</code></li><li>En <b>User Management</b> agrega el correo de cada cuenta Spotify que se vaya a conectar.</li><li>Client ID:</li></ol>
     <input type="text" id="spcid" value="${esc(SP.cid)}" placeholder="Client ID"></details>
     <div id="spdevs"></div>
-    ${SP.on?`<div class="equipo-btns"><span style="color:var(--ok);font-weight:800;align-self:center">✅ Conectado</span><button class="mini sec" id="spdesc">Desconectar</button></div>`:`<button class="pill" id="spcon">Conectar con Spotify</button>`}
+    ${SP.on?`<button class="pill" id="sptest">🔊 Probar sonido (3 s)</button><div class="equipo-btns"><span style="color:var(--ok);font-weight:800;align-self:center">✅ Conectado</span><a class="mini sec" href="spotify:">🎧 Abrir Spotify</a><button class="mini sec" id="spdesc">Desconectar</button></div>`:`<button class="pill" id="spcon">Conectar con Spotify</button>`}
     <button class="pill sec" onclick="cerrarModal()">Cerrar</button>`);
   const guardaCid=()=>localStorage.setItem('bb_sp_cid',$('#spcid').value.trim());$('#spcid').onchange=guardaCid;
+  const tst=$('#sptest');if(tst)tst.onclick=async()=>{tst.textContent='⏳ Buscando tu Spotify…';try{const s=CONTENT.qr[Math.floor(Math.random()*CONTENT.qr.length)];await SP.play(s,30000,3000);tst.textContent='🔊 ¡Suena! Listo para jugar';}catch(e){tst.textContent='🔊 Probar sonido (3 s)';errorSpotify(e)}};
   const c=$('#spcon');if(c)c.onclick=()=>{guardaCid();SP.conectar()};
   const d=$('#spdesc');if(d)d.onclick=()=>{SP.desconectar();cerrarModal();render()};
   if(SP.on)SP.dispositivos().then(ds=>{$('#spdevs').innerHTML=`<p class="sub" style="margin:0">Reproducir en:${ds.length?'':' (abre Spotify en algún dispositivo)'}</p><div class="equipo-btns"><button class="mini ${SP.manual?'sec':'on'}" data-auto="1">📱 Este celular</button>${ds.map(x=>`<button class="mini ${SP.manual&&x.id===SP.device?'on':'sec'}" data-d="${x.id}">${esc(x.name)}</button>`).join('')}</div>`;
@@ -773,9 +785,9 @@ function zoomTV(){const ancho=V&&V.k==='lobby';document.body.style.setProperty('
 addEventListener('resize',()=>{if(esTV())zoomTV()});
 function scene(o){$('#duelo-root').innerHTML='';const grande=esTV(),ancho=grande&&V&&V.k==='lobby';
   document.body.className='s-'+(o.s||'lima')+(grande?' tv':'');if(grande)zoomTV();
-  const k=V?V.k:'',prev=$('.desliza'),top=prev&&scene.k===k?prev.scrollTop:0;scene.k=k;
+  const k=(V?V.k:'')+'|'+(o.s||''),prev=$('.desliza'),misma=scene.k===k,top=prev&&misma?prev.scrollTop:0;scene.k=k;
   const dentro=`${o.hero!==undefined?`<div class="hero ${o.heroCls||''}">${o.hero}</div>`:''}${o.head?`<div class="head">${o.head}</div>`:''}<div class="body">${o.body||''}</div>`;
-  $('#app').innerHTML=`<section class="scene ${o.scroll?'scroll':''} ${ancho?'ancho':''}">${topbar()}${o.scroll?`<div class="desliza">${dentro}</div>`:dentro}${o.foot?`<div class="foot">${o.foot}</div>`:''}</section>`;
+  $('#app').innerHTML=`<section class="scene ${misma?'':'nueva'} ${o.scroll?'scroll':''} ${ancho?'ancho':''}">${topbar()}${o.scroll?`<div class="desliza">${dentro}</div>`:dentro}${o.foot?`<div class="foot">${o.foot}</div>`:''}</section>`;
   if(top)$('.desliza').scrollTop=top;
 }
 function pj(k){return `<img class="pj" src="${IMG[k]}" alt="">`}
